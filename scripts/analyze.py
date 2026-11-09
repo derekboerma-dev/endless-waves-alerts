@@ -575,7 +575,7 @@ def spot_cards(alerts, per_region, today, latest):
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
                               "plan": plan, "tides": tdays.get(ds, [])})
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
-                        "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"),
+                        "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"), "guide": s.get("guide"),
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],
                         "hs_range": hs_range(s, reg), "tide_pref": TIDE_NL.get(s.get("tide", "all")),
                         "run": run, "days": sdays})

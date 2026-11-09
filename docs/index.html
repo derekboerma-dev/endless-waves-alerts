@@ -156,6 +156,8 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .sheet textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;background:var(--bg);color:var(--ink)}
 .sheet .hint{font-size:12px;color:var(--mut);margin-top:8px}
 .err{margin:0 12px 10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--warn);color:var(--warn);font-size:13px}
+.guide dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0;font-size:14px}
+.guide dt{color:var(--mut,#93a3ab)}.guide dd{margin:0}.guide .src{font-size:12px;opacity:.6}
 </style>
 </head>
 <body>
@@ -289,11 +291,16 @@ function spot(k, focus){
       ${sessionsBlock(s)}
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
       <div class="days">${list.length ? list.map(([d, i]) => dayCard(s, d, i)).join('') : '<div class="empty">Geen aanraders in de komende 16 dagen.</div>'}</div>
+      ${s.guide ? `<details open class="guide"><summary>Spotgids</summary>
+        <p>${esc(s.guide.about)}</p>
+        <dl>${[['Swell', s.guide.swell], ['Wind', s.guide.wind], ['Getij', s.guide.tide], ['Hoogte', s.guide.size], ['Seizoen', s.guide.season], ['Niveau', s.guide.level], ['Bodem', s.guide.bottom], ['Let op', s.guide.hazards]].filter(x => x[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+        <p class="src">Samengevat uit de Surfline-spotgids.</p>
+      </details>` : ''}
       <details><summary>Over deze spot</summary>
         <p>Werkt bij ${N(s.hs_range[0])}–${N(s.hs_range[1])} m op de spot · getij: ${esc(s.tide_pref)} · bron criteria: ${esc(s.src)}</p>
         <p>Melding (regio ${esc(s.region_name)}): ${req.join(' · ')}</p>
         <p>"Beste tijd" = het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen, met voorkeur voor het juiste getij, zwakke offshore wind en lange periode. Getij en golven zijn modelwaarden; check Surfline voordat je gaat.</p>
-        <p>Golfhoogte op de spot is een schatting uit de golf op open zee (30–50 km uit de kust): brekerhoogte volgens Komar &amp; Gaughan (hoogte én periode), minder als de swell schuin binnenkomt, en een beschuttingsfactor per spot. Geen bodemkaart zoals Surfline; wordt bijgesteld met de Surfline-vergelijking en je sessies.</p>
+        <p>Golfhoogte op de spot is een schatting uit de golf op open zee (30–50 km uit de kust): brekerhoogte volgens Komar &amp; Gaughan (hoogte én periode), minder als de swell schuin binnenkomt, en een beschuttingsfactor per spot. Geen bodemkaart zoals Surfline; schaal en factor per spot zijn op 9 nov bijgesteld op de Surfline-voorspelling, en leren verder van je sessies.</p>
       </details>`;
     $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
     $('#rate').addEventListener('click', () => rateSheet(s));

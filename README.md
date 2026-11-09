@@ -111,7 +111,7 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
 - **Getij:** zeespiegel per spot (`sea_level_height_msl`, model van Météo-France via Open-Meteo). Dit loopt ongeveer 9 dagen vooruit. Hoog- en laagwater zijn op het hele uur afgerond (±30 min).
 - **Getijvoorkeur per spot** staat in `config/spots.json` (`tide`: low, low-mid, mid, mid-high, high, all). Behalve "all" bij Killer Point en Tonel (surf-forecast) en "half, liefst opkomend" bij Bud Bud (eigen regels) zijn dit aannames om bij te stellen.
 - **Beste tijd:** het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen. Een blok met het juiste getij, zwakke offshore wind en langere periode gaat voor.
-- **Golfhoogte-maximum per spot** (op de spot, uit spotgidsen; bron in `hs_max_bron`): 2,5 m Bud Bud, Cap Ferret, Truc Vert, La Gravière · 3,0 m La Sauzaie, Lostmarc'h, La Palue, Cavaliers, Supertubos, Lagide, Tonel, Beliche · 3,5 m Anchor, Killer, Boilers · 4,0 m Lafitenia.
+- **Hoogtebereik per spot** (op de spot): uit de Surfline-spotgids ("ideal size") waar die bestaat; anders de ondergrens meegeschaald en de bovengrens van wannasurf. Bron in `hs_max_bron`. De schatting (`surf_scale`, `exposure`) is op 9 nov 2026 gekalibreerd op Surfline LOTUS.
 
 ## Bekende beperkingen
 

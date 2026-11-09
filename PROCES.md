@@ -193,6 +193,18 @@ Keuzes van Derek, in volgorde:
       - Boilers (mondo.surf: experts tot 12 ft+).
     - **4,0 m:** Lafitenia (wannasurf).
     - **Ondergrenzen:** ongewijzigd.
+20. **Surfline-vergelijking en spotgidsen (9 nov, via Chrome met Dereks account).**
+    - **Vergelijking:** de LOTUS-dagwaarden over 16 dagen naast de app gelegd. De app schatte gemiddeld 1,6 keer te hoog (mediaan Surfline/app 0,62).
+      - `surf_scale` gaat van 0,85 naar 0,52.
+      - `exposure` per spot is bijgesteld naar de verhouding van die spot. Opvallend: Bud Bud 0,55 en Boilers 0,37 (Surfline geeft Boilers veel minder dan Anchor).
+      - Lostmarc'h staat niet op Surfline en krijgt de factor van La Palue.
+      - Na de bijstelling liggen de dagen 0–7 binnen ±0,3 m van Surfline.
+    - **Surfline-ID's:** voor alle spots behalve Lostmarc'h opgeslagen. De Surfline-knop opent nu de juiste pagina.
+    - **Spotgidsen** (alleen beschikbaar voor Wijk aan Zee, de spots in het Baskenland/Landes, Portugal en Marokko):
+      - een eigen Nederlandse samenvatting plus swell, wind, getij, hoogte, seizoen, niveau, bodem en gevaren in `guide`, met een blok "Spotgids" in de app;
+      - hoogtebereik = de "ideal size" uit de gids, met een vertaaltabel: heup ≈ 0,9 m · schouder 1,2 · hoofd 1,5 · overhead 2,1 · dubbel overhead 3,0 (+ = 3,7) · 3x overhead 4,5;
+      - swell- en windbogen overgenomen uit de gids (punt 1 van de open punten is daarmee afgerond voor deze spots).
+    - **Franse spots zonder Surfline-gids** (Bud Bud, La Sauzaie, Lostmarc'h, La Palue, Cap Ferret, Truc Vert): ondergrens meegeschaald (minimaal 0,6 m), bovengrens van wannasurf.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

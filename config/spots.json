@@ -31,8 +31,9 @@
    "bevestigd": 3,
    "waarschijnlijk": 7
   },
-  "surf_scale": 0.85,
-  "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). 'powerful' blijft over open zee."
+  "surf_scale": 0.52,
+  "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). 'powerful' blijft over open zee.",
+  "_kalibratie": "surf_scale en exposure per spot bijgesteld op 9 nov 2026 met de Surfline LOTUS-voorspelling (16 dagen, mediaan Surfline/app). Lostmarc'h staat niet op Surfline: factor van La Palue."
  },
  "regions": [
   {
@@ -72,7 +73,7 @@
       ]
      ],
      "hs": [
-      1.0,
+      0.6,
       2.0
      ],
      "tp_min": 6,
@@ -91,7 +92,20 @@
      "hs_open_zee_oud": [
       0.8,
       2.0
-     ]
+     ],
+     "surfline_id": "584204204e65fad6a77095ea",
+     "exposure": 0.73,
+     "guide": {
+      "about": "Lang strand in de luwte van de noordpier van het Noordzeekanaal, dicht bij Amsterdam. Buiten de zomer vooral kleine, piekerige windswell; af en toe een lange noorderswell met lange rechts en links. De pier geeft beschutting bij zuidwestenwind.",
+      "swell": "NW tot N (soms ZW-windswell)",
+      "wind": "ZO",
+      "tide": "alle, liefst half",
+      "size": "heup tot hoofdhoogte",
+      "season": "sep–feb",
+      "level": "beginner–gemiddeld",
+      "bottom": "zand",
+      "hazards": "muistromen als het groter wordt"
+     }
     }
    ]
   },
@@ -122,7 +136,7 @@
       ]
      ],
      "hs": [
-      1.2,
+      0.6,
       2.5
      ],
      "tp_min": 11,
@@ -130,7 +144,7 @@
      "group": "Frankrijk",
      "tide_rising": true,
      "surfline_id": "584204204e65fad6a7709023",
-     "exposure": 0.9,
+     "exposure": 0.55,
      "hs_open_zee_oud": [
       1.0,
       2.1
@@ -155,7 +169,7 @@
       ]
      ],
      "hs": [
-      1.4,
+      0.8,
       3.0
      ],
      "tide": "mid",
@@ -164,7 +178,9 @@
       1.0,
       2.5
      ],
-     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+"
+     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
+     "surfline_id": "584204204e65fad6a770901f",
+     "exposure": 0.92
     }
    ],
    "alert": {
@@ -203,7 +219,7 @@
       ]
      ],
      "hs": [
-      1.4,
+      0.7,
       3.0
      ],
      "tide": "mid",
@@ -212,7 +228,8 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+",
+     "exposure": 0.81
     },
     {
      "name": "La Palue",
@@ -232,7 +249,7 @@
       ]
      ],
      "hs": [
-      1.4,
+      0.7,
       3.0
      ],
      "tide": "mid",
@@ -241,7 +258,9 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+"
+     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
+     "surfline_id": "584204204e65fad6a7709009",
+     "exposure": 0.81
     }
    ],
    "alert": {
@@ -280,7 +299,7 @@
       ]
      ],
      "hs": [
-      1.4,
+      0.9,
       2.5
      ],
      "tide": "mid",
@@ -289,7 +308,9 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+"
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+",
+     "surfline_id": "584204204e65fad6a7708fe7",
+     "exposure": 1.02
     },
     {
      "name": "Le Truc Vert",
@@ -309,7 +330,7 @@
       ]
      ],
      "hs": [
-      1.4,
+      0.7,
       2.5
      ],
      "tide": "mid",
@@ -318,7 +339,9 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,5–2 m, tot 2,5 m+"
+     "hs_max_bron": "wannasurf: vanaf 1,5–2 m, tot 2,5 m+",
+     "surfline_id": "584204204e65fad6a7708fe5",
+     "exposure": 0.78
     }
    ],
    "alert": {
@@ -341,24 +364,24 @@
    "spots": [
     {
      "name": "La Gravière (Hossegor)",
-     "src": "SF (richting) / SL (hoogte)",
+     "src": "Surfline spotgids",
      "lat": 43.672,
      "lon": -1.443,
      "swell": [
       [
-       270,
-       45
+       292.5,
+       33.75
       ]
      ],
      "wind": [
       [
-       90,
-       22.5
+       112.5,
+       33.75
       ]
      ],
      "hs": [
-      1.4,
-      2.5
+      1.2,
+      3.7
      ],
      "tide": "mid",
      "group": "Frankrijk",
@@ -366,27 +389,40 @@
       1.0,
       2.5
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+"
+     "hs_max_bron": "Surfline spotgids: schouder tot ruim dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708c8e",
+     "exposure": 1.14,
+     "guide": {
+      "about": "Een van de beste beachbreaks ter wereld, midden in Hossegor. Bij een goede westswell zware, holle tubes boven de zandbanken, tot zo'n 3,5 m. Harde stroming, een shorebreak die planken breekt en veel close-outs, maar ook de beste en best bereikbare barrels die je kunt krijgen.",
+      "swell": "W tot NW",
+      "wind": "O tot ZO",
+      "tide": "alle",
+      "size": "schouder tot ruim dubbel overhead",
+      "season": "okt–feb, eigenlijk het hele jaar",
+      "level": "gevorderd",
+      "bottom": "zand",
+      "hazards": "wipe-outs, stroming, shorebreak"
+     }
     },
     {
      "name": "Les Cavaliers (Anglet)",
-     "src": "SF",
+     "src": "Surfline spotgids",
      "lat": 43.523,
      "lon": -1.531,
      "swell": [
       [
-       270,
-       45
+       292.5,
+       33.75
       ]
      ],
      "wind": [
       [
-       90,
+       123.75,
        22.5
       ]
      ],
      "hs": [
-      1.4,
+      1.2,
       3.0
      ],
      "tide": "mid",
@@ -395,37 +431,62 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "yeeew: tot 12 ft+ (algemene tekst, zwakke bron); begrensd op 3 m zoals vergelijkbare beachbreaks"
+     "hs_max_bron": "Surfline spotgids: schouder tot dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708c8f",
+     "exposure": 1.0,
+     "guide": {
+      "about": "Topbeachbreak van de Baskische kust, net ten zuiden van de monding van de Adour. Pieren houden de zandbanken op hun plek; dat geeft een stevige A-frame met holle, snelle links en rechts. Werkt op elke westswell.",
+      "swell": "W tot NW",
+      "wind": "OZO tot ZO",
+      "tide": "laag tot half-hoog",
+      "size": "schouder tot dubbel overhead",
+      "season": "okt–feb, het hele jaar surfbaar",
+      "level": "gemiddeld–gevorderd",
+      "bottom": "zand",
+      "hazards": "muistromen"
+     }
     },
     {
      "name": "Lafitenia",
-     "src": "SF (richting) / SL (hoogte)",
+     "src": "Surfline spotgids",
      "lat": 43.425,
      "lon": -1.63,
      "swell": [
       [
-       270,
-       45
+       303.75,
+       22.5
       ]
      ],
      "wind": [
       [
        135,
-       22.5
+       33.75
       ]
      ],
      "hs": [
       1.2,
-      4.0
+      3.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
-     "exposure": 0.85,
+     "exposure": 0.94,
      "hs_open_zee_oud": [
       1.0,
       2.8
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 4 m+"
+     "hs_max_bron": "Surfline spotgids: schouder tot dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708c8c",
+     "guide": {
+      "about": "Klassieke rechtse pointbreak in een beschutte baai, tot zo'n 200 m lang over zandbedekt rif. Bij grote NW-swell verschuift de take-off en wordt die zwaar; daarna een snelle muur voor carves en een holle inside. Altijd druk. Aan de overkant van de baai ligt een grote linkse point.",
+      "swell": "WNW tot NW",
+      "wind": "OZO tot ZZO",
+      "tide": "laag tot half-hoog",
+      "size": "schouder tot dubbel overhead",
+      "season": "okt–feb, het hele jaar surfbaar",
+      "level": "gemiddeld–gevorderd",
+      "bottom": "rots en zand",
+      "hazards": "lange peddel, drukte"
+     }
     }
    ],
    "alert": {
@@ -449,31 +510,23 @@
    "spots": [
     {
      "name": "Supertubos",
-     "src": "SL",
+     "src": "Surfline spotgids",
      "lat": 39.345,
      "lon": -9.364,
      "swell": [
       [
-       270,
-       22.5
-      ],
-      [
-       292.5,
-       22.5
+       258.75,
+       45
       ]
      ],
      "wind": [
       [
-       45,
-       22.5
-      ],
-      [
-       90,
-       22.5
+       78.75,
+       45
       ]
      ],
      "hs": [
-      1.7,
+      1.5,
       3.0
      ],
      "tide": "low-mid",
@@ -482,37 +535,62 @@
       1.3,
       2.3
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
+     "hs_max_bron": "Surfline spotgids: hoofdhoogte tot dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708bc3",
+     "exposure": 1.0,
+     "guide": {
+      "about": "Een van de beste golven van Europa: één hoofdpiek met een zeer snelle, maar maakbare links en een kortere rechts, plus een tweede piek verderop die nog steeds beter is dan de meeste beachbreaks. Te veel noord in de swell en hij valt in de schaduw.",
+      "swell": "ZW tot WNW (liefst W–WNW)",
+      "wind": "NO tot O (enigszins beschut tegen noord)",
+      "tide": "half tot hoog",
+      "size": "hoofdhoogte tot dubbel overhead",
+      "season": "sep–feb",
+      "level": "gemiddeld; gevorderd op grote dagen",
+      "bottom": "zand",
+      "hazards": "drukte, bodem raken op grotere dagen"
+     }
     },
     {
      "name": "Lagide",
-     "src": "SF (richting) / SL (hoogte)",
+     "src": "Surfline spotgids",
      "lat": 39.372,
      "lon": -9.345,
      "swell": [
       [
-       337.5,
+       315,
        45
       ]
      ],
      "wind": [
       [
-       180,
-       22.5
+       157.5,
+       45
       ]
      ],
      "hs": [
       0.9,
-      3.0
+      2.1
      ],
      "tide": "mid",
      "group": "Portugal",
-     "exposure": 0.8,
+     "exposure": 0.84,
      "hs_open_zee_oud": [
       0.8,
       2.3
      ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
+     "hs_max_bron": "Surfline spotgids: heup tot overhead",
+     "surfline_id": "58bdf3a70cec4200133464f2",
+     "guide": {
+      "about": "Lange, lekkere links over een vlak rif voor de parkeerplaats. Rustige take-off, daarna een top-to-bottom muur die lang doorloopt. Je peddelt droog naast de golf uit, dus het is altijd druk en de take-off-zone is klein.",
+      "swell": "W tot N",
+      "wind": "ZO tot Z",
+      "tide": "laag tot half",
+      "size": "heup tot overhead",
+      "season": "sep–nov en mrt–mei",
+      "level": "gemiddeld–gevorderd (vanwege drukte)",
+      "bottom": "vlak rif",
+      "hazards": "ondiep bij laagwater, zee-egels, drukte"
+     }
     }
    ],
    "alert": {
@@ -543,12 +621,54 @@
    "spots": [
     {
      "name": "Tonel",
-     "src": "SF (richting) / SL (hoogte)",
+     "src": "Surfline spotgids",
      "lat": 37.0049,
      "lon": -8.9483,
      "swell": [
       [
-       292.5,
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       67.5,
+       45
+      ]
+     ],
+     "hs": [
+      0.9,
+      3.0
+     ],
+     "tide": "all",
+     "group": "Portugal",
+     "exposure": 0.88,
+     "hs_open_zee_oud": [
+      0.8,
+      2.3
+     ],
+     "hs_max_bron": "Surfline spotgids: heup tot dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708e80",
+     "guide": {
+      "about": "Een van de meest consistente spots van de Algarve, onder hoge kliffen en open voor elke westswell. Krachtige pieken langs het strand, links en rechts; vooral de linkse kunnen formaat aan. Goede uitwijk als het elders vlak is; vroeg of rond tijwisseling is het rustiger.",
+      "swell": "W tot NW, soms ZW",
+      "wind": "O (NO gaat ook)",
+      "tide": "laag tot half, niet vol hoog",
+      "size": "heup tot dubbel overhead",
+      "season": "okt–apr",
+      "level": "gemiddeld–pro",
+      "bottom": "zand met losse rotsen binnen",
+      "hazards": "muistromen, verschuivende pieken, rotsplekken"
+     }
+    },
+    {
+     "name": "Beliche",
+     "src": "Surfline spotgids",
+     "lat": 37.0245,
+     "lon": -8.9648,
+     "swell": [
+      [
+       270,
        45
       ]
      ],
@@ -556,54 +676,32 @@
       [
        45,
        22.5
-      ],
-      [
-       90,
-       22.5
-      ]
-     ],
-     "hs": [
-      1.0,
-      3.0
-     ],
-     "tide": "all",
-     "group": "Portugal",
-     "exposure": 0.9,
-     "hs_open_zee_oud": [
-      0.8,
-      2.3
-     ],
-     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
-    },
-    {
-     "name": "Beliche",
-     "src": "SF (richting) / SL (hoogte, verhoogd: beschutte spot)",
-     "lat": 37.0245,
-     "lon": -8.9648,
-     "swell": [
-      [
-       315,
-       45
-      ]
-     ],
-     "wind": [
-      [
-       0,
-       22.5
       ]
      ],
      "hs": [
       0.9,
-      3.0
+      2.1
      ],
      "tide": "mid",
      "group": "Portugal",
-     "exposure": 0.6,
+     "exposure": 0.77,
      "hs_open_zee_oud": [
       1.2,
       3.5
      ],
-     "hs_max_bron": "thesurfatlas: werkt vanaf ±5 ft; geen maximum genoemd, gelijk aan buurspot Tonel gezet"
+     "hs_max_bron": "Surfline spotgids: heup tot overhead",
+     "surfline_id": "602d75185a026ea81cf2c70e",
+     "guide": {
+      "about": "Kleine, op het zuiden gerichte baai onder kliffen, met een wiggige, holle piek die goede linkse en rechtse ramps geeft; voelt daardoor snel druk. Krijgt minder swell dan Tonel en kan bij hoogwater verdwijnen.",
+      "swell": "ZW tot NW",
+      "wind": "NO",
+      "tide": "laag tot half",
+      "size": "heup tot overhead",
+      "season": "dec–feb",
+      "level": "alle niveaus; hoofdpiek voor ervaren surfers",
+      "bottom": "zand",
+      "hazards": "afbrokkelende kliffen; de hoofdwedge kan zwaar zijn"
+     }
     }
    ]
   },
@@ -618,102 +716,129 @@
    "spots": [
     {
      "name": "Anchor Point",
-     "src": "SL",
+     "src": "Surfline spotgids",
      "lat": 30.544,
      "lon": -9.726,
      "swell": [
       [
-       315,
-       22.5
-      ],
-      [
        292.5,
-       22.5
-      ],
-      [
-       270,
-       22.5
+       33.75
       ]
      ],
      "wind": [
       [
-       45,
-       22.5
+       56.25,
+       45
       ]
      ],
      "hs": [
-      1.2,
-      3.5
+      1.5,
+      4.5
      ],
      "tide": "all",
      "group": "Taghazout",
      "surfline_id": "5842041f4e65fad6a7708cfd",
-     "exposure": 0.7,
+     "exposure": 0.81,
      "hs_open_zee_oud": [
       1.3,
       3.5
      ],
-     "hs_max_bron": "surfmaroc: beste maat 7 ft; mondo.surf: houdt ruim boven hoofdhoogte; geen hard maximum"
+     "hs_max_bron": "Surfline spotgids: hoofdhoogte tot 3x overhead",
+     "guide": {
+      "about": "De bekendste golf van Marokko: een lange rechtse point langs een rotsplaat, met holle secties en veel ruimte voor manoeuvres. Ligt in Taghazout zelf en is consistent in de winter; met meerdere topspots in de buurt verspreidt de drukte zich.",
+      "swell": "W tot NW",
+      "wind": "NNO tot O",
+      "tide": "hoe lager hoe beter",
+      "size": "hoofdhoogte tot 3x overhead",
+      "season": "sep–mrt",
+      "level": "gemiddeld–gevorderd",
+      "bottom": "rotsige point",
+      "hazards": "rotsen"
+     }
     },
     {
      "name": "Killer Point",
-     "src": "SF",
+     "src": "Surfline spotgids",
      "lat": 30.565,
      "lon": -9.765,
      "swell": [
       [
-       315,
-       45
+       292.5,
+       33.75
       ]
      ],
      "wind": [
       [
-       90,
-       22.5
+       22.5,
+       33.75
       ]
      ],
      "hs": [
-      1.3,
-      3.5
+      1.5,
+      4.5
      ],
      "tide": "all",
      "group": "Taghazout",
-     "exposure": 0.8,
+     "exposure": 0.81,
      "hs_open_zee_oud": [
       1.3,
       3.5
      ],
-     "hs_max_bron": "surfholidays: vanaf 4 ft tot dubbel overhead"
+     "hs_max_bron": "Surfline spotgids: hoofdhoogte tot 3x overhead",
+     "surfline_id": "5842041f4e65fad6a7708cfa",
+     "guide": {
+      "about": "Rechtse point en de meest swell-gevoelige van Taghazout. Lang en krachtig, kan de grootste swells aan en is uitdagender dan Anchor. Lange peddel vanaf een scherp rotsstrand, en stroming bij grote swell.",
+      "swell": "W tot NW",
+      "wind": "N tot NO",
+      "tide": "laag tot half",
+      "size": "hoofdhoogte tot 3x overhead",
+      "season": "herfst en winter",
+      "level": "gemiddeld–expert",
+      "bottom": "rotsige point met zand",
+      "hazards": "rotsen, stroming, drukte, haaien"
+     }
     },
     {
      "name": "Boilers",
-     "src": "SF (richting) / SL (hoogte)",
+     "src": "Surfline spotgids",
      "lat": 30.632,
      "lon": -9.889,
      "swell": [
       [
        292.5,
-       45
+       33.75
       ]
      ],
      "wind": [
       [
-       90,
-       22.5
+       67.5,
+       45
       ]
      ],
      "hs": [
       1.5,
-      3.5
+      3.7
      ],
      "tide": "all",
      "group": "Taghazout",
-     "exposure": 0.9,
+     "exposure": 0.37,
      "hs_open_zee_oud": [
       1.3,
       3.0
      ],
-     "hs_max_bron": "mondo.surf: ideaal 6–8 ft, experts tot 12 ft+"
+     "hs_max_bron": "Surfline spotgids: hoofdhoogte tot ruim dubbel overhead",
+     "surfline_id": "5842041f4e65fad6a7708cf3",
+     "guide": {
+      "about": "Snelle, krachtige rechtse point langs rotsen vol zee-egels, genoemd naar de ketel van een scheepswrak bovenaan de point. Ligt op het westelijkste puntje van de kaap. Lager tij geeft meer snelheid. Met solide swell en offshore wind een droomsessie.",
+      "swell": "W tot NW",
+      "wind": "NO (kan hard waaien)",
+      "tide": "laag tot half",
+      "size": "hoofdhoogte tot ruim dubbel overhead",
+      "season": "herfst en winter",
+      "level": "gemiddeld–gevorderd",
+      "bottom": "rif/point",
+      "hazards": "in- en uitstappen over rotsen met zee-egels"
+     }
     }
    ],
    "alert": {
