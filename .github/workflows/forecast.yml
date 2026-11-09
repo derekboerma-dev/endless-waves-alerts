@@ -43,6 +43,9 @@ jobs:
       - name: Toetsen en reeksen zoeken
         run: python scripts/analyze.py
 
+      - name: Voorspeld tegenover echt (sessies)
+        run: python scripts/calibrate.py
+
       - name: Resultaat vastleggen (ook voor de web-app)
         run: |
           git config user.name "endless-waves-bot"

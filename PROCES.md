@@ -167,6 +167,22 @@ Keuzes van Derek, in volgorde:
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
+## 5b. Leren van sessies
+
+- Het beoordelingsscherm vraagt ook het **tijdstip**: ochtend (07–11), middag (11–16), avond (16–20) of een begintijd.
+- **`scripts/calibrate.py`** draait elke run. Per sessie:
+  - pakt het de voorspelling van die dag uit het archief (dag 0);
+  - rekent de graad opnieuw uit met dezelfde regels als de app;
+  - haalt golf, periode, richting, wind en getij op het sessietijdstip op.
+- Per spot berekent het het gemiddelde verschil (jouw graad min de voorspelde graad) en geeft het hints, pas vanaf 3 sessies. Bijvoorbeeld:
+  - de criteria zijn te streng of te ruim;
+  - je scoort beter bij opkomend of afgaand tij;
+  - je hebt goede sessies buiten het hoogtebereik gehad;
+  - de gemiddelde score per plank.
+- **Uitvoer:** `docs/calibration.json` (in de app onder "Jouw sessies") en `out/kalibratie.md` (leesbaar, voor de evaluatie met Claude).
+- **Afspraak:** elke paar weken samen bijstellen ("kijk naar mijn sessies"). Claude stelt wijzigingen voor, Derek keurt goed, en ze worden hier vastgelegd. Automatisch bijsturen pas vanaf ±10–15 sessies per spot.
+- **Idee voor later:** voorspellingen toetsen aan metingen (golfboeien) en aan het eigen archief (voorspelling van dag N tegenover dag 0) om afwijkingen per spot en per termijn te meten en te corrigeren.
+
 ## 6. Installatiestatus (9 november 2026)
 
 - [x] Repository aangemaakt en Claude GitHub App geïnstalleerd (Claude kan pushen).

@@ -4,6 +4,7 @@
 Een issue heeft de titel 'Sessie: <spot> <datum>' en een body met regels:
   Spot: <naam>
   Datum: JJJJ-MM-DD
+  Tijd: ochtend | middag | avond | UU:MM (optioneel)
   Score: <0-4> (<label>)
   Plank: <optioneel>
   Opmerking: <optioneel>
@@ -16,7 +17,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FIELDS = {"spot": "spot", "datum": "date", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast"}
+FIELDS = {"spot": "spot", "datum": "date", "tijd": "time", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast"}
 
 
 def parse(issue):

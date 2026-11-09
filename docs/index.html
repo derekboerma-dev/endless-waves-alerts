@@ -308,25 +308,33 @@ function spot(k, focus){
 /* ---------- sessiescores: via een GitHub-issue naar de repository (zodat Claude ze kan gebruiken) ---------- */
 let SESS = [];
 const localSess = () => { try { return JSON.parse(localStorage.getItem('ew-sess') || '[]'); } catch(e){ return []; } };
+let CAL = {};
 function sessionsBlock(s){
-  const synced = SESS.filter(r => r.spot === s.name);
+  const cal = CAL[s.name];
+  const calBy = Object.fromEntries((cal?.sessions || []).map(r => [r.date + '|' + (r.time || '') + '|' + r.score, r]));
+  const synced = SESS.filter(r => r.spot === s.name).map(r => ({...r, cal: calBy[r.date + '|' + (r.time || '') + '|' + r.score]}));
   const keys = new Set(synced.map(r => r.date + r.score));
   const pending = localSess().filter(r => r.spot === s.name && !keys.has(r.date + r.score)).map(r => ({...r, pending:true}));
   const all = pending.concat(synced).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
   if (!all.length) return '';
-  return `<div class="sess"><h4>Jouw sessies</h4>${all.map(r => `<div class="r g${r.score}"><span class="lbl">${GRADE[r.score]}</span>
-    <span>${LONG(r.date)}${r.board ? ' · ' + esc(r.board) : ''}${r.note ? ' · ' + esc(r.note) : ''}${r.forecast ? `<br><span style="color:var(--mut)">voorspeld: ${esc(r.forecast)}</span>` : ''}${r.pending ? ' <span style="color:var(--mut)">(nog niet verwerkt)</span>' : ''}</span></div>`).join('')}</div>`;
+  const sum = cal && cal.n_compared ? `<div style="font-size:13px;margin:-2px 0 6px">${cal.n_compared} vergeleken · gemiddeld ${cal.mean_diff > 0 ? '+' : ''}${N(cal.mean_diff)} graad t.o.v. de voorspelling${cal.hints.length ? '' : ' · nog te weinig voor conclusies'}</div>${cal.hints.map(h => `<div class="nogo" style="margin:0 0 4px">→ ${esc(h)}</div>`).join('')}` : '';
+  return `<div class="sess"><h4>Jouw sessies</h4>${sum}${all.map(r => { const c = r.cal?.cond;
+    const pred = r.cal && r.cal.predicted != null ? `voorspeld: ${GRADE[r.cal.predicted]}` : (r.forecast ? `voorspeld: ${esc(r.forecast)}` : '');
+    return `<div class="r g${r.score}"><span class="lbl">${GRADE[r.score]}</span>
+    <span>${LONG(r.date)}${r.time ? ' · ' + esc(r.time) : ''}${r.board ? ' · ' + esc(r.board) : ''}${r.note ? ' · ' + esc(r.note) : ''}
+    ${pred || c ? `<br><span style="color:var(--mut)">${pred}${c ? ` · ${N(c.hs)} m ${c.tp} s ${esc(c.dir)} · wind ${esc(c.wd)} ${c.ws} kn${c.tide ? ' · ' + esc(c.tide) : ''}` : ''}</span>` : ''}${r.pending ? ' <span style="color:var(--mut)">(nog niet verwerkt)</span>' : ''}</span></div>`; }).join('')}</div>`;
 }
 function rateSheet(s){
   const iso = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toLocaleDateString('sv-SE'); };
   const dates = [0, 1, 2, 3].map(n => [iso(n), n === 0 ? 'vandaag' : n === 1 ? 'gisteren' : LONG(iso(n))]);
   const boards = (QUIVER?.boards || []).map(b => b.short || `${b.brand} ${b.length}`);
-  let st = {date: dates[0][0], score: null, board: '', note: ''};
+  let st = {date: dates[0][0], time: '', score: null, board: '', note: ''};
   const bg = document.createElement('div'); bg.className = 'sheet-bg';
   const paint = () => {
     const fc = s.days.find(d => d.date === st.date);
     bg.innerHTML = `<div class="sheet"><h3>Sessie ${esc(s.name)}</h3>
       <label>Wanneer</label><div class="seg" id="sd">${dates.map(([v, t]) => `<button data-v="${v}" class="${st.date === v ? 'on' : ''}">${t}</button>`).join('')}</div>
+      <label>Hoe laat?</label><div class="seg" id="st">${['ochtend', 'middag', 'avond'].map(t => `<button data-v="${t}" class="${st.time === t ? 'on' : ''}">${t}</button>`).join('')}<input id="sh" type="time" value="${/^\d/.test(st.time) ? st.time : ''}" aria-label="Begintijd" style="border:1px solid var(--line);border-radius:999px;padding:6px 10px;font:inherit;background:var(--bg);color:var(--ink)"></div>
       <label>Hoe was het?</label><div class="seg" id="ss">${GRADE.map((t, k) => `<button data-v="${k}" class="g${k} ${st.score === k ? 'on' : ''}">${k ? t : 'niets'}</button>`).join('')}</div>
       <label>Plank</label><div class="seg" id="sb">${boards.map(b => `<button data-v="${esc(b)}" class="${st.board === b ? 'on' : ''}">${esc(b)}</button>`).join('')}</div>
       <label>Opmerking</label><textarea id="sn" placeholder="bijv. te vol bij hoogwater, mooie linkers">${esc(st.note)}</textarea>
@@ -334,15 +342,17 @@ function rateSheet(s){
       <div class="hint">Versturen opent GitHub met een ingevuld formulier: tik daar op "Submit new issue". De volgende run verwerkt je score${fc ? ' samen met de voorspelling van die dag' : ''}.</div></div>`;
     bg.querySelectorAll('#sd button').forEach(b => b.onclick = () => { st.date = b.dataset.v; paint(); });
     bg.querySelectorAll('#ss button').forEach(b => b.onclick = () => { st.score = +b.dataset.v; paint(); });
+    bg.querySelectorAll('#st button').forEach(b => b.onclick = () => { st.time = st.time === b.dataset.v ? '' : b.dataset.v; paint(); });
+    bg.querySelector('#sh').onchange = e => { st.time = e.target.value; paint(); };
     bg.querySelectorAll('#sb button').forEach(b => b.onclick = () => { st.board = st.board === b.dataset.v ? '' : b.dataset.v; paint(); });
     bg.querySelector('#sn').oninput = e => { st.note = e.target.value; };
     bg.querySelector('#sc').onclick = () => bg.remove();
     bg.querySelector('#sk').onclick = () => {
       if (st.score == null) return;
       const fcs = fc ? `${GRADE[fc.v ?? 0]}, ${N(fc.hs)} m${fc.plan ? `, beste tijd ${fc.plan.window}` : ''}` : 'niet meer in de app';
-      const body = `Spot: ${s.name}\nDatum: ${st.date}\nScore: ${st.score} (${GRADE[st.score]})\nPlank: ${st.board}\nOpmerking: ${st.note.replace(/\n/g, ' ')}\nVoorspeld: ${fcs}\n\n(ingediend vanuit de Endless Waves-app)`;
+      const body = `Spot: ${s.name}\nDatum: ${st.date}\nTijd: ${st.time}\nScore: ${st.score} (${GRADE[st.score]})\nPlank: ${st.board}\nOpmerking: ${st.note.replace(/\n/g, ' ')}\nVoorspeld: ${fcs}\n\n(ingediend vanuit de Endless Waves-app)`;
       const url = `https://github.com/${DATA.repo}/issues/new?title=${encodeURIComponent('Sessie: ' + s.name + ' ' + st.date)}&body=${encodeURIComponent(body)}`;
-      try { const L = localSess(); L.unshift({spot: s.name, date: st.date, score: st.score, board: st.board, note: st.note, forecast: fcs}); localStorage.setItem('ew-sess', JSON.stringify(L.slice(0, 100))); } catch(e){}
+      try { const L = localSess(); L.unshift({spot: s.name, date: st.date, time: st.time, score: st.score, board: st.board, note: st.note, forecast: fcs}); localStorage.setItem('ew-sess', JSON.stringify(L.slice(0, 100))); } catch(e){}
       window.open(url, '_blank'); bg.remove(); route();
     };
   };
@@ -406,6 +416,7 @@ async function load(first){
     if (!d.spots || !d.spots.length) throw new Error('oude data');
     DATA = d;
     try { SESS = await (await fetch('sessions.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ SESS = []; }
+    try { CAL = await (await fetch('calibration.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ CAL = {}; }
     if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json', {cache:'no-store'})).json(); } catch(e){} }
     const t = d.fetched_at ? new Date(d.fetched_at) : null;
     const old = t && (Date.now() - t) / 36e5 > 36;
