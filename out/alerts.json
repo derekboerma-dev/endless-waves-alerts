@@ -1,8 +1,33 @@
 {
  "generated": "2026-11-09",
- "fetched_at": "2026-11-09T14:40+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-09T14:53+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-11",
+   "end": "2026-11-12",
+   "days": 2,
+   "lead_days": 2,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-11-11",
+    "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
@@ -75,6 +100,30 @@
    "below_threshold": [
     "begint over 7 dagen (thuisspot: max 3)"
    ]
+  },
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-11",
+   "end": "2026-11-12",
+   "days": 2,
+   "lead_days": 2,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-11-11",
+    "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": []
   }
  ],
  "problems": []
