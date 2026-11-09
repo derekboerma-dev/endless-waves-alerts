@@ -41,11 +41,27 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-sy
 .sun{width:34px;height:34px;border-radius:50%;background:#f4c96b;box-shadow:0 0 30px #f4c96b88}
 
 /* kopbalk: vast bovenaan */
-.top{position:sticky;top:0;z-index:20;background:var(--deep);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 14px;display:flex;align-items:center;gap:10px}
-.top h1{margin:0;font:800 26px/1.1 -apple-system,system-ui,sans-serif;letter-spacing:-.4px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top{position:sticky;top:0;z-index:20;background:var(--deep);color:#fff;padding:calc(env(safe-area-inset-top) + 18px) 18px 20px;display:flex;align-items:center;gap:10px}
+.top h1{margin:0;font:800 32px/1.1 -apple-system,system-ui,sans-serif;letter-spacing:-.6px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top .upd{font-size:12px;opacity:.7}
-.top button{appearance:none;border:0;background:none;color:#fff;font-size:30px;line-height:1;padding:0 4px 2px 0;cursor:pointer}
-main{padding:12px 0 calc(env(safe-area-inset-bottom) + 24px);max-width:760px;margin:0 auto}
+.top button{appearance:none;border:0;background:none;color:#fff;font-size:36px;line-height:1;padding:0 4px 2px 0;cursor:pointer}
+main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;margin:0 auto}
+/* menubalk onderin */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 0 calc(env(safe-area-inset-bottom) + 6px)}
+.tabs a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--mut);text-decoration:none;padding:4px 0}
+.tabs a svg{width:26px;height:26px}
+.tabs a.on{color:var(--sea)}
+/* quiver */
+.boards{display:flex;flex-direction:column;gap:10px;margin:0 12px}
+.board-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:start}
+.board-card svg{width:64px;height:auto}
+.board-card h3{margin:0;font-size:17px}
+.board-card .br{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.specs{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13px;margin-top:8px}
+.specs dt{color:var(--mut)} .specs dd{margin:0}
+.use{margin-top:8px;font-size:13px;background:var(--hl);border-radius:10px;padding:6px 10px}
+.use b{color:var(--sea)}
+.qnote{font-size:12px;color:var(--mut);margin:12px 14px 0}
 
 /* startscherm */
 .board{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -123,6 +139,10 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
   <span class="upd" id="upd"></span>
 </div>
 <main id="view"></main>
+<nav class="tabs">
+  <a href="#" id="tab-f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 14c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/><path d="M2 19c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/><circle cx="17" cy="6" r="2.5"/></svg>Voorspelling</a>
+  <a href="#quiver" id="tab-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2c3 3 4.5 8 4.5 12.5 0 3.5-1.5 6-4.5 7.5-3-1.5-4.5-4-4.5-7.5C7.5 10 9 5 12 2z"/><path d="M12 6v12"/></svg>Quiver</a>
+</nav>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -217,9 +237,50 @@ function spot(k, focus){
 }
 
 const problems = () => DATA.problems?.length ? `<div class="err">Data onvolledig: ${DATA.problems.length} probleem/problemen bij ophalen.</div>` : '';
-const route = () => { if (!DATA) return; const h = location.hash.slice(1);
-  if (h.startsWith('s')){ const [k, i] = h.slice(1).split('/'); spot(+k, i != null ? +i : null); } else home(); };
+const route = () => { const h = location.hash.slice(1);
+  $('#tab-q').classList.toggle('on', h === 'quiver'); $('#tab-f').classList.toggle('on', h !== 'quiver');
+  if (h === 'quiver') return quiver();
+  if (!DATA) return; if (h.startsWith('s')){ const [k, i] = h.slice(1).split('/'); spot(+k, i != null ? +i : null); } else home(); };
+
+/* ---------- quiver: getekende silhouetten op basis van lengte, breedte en tailvorm ---------- */
+let QUIVER = null;
+function boardSVG(b){
+  const L = b.len_in || 72, W = b.w_in || 19.5, s = 3.2;            // px per inch
+  const h = L * s, w = W * s, cx = 40, top = 6;
+  const noseW = (b.nose_in || W * 0.62) * s / 2, tailW = (b.tail_in || W * 0.7) * s / 2, half = w / 2;
+  const y = f => top + f * h;
+  const wide = y(0.52);
+  let tail;
+  switch (b.tail){
+    case 'pintail':   tail = `C ${cx + tailW * 0.9} ${y(0.86)} ${cx + 6} ${y(0.97)} ${cx} ${y(1)} C ${cx - 6} ${y(0.97)} ${cx - tailW * 0.9} ${y(0.86)}`; break;
+    case 'roundpin':  tail = `C ${cx + tailW} ${y(0.9)} ${cx + 10} ${y(1)} ${cx} ${y(1)} C ${cx - 10} ${y(1)} ${cx - tailW} ${y(0.9)}`; break;
+    case 'swallow':   tail = `C ${cx + tailW} ${y(0.9)} ${cx + tailW * 0.75} ${y(0.98)} ${cx + tailW * 0.6} ${y(1)} L ${cx} ${y(0.955)} L ${cx - tailW * 0.6} ${y(1)} C ${cx - tailW * 0.75} ${y(0.98)} ${cx - tailW} ${y(0.9)}`; break;
+    case 'squash-wide': tail = `C ${cx + tailW * 1.05} ${y(0.92)} ${cx + tailW * 0.75} ${y(1)} ${cx + tailW * 0.6} ${y(1)} L ${cx - tailW * 0.6} ${y(1)} C ${cx - tailW * 0.75} ${y(1)} ${cx - tailW * 1.05} ${y(0.92)}`; break;
+    default:          tail = `C ${cx + tailW} ${y(0.92)} ${cx + tailW * 0.6} ${y(1)} ${cx + tailW * 0.45} ${y(1)} L ${cx - tailW * 0.45} ${y(1)} C ${cx - tailW * 0.6} ${y(1)} ${cx - tailW} ${y(0.92)}`;
+  }
+  const d = `M ${cx} ${y(0)} C ${cx + noseW * 0.6} ${y(0.02)} ${cx + noseW} ${y(0.12)} ${cx + half * 0.92} ${y(0.3)}
+    C ${cx + half} ${y(0.42)} ${cx + half} ${y(0.6)} ${cx + tailW * 1.15} ${y(0.8)} ${tail} ${cx - tailW * 1.15} ${y(0.8)}
+    C ${cx - half} ${y(0.6)} ${cx - half} ${y(0.42)} ${cx - half * 0.92} ${y(0.3)} C ${cx - noseW} ${y(0.12)} ${cx - noseW * 0.6} ${y(0.02)} ${cx} ${y(0)} Z`;
+  const fins = (b.fins || '').includes('5-fin') ? 5 : 3, fy = y(0.9);
+  const finEls = [[0, 0], [-tailW * 0.55, -10], [tailW * 0.55, -10]].concat(fins === 5 ? [[-tailW * 0.35, 2], [tailW * 0.35, 2]] : [])
+    .slice(0, fins === 5 ? 5 : 3).map(([dx, dy]) => `<rect x="${cx + dx - 1.5}" y="${fy + dy}" width="3" height="9" rx="1.5" fill="currentColor" opacity=".35"/>`).join('');
+  return `<svg viewBox="0 0 80 ${h + 12}" style="color:var(--ink)"><path d="${d}" fill="var(--hl)" stroke="currentColor" stroke-width="1.6"/>
+    <line x1="${cx}" y1="${y(0.03)}" x2="${cx}" y2="${y(0.97)}" stroke="currentColor" stroke-width=".7" opacity=".35"/>${finEls}</svg>`;
+}
+async function quiver(){
+  $('#back').hidden = true; $('#title').textContent = 'Quiver';
+  if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ $('#view').innerHTML = '<div class="empty">Quiver niet gevonden.</div>'; return; } }
+  const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+  $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}
+      <div><div class="br">${esc(b.brand)}</div><h3>${esc(b.length)} ${esc(b.name)}</h3>
+      <dl class="specs">${row('Maten', [b.length, b.width, b.thick].filter(Boolean).join(' × '))}${row('Volume', b.volume)}${row('Tail', ({swallow:'swallow', 'squash-wide':'brede squash', pintail:'pintail', squash:'squash', roundpin:'roundpin (aanname)'})[b.tail])}${row('Vinnen', b.fins)}${row('Herkomst', b.origin)}</dl>
+      <div class="use">Pak deze bij <b>${esc(b.use)}</b></div>
+      ${b.note ? `<div class="qnote" style="margin:6px 0 0">${esc(b.note)}</div>` : ''}</div></div>`).join('')}</div>
+    <p class="qnote">De silhouetten zijn getekend uit lengte, breedte en tailvorm. Eigen foto's toevoegen kan: zet ze in docs/img/ en geef ze door, dan koppel ik ze.</p>`;
+  window.scrollTo(0, 0);
+}
 $('#back').addEventListener('click', () => { location.hash = ''; });
+$('#tab-f').addEventListener('click', e => { e.preventDefault(); location.hash = ''; route(); });
 window.addEventListener('hashchange', route);
 
 async function load(first){
@@ -235,7 +296,7 @@ async function load(first){
   } catch (e) {
     $('#view').innerHTML = '<div class="empty" style="margin-top:12px">Nog geen (nieuwe) data. De volgende run van de GitHub Action vult dit.</div>';
   }
-  if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 1100 - (Date.now() - t0)));
+  if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 4000 - (Date.now() - t0)));
 }
 load(true);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(false); });

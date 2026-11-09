@@ -1,0 +1,20 @@
+{
+  "_doc": "Dereks quiver. Maten zoals door Derek opgegeven; '–' = niet bekend. 'use' = wanneer deze plank (zelfde regels als het plankadvies in scripts/analyze.py).",
+  "boards": [
+    {"id": "ci", "name": "Happy Everyday", "brand": "Channel Islands", "length": "5'11", "len_in": 71, "width": null, "thick": null, "volume": null,
+     "tail": "swallow", "fins": "Thruster · FCS II", "origin": "Gekocht op Bali", "note": "Meest gebruikte plank; soms te weinig volume, vooral in NL.",
+     "use": "1,0–1,8 m, schoon · standaard voor performance en barrels", "range": [1.0, 1.8]},
+    {"id": "onfire", "name": "Skye Burton-model", "brand": "Onfire Surfboards", "length": "6'0", "len_in": 72, "width": "20½", "w_in": 20.5, "thick": "2⅝", "volume": "35 L",
+     "tail": "squash-wide", "fins": "5-fin box", "origin": "Gekocht op Bali (±2021)", "note": "Brede squash tail, veel volume.",
+     "use": "0,6–1,0 m of zwak/kort-periodiek (Noordzee)", "range": [0.6, 1.0]},
+    {"id": "morris", "name": "Waterskate (M155)", "brand": "Morris (custom)", "length": "6'4", "len_in": 76, "width": "20¼", "w_in": 20.25, "nose_in": 13.75, "tail_in": 13.75, "thick": "2½", "volume": null,
+     "tail": "pintail", "fins": "Thruster · FCS I", "origin": "Gekocht in Nieuw-Zeeland (±2002)", "note": "Maten 6'4 × 13¾ × 20¼ × 13¾ × 2½.",
+     "use": "1,5–2,2 m, steil/hol of wat chop", "range": [1.5, 2.2]},
+    {"id": "bitch", "name": "HP (custom)", "brand": "Bitch Boards", "length": "6'4", "len_in": 76, "width": "18½", "w_in": 18.5, "thick": "2½", "volume": null,
+     "tail": "squash", "fins": "Thruster · FCS I", "origin": "Gekocht in Zuid-Afrika (±2007)", "note": "Smal high-performance board.",
+     "use": "1,8–2,5 m schone groundswell (periode ≥ 13 s)", "range": [1.8, 2.5]},
+    {"id": "mayhem", "name": "Mayhem", "brand": "Lost", "length": "7'2", "len_in": 86, "width": "20½", "w_in": 20.5, "thick": "2⅝", "volume": null,
+     "tail": "roundpin", "fins": "FCS I", "origin": "Tweedehands, Zuid-Afrika (±2002)", "note": "Step-up voor grote dagen. Tailvorm niet opgegeven; getekend als roundpin.",
+     "use": "2,5 m+ en schoon", "range": [2.5, 4.0]}
+  ]
+}
