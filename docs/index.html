@@ -43,7 +43,11 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-sy
 /* kopbalk: vast bovenaan */
 .top{position:sticky;top:0;z-index:20;background:var(--deep);color:#fff;padding:calc(env(safe-area-inset-top) + 18px) 18px 20px;display:flex;align-items:center;gap:10px}
 .top h1{margin:0;font:800 32px/1.1 -apple-system,system-ui,sans-serif;letter-spacing:-.6px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top .upd{font-size:12px;opacity:.7}
+.top .tt{flex:1;min-width:0}
+.top .upd{display:block;font-size:12px;opacity:.75;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .upd.old{color:#f4c96b;opacity:1}
+.extra{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.extra .chip{background:transparent;border:1px solid var(--line)}
 .top button{appearance:none;border:0;background:none;color:#fff;font-size:36px;line-height:1;padding:0 4px 2px 0;cursor:pointer}
 main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;margin:0 auto}
 /* menubalk onderin */
@@ -135,8 +139,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 </div>
 <div class="top">
   <button id="back" hidden aria-label="Terug">‹</button>
-  <h1 id="title">Endless Waves</h1>
-  <span class="upd" id="upd"></span>
+  <div class="tt"><h1 id="title">Endless Waves</h1><span class="upd" id="upd"></span></div>
 </div>
 <main id="view"></main>
 <nav class="tabs">
@@ -182,6 +185,13 @@ function home(){
   }));
 }
 
+function extras(d){
+  const c = [];
+  if (d.sst != null) c.push(`<span class="chip">🌡 water ${N(d.sst)}°${d.air != null ? ` · lucht ${d.air}°` : ''}</span>`);
+  if (d.wetsuit) c.push(`<span class="chip">wetsuit: ${esc(d.wetsuit)}</span>`);
+  if (d.sun) c.push(`<span class="chip">☀ ${d.sun[0]}–${d.sun[1]}</span>`);
+  return c.length ? `<div class="extra">${c.join('')}</div>` : '';
+}
 function tideChips(d, s){
   const t = (d.tides || []).map(x => `${x.k === 'HW' ? 'hoog' : 'laag'} ≈${x.t}`);
   return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
@@ -196,8 +206,8 @@ function dayCard(s, d, i){
     ${p ? `<div class="when"><span class="k">beste tijd</span><span class="t">${esc(p.window)}</span></div>
       <div class="facts"><span class="chip">${N(p.hs)} m · ${p.tp} s · ${esc(p.dir)}</span><span class="chip">wind ${esc(p.wd)} ${p.ws} kn</span>
       ${p.tide ? `<span class="chip ${p.tide_ok ? '' : 'warn'}">${esc(p.tide)}${p.tide_ok ? '' : ' (niet ideaal)'}</span>` : ''}${tideChips(d, s)}</div>
-      ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}`
-    : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>`}
+      ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}${extras(d)}`
+    : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>${extras(d)}`}
     ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
     <div class="more">${models}</div></div>`;
 }
@@ -215,7 +225,7 @@ function spot(k, focus){
   const draw = sel => {
     const list = s.days.map((d, i) => [d, i]).filter(([d]) => showAll || (d.v ?? 0) >= 2);
     $('#view').innerHTML = `
-      <div class="sub">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}</div>
+      <div class="sub">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${s.days[0].sst != null ? ` · water ${N(s.days[0].sst)}° · ${esc(s.days[0].wetsuit)}` : ''}</div>
       <div class="week">${s.days.slice(0, 16).map((d, i) => { const dt = new Date(d.date + 'T12:00');
         return `<div class="d ${sel === i ? 'sel' : ''}" data-i="${i}">${WD[dt.getDay()]}<b>${dt.getDate()}</b><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}" style="width:22px;height:6px"></div></div>`; }).join('')}</div>
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
@@ -277,6 +287,7 @@ async function quiver(){
       <dl class="specs">${row('Maten', [b.length, b.width, b.thick].filter(Boolean).join(' × '))}${row('Volume', b.volume)}${row('Tail', ({swallow:'swallow', 'squash-wide':'brede squash', pintail:'pintail', round:'round tail', squash:'squash', roundpin:'roundpin (aanname)'})[b.tail])}${row('Vinnen', b.fins)}${row('Herkomst', b.origin)}</dl>
       <div class="use">Pak deze bij <b>${esc(b.use)}</b></div>
       ${b.note ? `<div class="qnote" style="margin:6px 0 0">${esc(b.note)}</div>` : ''}</div></div>`).join('')}</div>
+    ${QUIVER._note ? `<p class="qnote"><b>Ontbreekt:</b> ${esc(QUIVER._note.replace('Een echte step-up', 'een echte step-up'))}</p>` : ''}
     <p class="qnote">De silhouetten zijn getekend uit lengte, breedte en tailvorm. Eigen foto's toevoegen kan: zet ze in docs/img/ en geef ze door, dan koppel ik ze.</p>`;
   window.scrollTo(0, 0);
 }
@@ -292,12 +303,13 @@ async function load(first){
     DATA = d;
     const t = d.fetched_at ? new Date(d.fetched_at) : null;
     const old = t && (Date.now() - t) / 36e5 > 36;
-    $('#upd').textContent = t ? (old ? '⚠ ' : '') + t.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '';
+    $('#upd').textContent = t ? (old ? '⚠ Data verouderd · ' : 'Data bijgewerkt ') + t.toLocaleDateString('nl-NL', {weekday:'short', day:'numeric', month:'short'}) + ', ' + t.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '';
+    $('#upd').classList.toggle('old', !!old);
     route();
   } catch (e) {
     $('#view').innerHTML = '<div class="empty" style="margin-top:12px">Nog geen (nieuwe) data. De volgende run van de GitHub Action vult dit.</div>';
   }
-  if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 4000 - (Date.now() - t0)));
+  if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 3000 - (Date.now() - t0)));
 }
 load(true);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(false); });

@@ -120,8 +120,20 @@ Het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en win
 | Onfire 6'0 (35 L) | < 1,0 m (NL < 1,2 m) of Tp < 8 s |
 | Morris 6'4 Waterskate (round tail, breed) | 1,0–2,2 m zachte, vollere golven (Tp < 10 s); niet bij hol (correctie van Derek: de Morris is een round tail, geen pintail) |
 | Channel Islands Happy Everyday 5'11 | 1,0–1,8 m, schoon, langere periode |
-| Bitch Boards 6'4 HP | 1,8–2,5 m, steil/hol of krachtige groundswell |
-| Lost Mayhem 7'2 | ≥ 2,5 m |
+| Bitch Boards 6'4 HP | ≥ 1,8 m, steil/hol of krachtige groundswell, ook grote dagen (geen echte step-up in de quiver) |
+| Lost 7'2 (shaper Matt "Mayhem" Biolos) | < 0,8 m en korte periode: glijden op slappe dagen. Uitgezocht: met 20½ × 2⅝ (± 42 L) een mid-length, geen step-up en geen longboard |
+
+### Wetsuitadvies (watertemperatuur overdag, Open-Meteo `sea_surface_temperature`)
+| Water | Wetsuit |
+|---|---|
+| ≥ 24 °C | boardshort of lycra |
+| 21–24 °C | shorty of 2 mm |
+| 18–21 °C | 3/2 |
+| 15–18 °C | 4/3 |
+| 12–15 °C | 5/4 + booties |
+| < 12 °C | 5/4 of 6/5 + booties, handschoenen en cap |
+
+Bij luchttemperatuur onder 8 °C één stap dikker.
 
 ## 5. App (iPhone, web-app op GitHub Pages)
 
@@ -141,8 +153,10 @@ Keuzes van Derek, in volgorde:
 4. **Per surfspot**, gegroepeerd: Nederland, Frankrijk, Portugal, Taghazout.
 5. **Slecht is grijs.**
 6. **Kopbalk:** vast bovenaan, grote titel (32 px).
-7. **Opstartscherm** van 4 seconden (zon met bewegende golven).
-8. **Menubalk onderin:** Voorspelling en Quiver. De quiver toont per board de maten, tail, vinnen, herkomst en wanneer je hem pakt, met een getekend silhouet. Foto's van internet zijn bewust niet gebruikt (auteursrecht); eigen foto's kunnen in `docs/img/`.
+7. **Opstartscherm** (zon met bewegende golven), zie punt 8.
+8. **Opstartscherm 3 s** (was 4 s). Titelbalk toont "Data bijgewerkt <dag datum, tijd>" (moment van ophalen, niet van uploaden).
+9. **Spotdetail toont ook:** watertemperatuur, luchttemperatuur, wetsuitadvies, zonsopkomst/-ondergang.
+10. **Menubalk onderin:** Voorspelling en Quiver. De quiver toont per board de maten, tail, vinnen, herkomst en wanneer je hem pakt, met een getekend silhouet. Foto's van internet zijn bewust niet gebruikt (auteursrecht); eigen foto's kunnen in `docs/img/`.
 
 Eerder afgewezen of vervangen: een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

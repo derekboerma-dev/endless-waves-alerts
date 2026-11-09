@@ -76,7 +76,7 @@
    "fins": "Thruster · FCS I",
    "origin": "Gekocht in Zuid-Afrika (±2007)",
    "note": "Smal (18½) high-performance board: de keuze voor holle, krachtige golven.",
-   "use": "1,8–2,5 m steil/hol of krachtige groundswell",
+   "use": "1,8 m en groter, steil/hol of krachtige groundswell · ook de grote dagen (een echte step-up ontbreekt)",
    "range": [
     1.8,
     2.5
@@ -84,7 +84,7 @@
   },
   {
    "id": "mayhem",
-   "name": "Mayhem",
+   "name": "7'2 (shaper Matt 'Mayhem' Biolos)",
    "brand": "Lost",
    "length": "7'2",
    "len_in": 86,
@@ -95,12 +95,13 @@
    "tail": "roundpin",
    "fins": "FCS I",
    "origin": "Tweedehands, Zuid-Afrika (±2002)",
-   "note": "Step-up voor grote dagen. Tailvorm niet opgegeven; getekend als roundpin.",
-   "use": "2,5 m+ en schoon",
+   "note": "'Mayhem' is de bijnaam van Lost-shaper Matt Biolos, geen modelnaam. Met 20½ × 2⅝ (± 42 L geschat) is dit een mid-length/funboard, geen step-up en ook geen longboard (die zijn 9 voet of langer). Tailvorm en model niet bekend; getekend als roundpin.",
+   "use": "kleine, slappe dagen (< 0,8 m, korte periode) als je wilt glijden en makkelijk peddelen",
    "range": [
-    2.5,
-    4.0
+    0.4,
+    0.8
    ]
   }
- ]
+ ],
+ "_note": "Een echte step-up (bijv. 6'8–7'0 × 19–19½, ± 32–36 L voor 76 kg) ontbreekt in de quiver."
 }

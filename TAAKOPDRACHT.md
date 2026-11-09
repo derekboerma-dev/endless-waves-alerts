@@ -18,7 +18,8 @@ Je controleert de surfvoorspelling voor Derek. Antwoord in het Nederlands, kort.
      - 1,0–1,8 m schoon: Channel Islands Happy Everyday 5'11.
      - 1,0–2,2 m zachte, vollere golven (periode < 10 s): Morris 6'4 Waterskate (breed, round tail; nooit bij hol).
      - 1,8–2,5 m steil/hol of krachtige groundswell: Bitch Boards 6'4 HP.
-     - 2,5 m+ schoon: Lost Mayhem 7'2.
+     - Grote dagen (2,5 m+): ook Bitch Boards 6'4 HP (er is geen echte step-up).
+     - < 0,8 m, slap: Lost 7'2 (mid-length, ± 42 L).
    - Advies: "kans" = in de gaten houden; "waarschijnlijk" = vluchten en verblijf checken; "bevestigd" = boeken als het past. Raad aan om op Surfline (12 dagen) mee te kijken.
    - Een korte uitleg van de definitie (gelijk aan Endless Waves) en de bron: Open-Meteo, modellen ECMWF en GFS.
    - Een link naar de web-app (de GitHub Pages-URL van de repository).

@@ -25,7 +25,7 @@ MARINE_MODELS = ["ecmwf_wam025", "ncep_gfswave025"]
 WIND_MODELS = ["ecmwf_ifs025", "gfs_seamless"]
 MARINE_VARS = ["wave_height", "wave_direction", "wave_peak_period",
                "swell_wave_height", "swell_wave_direction", "swell_wave_peak_period"]
-WIND_VARS = ["wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"]
+WIND_VARS = ["wind_speed_10m", "wind_direction_10m", "wind_gusts_10m", "temperature_2m"]
 
 
 def get(url, params, tries=4):
@@ -74,6 +74,15 @@ def main():
                 if t.get("error") or not any(v is not None for v in vals):
                     out["problems"].append(f"{reg['id']} getij {s['name']}: {t.get('reason', 'geen data')}")
             r["tide"][s["name"]] = t
+            # Watertemperatuur apart opvragen: een onbekende variabele laat zo niet het getij mislukken.
+            w = get(MARINE_URL, {"latitude": s["lat"], "longitude": s["lon"], "hourly": "sea_surface_temperature",
+                                 "forecast_days": 16, "timezone": "auto", "cell_selection": "sea"})
+            if w.get("error") or not any(v is not None for v in (w.get("hourly") or {}).get("sea_surface_temperature") or []):
+                w = get(MARINE_URL, {"latitude": lat, "longitude": lon, "hourly": "sea_surface_temperature",
+                                     "forecast_days": 16, "timezone": "auto"})
+                if w.get("error"):
+                    out["problems"].append(f"{reg['id']} watertemperatuur {s['name']}: {w.get('reason')}")
+            r.setdefault("sst", {})[s["name"]] = w
             r["wind"][s["name"]] = {}
             for m in WIND_MODELS:
                 j = fetch_model(WIND_URL, s["lat"], s["lon"], WIND_VARS, m, {"wind_speed_unit": "kn", "daily": "sunrise,sunset"})

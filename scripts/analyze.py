@@ -62,20 +62,35 @@ def tier_for(lead):
 
 def board_for(hs, tp, home=False):
     """Plankadvies uit Dereks quiver op basis van golfhoogte (diep water) en periode.
-    Korte periode (< 10 s) = zachtere, vollere golven -> Morris (breed, round tail, veel volume).
-    Lange periode = steilere, holle golven -> Happy Everyday of Bitch Boards HP. Nooit de Morris voor hol."""
+    - Korte periode (< 10 s) = zachtere, vollere golven -> Morris (breed, round tail). Nooit de Morris voor hol.
+    - Lange periode = steiler/hol -> Happy Everyday of Bitch Boards HP.
+    - Lost 7'2 (Mayhem = shaper Matt Biolos) is met 20½ × 2⅝ (±42 L) een mid-length, geen step-up:
+      voor kleine, slappe dagen waar je glijden wilt, niet voor grote golven.
+    - Een echte step-up/gun ontbreekt; boven 2,5 m blijft de smalle Bitch Boards HP de beste keuze."""
     if hs is None:
         return None
     tp = tp or 0
+    if hs < 0.8 and tp < 9:
+        return "Lost 7'2 (mid-length)"
     if hs < (1.2 if home else 1.0) or tp < 8:
         return "Onfire 6'0 (35L)"
     if tp < 10 and hs < 2.2:
         return "Morris 6'4 Waterskate"
     if hs < 1.8:
         return "Channel Islands Happy Everyday 5'11"
-    if hs < 2.5:
-        return "Bitch Boards 6'4 HP"
-    return "Lost Mayhem 7'2"
+    return "Bitch Boards 6'4 HP"
+
+
+def wetsuit_for(sst, air=None):
+    """Wetsuitadvies op watertemperatuur (°C), met een stap dikker bij koude lucht (< 8 °C)."""
+    if sst is None:
+        return None
+    steps = [(24, "boardshort of lycra"), (21, "shorty of 2 mm"), (18, "3/2"), (15, "4/3"),
+             (12, "5/4 + booties"), (-99, "5/4 of 6/5 + booties, handschoenen en cap")]
+    i = next(k for k, (t, _) in enumerate(steps) if sst >= t)
+    if air is not None and air < 8 and i < len(steps) - 1:
+        i += 1
+    return steps[i][1]
 
 
 def daylight(wind):
@@ -447,6 +462,29 @@ def best_time(spot, region, marine, wind, tinfo, day):
             "board": board_for(mid["hs"], mid["tp"], home)}
 
 
+def _vals(j, var, day, light):
+    h = (j or {}).get("hourly") or {}
+    out = []
+    for t, v in zip(h.get("time") or [], h.get(var) or []):
+        if v is None or not t.startswith(day):
+            continue
+        hr = int(t[11:13])
+        if light and not (light[0] - 0.5 <= hr <= light[1]):
+            continue
+        out.append(v)
+    return out
+
+
+def day_mean(j, var, day, light):
+    v = _vals(j, var, day, light)
+    return round(sum(v) / len(v), 1) if v else None
+
+
+def day_max(j, var, day, light):
+    v = _vals(j, var, day, light)
+    return round(max(v)) if v else None
+
+
 def spot_cards(alerts, per_region, today, latest):
     """Per spot de 16 dagen voor de app (startscherm per surfspot, gegroepeerd)."""
     out = []
@@ -482,7 +520,17 @@ def spot_cards(alerts, per_region, today, latest):
                         plan["model"] = lab
                         break
                 hs = [e["hs"] for e in per.values()]
-                sdays.append({"date": ds, "lead": k, "v": v, "disagree": bool(sc) and max(sc) - min(sc) >= 2,
+                light = None
+                wjs = (data.get("wind") or {}).get(s["name"]) or {}
+                for _, wm, _l in PAIRS:
+                    light = light or daylight(wjs.get(wm)).get(ds)
+                sst = day_mean((data.get("sst") or {}).get(s["name"]), "sea_surface_temperature", ds, light)
+                air = None
+                for _, wm, _l in PAIRS:
+                    air = air if air is not None else day_max(wjs.get(wm), "temperature_2m", ds, light)
+                sdays.append({"sst": sst, "air": air, "wetsuit": wetsuit_for(sst, air),
+                              "sun": [f"{int(light[0]):02d}:{int(round(light[0] % 1 * 60)):02d}",
+                                      f"{int(light[1]):02d}:{int(round(light[1] % 1 * 60)):02d}"] if light else None,"date": ds, "lead": k, "v": v, "disagree": bool(sc) and max(sc) - min(sc) >= 2,
                               "unsure": bool(sc) and (max(sc) - min(sc) >= 2 or (v is not None and v >= 3 and not counts)),
                               "hs": round(sum(hs) / len(hs), 1) if hs else None, "counts": counts,
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
