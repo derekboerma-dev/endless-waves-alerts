@@ -162,7 +162,10 @@ Keuzes van Derek, in volgorde:
 12. **Open in Surfline:** directe link bij Anchor Point en Bud Bud (Surfline-ID bekend); bij de andere spots de Surfline-kaart op de coördinaten van de spot. Directe links kunnen er komen zodra de Surfline-ID's bekend zijn (via Chrome).
 13. **Sessie beoordelen:** na een sessie geef je dezelfde graad als de app (niets/matig/redelijk/goed/top), met de plank en een opmerking. De app opent een ingevuld GitHub-issue ("Sessie: <spot> <datum>"); jij tikt op "Submit new issue". De volgende run zet het in `docs/sessions.json`, samen met wat de app die dag voorspelde, en sluit het issue. Onder "Jouw sessies" op de spotpagina zie je ze terug. Doel: later drempels, getijvoorkeuren en plankadvies per spot bijstellen op echte ervaring in plaats van aannames. Let op: de repository is openbaar, dus ook deze issues.
 
-Eerder afgewezen of vervangen: een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
+14. **Startscherm = variant A "Tegels"** (gekozen uit vijf ontwerpen op het canvas "Endless Waves – startscherm varianten"): per spot een rij gekleurde tegels met de golfhoogte erin; open tegel = onzeker; omlijnd = hoort bij een melding.
+15. **Bovenaan de spotpagina = variant B "Spotkaart met golfgrafiek"**: per dag een staafje (hoogte = golfhoogte, kleur = conditie) met de beste dag rechtsboven; tik op een staafje om naar die dag te springen.
+
+Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
 ## 6. Installatiestatus (9 november 2026)
 

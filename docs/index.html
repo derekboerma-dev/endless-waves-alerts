@@ -67,40 +67,52 @@ main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;mar
 .use b{color:var(--sea)}
 .qnote{font-size:12px;color:var(--mut);margin:12px 14px 0}
 
-/* startscherm */
-.board{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* startscherm: tegels (variant A) */
+:root{--i0:#5f6a70;--i1:#3a2410;--i2:#3a2e0a;--i3:#fff;--i4:#fff}
+@media (prefers-color-scheme:dark){:root{--i0:#93a3ab;--i1:#2a1606;--i2:#2a2006;--i3:#06281a;--i4:#04263a}}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
-.grid{display:grid;grid-template-columns:112px repeat(16,41px);min-width:max-content}
-.grid > *{border-bottom:1px solid var(--line)}
-.hd{background:var(--card);font-size:11px;color:var(--mut);text-align:center;padding:8px 0 6px;line-height:1.2}
+.grid{display:grid;grid-template-columns:104px repeat(16,42px);gap:4px;min-width:max-content;padding:0 12px 4px 0;align-items:center}
+.hd{font-size:11px;color:var(--mut);text-align:center;padding:4px 0 2px;line-height:1.2}
 .hd b{display:block;color:var(--ink);font-size:13px}
 .hd.today b{color:var(--sea)}
-.wk{box-shadow:inset 1px 0 0 var(--line)}
-.grp{grid-column:1 / -1;background:var(--bg);padding:12px 0 5px}
-.grp span{position:sticky;left:12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
-.nm{position:sticky;left:0;z-index:1;background:var(--card);padding:0 4px 0 12px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:1px 0 0 var(--line);line-height:1.15}
+.sep7{margin-left:6px}
+.grp{grid-column:1 / -1;padding:12px 0 0}
+.grp span{position:sticky;left:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.nm{position:sticky;left:0;z-index:1;background:var(--bg);align-self:stretch;padding:0 6px 0 12px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;line-height:1.15}
 .nm .al{width:7px;height:7px;border-radius:50%;flex:0 0 7px}
 .nm span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.cell{height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
-.cell.run{background:var(--hl)}
-.cell .h{font-size:14px;font-weight:700;letter-spacing:-.2px}
-.cell.flat .h{color:var(--mut);font-weight:500}
+.tile{appearance:none;border:0;padding:0;font-family:inherit;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:-.2px;cursor:pointer;background:var(--c);color:var(--ic)}
+.tile.v0{font-weight:500}
+.tile.na{background:var(--gna);color:var(--mut);font-weight:400}
+.tile.unsure{background:transparent;box-shadow:inset 0 0 0 2px var(--c);color:var(--ink)}
+.tile.run{outline:2px solid var(--ink);outline-offset:1px}
+.g0{--c:var(--g0);--ic:var(--i0)}.g1{--c:var(--g1);--ic:var(--i1)}.g2{--c:var(--g2);--ic:var(--i2)}.g3{--c:var(--g3);--ic:var(--i3)}.g4{--c:var(--g4);--ic:var(--i4)}
 .bar{width:31px;height:7px;border-radius:4px;background:var(--gna)}
-.g0{--c:var(--g0)}.g1{--c:var(--g1)}.g2{--c:var(--g2)}.g3{--c:var(--g3)}.g4{--c:var(--g4)}
 .bar[class*=" g"]{background:var(--c)}
 .bar.unsure{background:transparent!important;box-shadow:inset 0 0 0 2px var(--c)}
 .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;font-size:11px;color:var(--mut);margin:12px 12px 0}
-.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;vertical-align:1px;margin-right:4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
 
 /* spotdetail */
 .sub{display:flex;align-items:center;gap:8px;margin:2px 14px 10px;font-size:13px;color:var(--mut)}
 .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;color:#fff}
 .bg-kans{background:var(--kans)}.bg-waarschijnlijk{background:var(--waarschijnlijk)}.bg-bevestigd{background:var(--bevestigd)}
-.week{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:0 12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px}
-.week .d{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--mut);cursor:pointer;padding:3px 0;border-radius:8px}
-.week .d b{font-size:12px;color:var(--ink)}
-.week .d.sel{background:var(--hl)}
+.wave{margin:0 12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px 10px}
+.wave .top2{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.wave .best{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--c,var(--mut));text-align:right}
+.wave .when2{font-size:12px;color:var(--mut);margin-top:2px;text-align:right}
+.wave .meta{font-size:12px;color:var(--mut)}
+.bars{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;align-items:end;height:62px;margin-top:10px}
+.bars button{appearance:none;border:0;background:none;padding:0;height:62px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;cursor:pointer;color:var(--mut);font:inherit}
+.bars button span{font-size:8.5px;letter-spacing:-.3px}
+.bars button i{display:block;width:100%;border-radius:3px;background:var(--c,var(--gna))}
+.bars button i.unsure{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.bars button.sel i{outline:2px solid var(--ink);outline-offset:1px}
+.dates{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;margin-top:4px;font-size:10px;color:var(--mut);text-align:center}
+.dates .t{color:var(--sea);font-weight:700}
+@media (prefers-color-scheme:light){.wave .g2 .best{color:#8a6a12}}
+.wave .g0 .best{color:var(--mut)}
 .days{display:flex;flex-direction:column;gap:8px;margin:12px 12px 0}
 .day{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c,var(--line));border-radius:14px;padding:12px 14px;cursor:pointer}
 .day.focus{outline:2px solid var(--ink)}
@@ -188,7 +200,7 @@ function home(){
   const days = DATA.spots[0].days;
   let html = '<div class="hd nm" style="cursor:default"></div>' + days.map((d, i) => {
     const dt = new Date(d.date + 'T12:00');
-    return `<div class="hd ${i ? '' : 'today'} ${i === 7 ? 'wk' : ''}">${WD[dt.getDay()]}<b>${dt.getDate()}</b></div>`; }).join('');
+    return `<div class="hd ${i ? '' : 'today'}">${WD[dt.getDay()]}<b>${dt.getDate()}</b></div>`; }).join('');
   const F = favs();
   const groups = (F.length ? ['★ Favorieten'] : []).concat(DATA.groups || [...new Set(DATA.spots.map(s => s.group))]);
   groups.forEach(grp => {
@@ -198,13 +210,12 @@ function home(){
     list.forEach(([s, k]) => {
       const rd = runDates(s);
       html += `<div class="nm" data-k="${k}">${s.run ? `<i class="al bg-${s.run.tier}"></i>` : ''}<span>${esc(s.name)}</span></div>` +
-        s.days.map((d, i) => `<div class="cell ${(d.v ?? 0) === 0 ? 'flat' : ''} ${rd.has(d.date) ? 'run' : ''} ${i === 7 ? 'wk' : ''}" data-k="${k}" data-i="${i}">
-          <div class="h">${N(d.hs)}</div><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}"></div></div>`).join('');
+        s.days.map((d, i) => `<button class="tile ${d.v == null ? 'na' : 'g' + d.v + ' v' + d.v} ${d.unsure ? 'unsure' : ''} ${rd.has(d.date) ? 'run' : ''}" data-k="${k}" data-i="${i}" aria-label="${esc(s.name)} ${esc(d.date)}">${N(d.hs)}</button>`).join('');
     });
   });
-  $('#view').innerHTML = `${problems()}<div class="board"><div class="scroll"><div class="grid">${html}</div></div></div>
+  $('#view').innerHTML = `${problems()}<div class="scroll"><div class="grid">${html}</div></div>
     <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${k ? t : 'niets'}</span>`).join('')}</div>
-    <div class="legend">golfhoogte in meter · open balk = onzeker · gemarkeerd = melding</div>`;
+    <div class="legend">golfhoogte in meter · open tegel = onzeker · omlijnd = melding</div>`;
   document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('click', () => {
     location.hash = 's' + el.dataset.k + (el.dataset.i ? '/' + el.dataset.i : '');
   }));
@@ -237,6 +248,22 @@ function dayCard(s, d, i){
     <div class="more">${models}</div></div>`;
 }
 
+/* spotkaart (variant B): staafje per dag, hoogte = golfhoogte, kleur = conditie */
+function waveCard(s, sel){
+  let bi = 0; s.days.forEach((d, i) => { if ((d.v ?? -1) > (s.days[bi].v ?? -1)) bi = i; });
+  const b = s.days[bi], bv = b.v ?? 0;
+  const bestLbl = bv ? `${GRADE[bv]} · ${N(b.hs)} m` : 'niets in zicht';
+  const when = bv ? `${new Date(b.date + 'T12:00').toLocaleDateString('nl-NL', {weekday:'short', day:'numeric'})}${b.plan ? ' · ' + b.plan.window : ''}` : '16 dagen';
+  const maxH = Math.max(2.5, ...s.days.map(d => Math.min(d.hs || 0, 4)));
+  const bars = s.days.map((d, i) => `<button class="${d.v == null ? '' : 'g' + d.v} ${sel === i ? 'sel' : ''}" data-i="${i}" aria-label="${esc(d.date)}">
+      <span>${d.hs != null ? N(d.hs) : ''}</span><i class="${d.unsure ? 'unsure' : ''}" style="height:${Math.max(4, Math.min(d.hs || 0, 4) / maxH * 40)}px"></i></button>`).join('');
+  const dates = s.days.map((d, i) => `<span class="${i ? '' : 't'}">${new Date(d.date + 'T12:00').getDate()}</span>`).join('');
+  return `<div class="wave">
+    <div class="top2"><div class="meta">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${s.days[0].sst != null ? `<br>water ${N(s.days[0].sst)}° · ${esc(s.days[0].wetsuit)}` : ''}</div>
+      <div class="g${bv}"><div class="best">${bestLbl}</div><div class="when2">${esc(when)}</div></div></div>
+    <div class="bars">${bars}</div><div class="dates">${dates}</div></div>`;
+}
+
 function spot(k, focus){
   const s = DATA.spots[k]; if (!s) return home();
   $('#back').hidden = false; $('#title').textContent = s.name;
@@ -256,9 +283,7 @@ function spot(k, focus){
   const draw = sel => {
     const list = s.days.map((d, i) => [d, i]).filter(([d]) => showAll || (d.v ?? 0) >= 2);
     $('#view').innerHTML = `
-      <div class="sub">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${s.days[0].sst != null ? ` · water ${N(s.days[0].sst)}° · ${esc(s.days[0].wetsuit)}` : ''}</div>
-      <div class="week">${s.days.slice(0, 16).map((d, i) => { const dt = new Date(d.date + 'T12:00');
-        return `<div class="d ${sel === i ? 'sel' : ''}" data-i="${i}">${WD[dt.getDay()]}<b>${dt.getDate()}</b><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}" style="width:22px;height:6px"></div></div>`; }).join('')}</div>
+      ${waveCard(s, sel)}
       <div class="actions"><a href="${slUrl}" target="_blank" rel="noopener">Open in Surfline ↗</a><button class="pri" id="rate">Sessie beoordelen</button></div>
       ${sessionsBlock(s)}
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
@@ -271,7 +296,7 @@ function spot(k, focus){
     $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
     $('#rate').addEventListener('click', () => rateSheet(s));
     document.querySelectorAll('.day').forEach(el => el.addEventListener('click', () => el.classList.toggle('open')));
-    document.querySelectorAll('.week .d').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('.bars button').forEach(el => el.addEventListener('click', () => {
       const i = +el.dataset.i; if (!document.getElementById('d' + i)) showAll = true; draw(i); focusDay(i);
     }));
   };
