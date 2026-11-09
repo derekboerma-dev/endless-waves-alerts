@@ -18,7 +18,6 @@ Web-app (GitHub Pages, map docs/)   startscherm: per regio per dag golfhoogte + 
                                     conditiegraad (slecht/matig/redelijk/goed/top);
                                     tik op een regio of dag voor details en plankadvies
 
-Geplande Claude-taak (optioneel)    uitgebreid HTML-verslag bij een melding
 ```
 
 ## Definitie van een goede dag
@@ -105,7 +104,6 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
      - Secret `NTFY_TOPIC` = dat onderwerp.
      - Variable `APP_URL` = de Pages-URL.
    - Een tik op de melding opent dan de web-app.
-5. **Optioneel: het uitgebreide Claude-verslag.** Vul je GitHub-naam in `TAAKOPDRACHT.md` in en laat Claude de geplande taak aanmaken.
 
 ## Getij en beste tijd
 

@@ -190,7 +190,8 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 - [x] GitHub Pages aan; app op het beginscherm.
 - [x] Workflow "Test pushmelding" toegevoegd.
 - [ ] **ntfy-push: on hold** op verzoek van Derek. Te doen: ntfy-app plus abonnement, secret `NTFY_TOPIC`, variabele `APP_URL`, daarna "Test pushmelding" draaien. Het voorgestelde onderwerp staat niet in deze openbare repository; zie het projectdocument.
-- [ ] Optioneel: geplande Claude-taak voor een uitgebreid HTML-verslag (`TAAKOPDRACHT.md`).
+
+- Geschrapt (9 nov, keuze Derek): de geplande Claude-taak met een HTML-verslag. De app en de ntfy-push dekken dit, en zo kost het dagelijkse systeem geen tokens. `TAAKOPDRACHT.md` is verwijderd.
 
 ## 7. Open punten
 
