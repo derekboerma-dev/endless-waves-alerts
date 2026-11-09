@@ -16,68 +16,85 @@
 :root{
   --bg:#f4f1ea; --card:#fffdf8; --ink:#14232b; --mut:#7a858a; --line:#e6e0d4; --hl:#efe9dc;
   --deep:#0d3b4c; --sea:#127c86;
-  /* conditiegraad: slecht · matig · redelijk · goed · top */
-  --g0:#d9534f; --g1:#f08a3e; --g2:#f2c14e; --g3:#2fa874; --g4:#1b8fc9; --gna:#d9d3c7;
-  --kans:#c58a1b; --waarschijnlijk:#127c86; --bevestigd:#1f9d6b; --vervallen:#c8553d;
+  /* conditiegraad: slecht (niets te surfen) · matig · redelijk · goed · top */
+  --g0:#c9c3b8; --g1:#f08a3e; --g2:#f2c14e; --g3:#2fa874; --g4:#1b8fc9; --gna:#e4dfd5;
+  --kans:#c58a1b; --waarschijnlijk:#127c86; --bevestigd:#1f9d6b; --warn:#c8553d;
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#0b1418; --card:#121f25; --ink:#e7eef0; --mut:#8293a0; --line:#22343c; --hl:#172a31;
   --sea:#3bb7c0;
-  --g0:#e2675f; --g1:#f39a55; --g2:#f4cc63; --g3:#3cc187; --g4:#3ba9e0; --gna:#2a3b42;
-  --kans:#e0a83a; --waarschijnlijk:#3bb7c0; --bevestigd:#2fbf83; --vervallen:#e2765f;
+  --g0:#3a4a51; --g1:#f39a55; --g2:#f4cc63; --g3:#3cc187; --g4:#3ba9e0; --gna:#1c2b31;
+  --kans:#e0a83a; --waarschijnlijk:#3bb7c0; --bevestigd:#2fbf83; --warn:#e2765f;
 }}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-text-size-adjust:100%}
-.top{background:var(--deep);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 14px;display:flex;align-items:center;gap:10px}
-.top h1{margin:0;font:700 20px/1.1 -apple-system,system-ui,sans-serif;letter-spacing:-.2px;flex:1}
-.top .upd{font-size:12px;opacity:.7}
-.top button{appearance:none;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:0 6px 0 0;cursor:pointer}
-main{padding:12px 0 calc(env(safe-area-inset-bottom) + 24px);max-width:760px;margin:0 auto}
-.pad{padding:0 12px}
 
-/* startscherm: Surfline-achtige lijst */
+/* opstartscherm */
+#splash{position:fixed;inset:0;z-index:50;background:linear-gradient(#127c86,#0d3b4c 70%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .45s ease}
+#splash.hide{opacity:0;pointer-events:none}
+#splash h2{margin:0;font:800 30px/1 -apple-system,system-ui,sans-serif;letter-spacing:-.5px}
+#splash p{margin:0;font-size:13px;opacity:.75}
+.waves{width:180px;height:60px;overflow:hidden;position:relative}
+.waves svg{position:absolute;left:0;width:360px;height:60px;animation:roll 1.6s linear infinite}
+.waves svg.b{animation-duration:2.4s;opacity:.5;top:10px}
+@keyframes roll{from{transform:translateX(0)}to{transform:translateX(-180px)}}
+.sun{width:34px;height:34px;border-radius:50%;background:#f4c96b;box-shadow:0 0 30px #f4c96b88}
+
+/* kopbalk: vast bovenaan */
+.top{position:sticky;top:0;z-index:20;background:var(--deep);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 14px;display:flex;align-items:center;gap:10px}
+.top h1{margin:0;font:800 26px/1.1 -apple-system,system-ui,sans-serif;letter-spacing:-.4px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .upd{font-size:12px;opacity:.7}
+.top button{appearance:none;border:0;background:none;color:#fff;font-size:30px;line-height:1;padding:0 4px 2px 0;cursor:pointer}
+main{padding:12px 0 calc(env(safe-area-inset-bottom) + 24px);max-width:760px;margin:0 auto}
+
+/* startscherm */
 .board{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
-.grid{display:grid;grid-template-columns:100px repeat(16,41px);min-width:max-content}
+.grid{display:grid;grid-template-columns:112px repeat(16,41px);min-width:max-content}
 .grid > *{border-bottom:1px solid var(--line)}
-.hd{position:sticky;top:0;background:var(--card);font-size:11px;color:var(--mut);text-align:center;padding:8px 0 6px;line-height:1.2}
+.hd{background:var(--card);font-size:11px;color:var(--mut);text-align:center;padding:8px 0 6px;line-height:1.2}
 .hd b{display:block;color:var(--ink);font-size:13px}
 .hd.today b{color:var(--sea)}
-.hd.wk{box-shadow:inset 1px 0 0 var(--line)}
-.nm{position:sticky;left:0;z-index:1;background:var(--card);padding:0 4px 0 10px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:1px 0 0 var(--line)}
+.wk{box-shadow:inset 1px 0 0 var(--line)}
+.grp{grid-column:1 / -1;background:var(--bg);padding:12px 0 5px}
+.grp span{position:sticky;left:12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.nm{position:sticky;left:0;z-index:1;background:var(--card);padding:0 4px 0 12px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:1px 0 0 var(--line);line-height:1.15}
 .nm .al{width:7px;height:7px;border-radius:50%;flex:0 0 7px}
-.nm span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cell{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0 3px}
-.cell.wk{box-shadow:inset 1px 0 0 var(--line)}
+.nm span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cell{height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
 .cell.run{background:var(--hl)}
 .cell .h{font-size:14px;font-weight:700;letter-spacing:-.2px}
-.cell .h small{font-size:10px;font-weight:500;color:var(--mut)}
+.cell.flat .h{color:var(--mut);font-weight:500}
 .bar{width:31px;height:7px;border-radius:4px;background:var(--gna)}
-.bar.g0{--c:var(--g0)}.bar.g1{--c:var(--g1)}.bar.g2{--c:var(--g2)}.bar.g3{--c:var(--g3)}.bar.g4{--c:var(--g4)}
+.g0{--c:var(--g0)}.g1{--c:var(--g1)}.g2{--c:var(--g2)}.g3{--c:var(--g3)}.g4{--c:var(--g4)}
 .bar[class*=" g"]{background:var(--c)}
 .bar.unsure{background:transparent!important;box-shadow:inset 0 0 0 2px var(--c)}
-.cell.na .h{color:var(--mut);font-weight:400}
 .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;font-size:11px;color:var(--mut);margin:12px 12px 0}
 .legend i{display:inline-block;width:14px;height:6px;border-radius:3px;vertical-align:1px;margin-right:4px}
 
-/* detail */
-.hero{display:flex;align-items:center;gap:10px;margin:4px 14px 12px}
-.hero .flag{font-size:24px}
+/* spotdetail */
+.sub{display:flex;align-items:center;gap:8px;margin:2px 14px 10px;font-size:13px;color:var(--mut)}
 .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;color:#fff}
-.bg-kans{background:var(--kans)}.bg-waarschijnlijk{background:var(--waarschijnlijk)}.bg-bevestigd{background:var(--bevestigd)}.bg-vervallen{background:var(--vervallen)}
+.bg-kans{background:var(--kans)}.bg-waarschijnlijk{background:var(--waarschijnlijk)}.bg-bevestigd{background:var(--bevestigd)}
+.week{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:0 12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px}
+.week .d{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--mut);cursor:pointer;padding:3px 0;border-radius:8px}
+.week .d b{font-size:12px;color:var(--ink)}
+.week .d.sel{background:var(--hl)}
 .days{display:flex;flex-direction:column;gap:8px;margin:12px 12px 0}
-.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;border-left-width:6px}
+.day{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c,var(--line));border-radius:14px;padding:12px 14px;cursor:pointer}
 .day.focus{outline:2px solid var(--ink)}
-.day.g0{border-left-color:var(--g0)}.day.g1{border-left-color:var(--g1)}.day.g2{border-left-color:var(--g2)}.day.g3{border-left-color:var(--g3)}.day.g4{border-left-color:var(--g4)}
-.day .l1{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.day .l1 b{font-size:16px}
-.lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.lbl.g0{color:var(--g0)}.lbl.g1{color:var(--g1)}.lbl.g2{color:var(--g2)}.lbl.g3{color:var(--g3)}.lbl.g4{color:var(--g4)}
-.day .big{font-size:22px;font-weight:700;margin-top:4px;letter-spacing:-.3px}
-.day .big span{font-size:14px;font-weight:500;color:var(--mut)}
-.day .l3{font-size:13px;color:var(--mut);margin-top:2px}
-.day .brd{font-size:13px;margin-top:6px}.day .brd b{color:var(--sea)}
+.l1{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.l1 b{font-size:16px}
+.lbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--c)}
+.when{margin-top:8px;display:flex;align-items:baseline;gap:8px}
+.when .t{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.when .k{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-size:13px;background:var(--hl);border-radius:999px;padding:3px 10px}
+.chip.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+.brd{font-size:13px;margin-top:8px}.brd b{color:var(--sea)}
+.nogo{font-size:13px;color:var(--mut);margin-top:6px}
 .more{display:none;margin-top:10px;border-top:1px solid var(--line);padding-top:8px;font-size:12px}
 .day.open .more{display:block}
 .more .m{margin-top:6px}.more .m b{display:block;margin-bottom:2px}
@@ -85,12 +102,21 @@ main{padding:12px 0 calc(env(safe-area-inset-bottom) + 24px);max-width:760px;mar
 .empty{color:var(--mut);text-align:center;padding:22px;margin:0 12px;background:var(--card);border:1px solid var(--line);border-radius:14px}
 details{margin:14px 12px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:13px;color:var(--mut)}
 summary{cursor:pointer;color:var(--ink);font-weight:600}
-.toggle{display:flex;justify-content:flex-end;margin:0 12px 8px}
+.toggle{display:flex;justify-content:flex-end;margin:10px 12px 0}
 .toggle button{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;font-size:12px;padding:5px 12px;cursor:pointer}
-.err{margin:0 12px 10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--vervallen);color:var(--vervallen);font-size:13px}
+.err{margin:0 12px 10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--warn);color:var(--warn);font-size:13px}
 </style>
 </head>
 <body>
+<div id="splash">
+  <div class="sun"></div>
+  <div class="waves">
+    <svg viewBox="0 0 360 60" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M0 30c22 0 22-18 45-18s23 18 45 18 22-18 45-18 23 18 45 18 22-18 45-18 23 18 45 18 22-18 45-18 23 18 45 18"/></svg>
+    <svg class="b" viewBox="0 0 360 60" fill="none" stroke="#d8efe9" stroke-width="4" stroke-linecap="round"><path d="M0 36c22 0 22-12 45-12s23 12 45 12 22-12 45-12 23 12 45 12 22-12 45-12 23 12 45 12 22-12 45-12 23 12 45 12"/></svg>
+  </div>
+  <h2>Endless Waves</h2>
+  <p id="splashmsg">Voorspelling laden…</p>
+</div>
 <div class="top">
   <button id="back" hidden aria-label="Terug">‹</button>
   <h1 id="title">Endless Waves</h1>
@@ -101,104 +127,118 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const FLAG = {NL:'🇳🇱', FR:'🇫🇷', PT:'🇵🇹', MA:'🇲🇦'};
-const SHORT = {wijkaanzee:'Wijk a. Zee', vendee:'Bud Bud', crozon:"Lostmarc'h", capferret:'Cap Ferret', biarritz:'Biarritz', peniche:'Peniche', taghazout:'Taghazout'};
 const GRADE = ['slecht', 'matig', 'redelijk', 'goed', 'top'];
 const WD = ['zo','ma','di','wo','do','vr','za'];
 const N = x => x == null ? '–' : Number(x).toFixed(1).replace('.', ',');
 const LONG = d => new Date(d + 'T12:00').toLocaleDateString('nl-NL', {weekday:'long', day:'numeric', month:'short'});
 let DATA = null;
 
-/* conditiegraad per dag (uit analyze.py): 0 slecht · 1 matig · 2 redelijk · 3 goed · 4 top.
-   Onzeker (vaag) als de modellen 2+ graden verschillen, of als de dag op deze termijn niet meetelt. */
-const grade = d => d.score ? d.score.v : null;
-const unsure = d => !!d.score && (d.score.disagree || (d.score.v >= 3 && !d.counts));
-const runDays = g => new Set(g.runs.filter(r => r.qualifies).flatMap(r => r.dates));
-const activeRun = g => g.runs.filter(r => r.qualifies).sort((a, b) => a.lead_days - b.lead_days)[0];
+const g = d => d.v == null ? 'na' : 'g' + d.v;
+const runDates = s => new Set(s.run ? s.run.dates : []);
 
 function home(){
   $('#back').hidden = true; $('#title').textContent = 'Endless Waves';
-  const d0 = DATA.regions[0].days;
-  const head = '<div class="hd nm" style="cursor:default"></div>' + d0.map((d, i) => {
+  const days = DATA.spots[0].days;
+  let html = '<div class="hd nm" style="cursor:default"></div>' + days.map((d, i) => {
     const dt = new Date(d.date + 'T12:00');
     return `<div class="hd ${i ? '' : 'today'} ${i === 7 ? 'wk' : ''}">${WD[dt.getDay()]}<b>${dt.getDate()}</b></div>`; }).join('');
-  const rows = DATA.regions.map(g => {
-    const a = activeRun(g), rd = runDays(g);
-    return `<div class="nm" data-id="${g.id}">${a ? `<i class="al bg-${a.tier}"></i>` : ''}<span>${esc(SHORT[g.id] || g.name)}</span></div>` +
-      g.days.map((d, i) => { const gr = grade(d);
-        return `<div class="cell ${gr == null ? 'na' : ''} ${rd.has(d.date) ? 'run' : ''} ${i === 7 ? 'wk' : ''}" data-id="${g.id}" data-i="${i}">
-          <div class="h">${d.hs != null ? N(d.hs) : '–'}</div>
-          <div class="bar ${gr == null ? '' : 'g' + gr} ${unsure(d) ? 'unsure' : ''}"></div></div>`; }).join('');
-  }).join('');
-  $('#view').innerHTML = `${problems()}
-    <div class="board"><div class="scroll"><div class="grid">${head}${rows}</div></div></div>
-    <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${t}</span>`).join('')}</div>
+  const groups = DATA.groups || [...new Set(DATA.spots.map(s => s.group))];
+  groups.forEach(grp => {
+    const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => s.group === grp);
+    if (!list.length) return;
+    html += `<div class="grp"><span>${FLAG[list[0][0].country] || ''} ${esc(grp)}</span></div>`;
+    list.forEach(([s, k]) => {
+      const rd = runDates(s);
+      html += `<div class="nm" data-k="${k}">${s.run ? `<i class="al bg-${s.run.tier}"></i>` : ''}<span>${esc(s.name)}</span></div>` +
+        s.days.map((d, i) => `<div class="cell ${(d.v ?? 0) === 0 ? 'flat' : ''} ${rd.has(d.date) ? 'run' : ''} ${i === 7 ? 'wk' : ''}" data-k="${k}" data-i="${i}">
+          <div class="h">${N(d.hs)}</div><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}"></div></div>`).join('');
+    });
+  });
+  $('#view').innerHTML = `${problems()}<div class="board"><div class="scroll"><div class="grid">${html}</div></div></div>
+    <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${k ? t : 'niets'}</span>`).join('')}</div>
     <div class="legend">golfhoogte in meter · open balk = onzeker · gemarkeerd = melding</div>`;
-  document.querySelectorAll('.nm[data-id], .cell[data-id]').forEach(el => el.addEventListener('click', () => {
-    location.hash = el.dataset.id + (el.dataset.i ? '/' + el.dataset.i : '');
+  document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('click', () => {
+    location.hash = 's' + el.dataset.k + (el.dataset.i ? '/' + el.dataset.i : '');
   }));
 }
 
-function dayCard(d, i){
-  const gr = grade(d), b = d.best;
-  const models = Object.entries(d.models).map(([lab, m]) => `<div class="m"><b>${lab} · ${GRADE[m.score ?? 0]}${m.strict ? ' ★' : ''}</b>` +
-    Object.entries(m.detail).map(([n, s]) => `<div><span class="${s.good ? 'ok' : 'no'}">${s.good ? '✓' : '–'}</span> ${esc(n)} · ${N(s.hs)} m ${s.tp} s ${esc(s.dir)} · wind ${esc(s.wd)} ${s.ws}${s.gu != null ? '/' + s.gu : ''} kn${s.window ? ' · ' + esc(s.window) : ''}</div>`).join('') + '</div>').join('');
-  return `<div class="day g${gr ?? 0}" id="d${i}">
-    <div class="l1"><b>${LONG(d.date)}</b><span class="lbl g${gr ?? 0}">${gr == null ? 'geen data' : GRADE[gr]}${unsure(d) ? ' ?' : ''}</span></div>
-    ${b ? `<div class="big">${N(b.hs)} m <span>${b.tp} s · ${esc(b.dir)}</span></div>
-    <div class="l3">${esc(b.spot)} · wind ${esc(b.wd)} ${b.ws} kn${b.window ? ' · ' + esc(b.window) : ''}${d.score?.disagree ? ' · modellen oneens' : ''}</div>` : ''}
-    ${d.board ? `<div class="brd">Plank: <b>${esc(d.board)}</b></div>` : ''}
+function tideChips(d, s){
+  const t = (d.tides || []).filter(x => true).map(x => `${x.k === 'HW' ? 'hoog' : 'laag'} ${x.t}`);
+  return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
+}
+
+function dayCard(s, d, i){
+  const p = d.plan, gr = d.v ?? 0;
+  const models = Object.entries(d.models).map(([lab, e]) => `<div class="m"><b>${lab} · ${GRADE[e.score ?? 0]}${e.strict ? ' ★' : ''}</b>
+      ${N(e.hs)} m · ${e.tp} s · ${esc(e.dir)} · wind ${esc(e.wd)} ${e.ws}${e.gu != null ? '/' + e.gu : ''} kn${e.window ? ' · ochtend ' + esc(e.window) : ''}</div>`).join('');
+  return `<div class="day g${gr}" id="d${i}">
+    <div class="l1"><b>${LONG(d.date)}</b><span class="lbl">${gr ? GRADE[gr] : 'niets te surfen'}${d.unsure ? ' ?' : ''}</span></div>
+    ${p ? `<div class="when"><span class="k">beste tijd</span><span class="t">${esc(p.window)}</span></div>
+      <div class="facts"><span class="chip">${N(p.hs)} m · ${p.tp} s · ${esc(p.dir)}</span><span class="chip">wind ${esc(p.wd)} ${p.ws} kn</span>
+      ${p.tide ? `<span class="chip ${p.tide_ok ? '' : 'warn'}">${esc(p.tide)}${p.tide_ok ? '' : ' (niet ideaal)'}</span>` : ''}${tideChips(d, s)}</div>
+      ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}`
+    : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>`}
+    ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
     <div class="more">${models}</div></div>`;
 }
 
-function region(id, focus){
-  const g = DATA.regions.find(x => x.id === id); if (!g) return home();
-  $('#back').hidden = false; $('#title').textContent = SHORT[g.id] || g.name;
-  const a = activeRun(g);
-  let showAll = focus != null && (grade(g.days[focus]) ?? 0) < 2;
-  const a2 = g.alert, req = [a2.mode === 'home' ? `${a2.run_min_days} goede sessie, max ${a2.max_lead_days} d vooruit` : `≥ ${a2.run_min_days} goede dagen op rij`];
+function spot(k, focus){
+  const s = DATA.spots[k]; if (!s) return home();
+  $('#back').hidden = false; $('#title').textContent = s.name;
+  let showAll = focus != null && (s.days[focus].v ?? 0) < 2;
+  const reg = DATA.regions.find(r => r.id === s.region), a2 = reg.alert;
+  const req = [a2.mode === 'home' ? `${a2.run_min_days} goede sessie, max ${a2.max_lead_days} d vooruit` : `≥ ${a2.run_min_days} goede dagen op rij`];
   if (a2.min_agree_days) req.push(`modellen eens ≥ ${a2.min_agree_days} d`);
   if (a2.min_strict_days) req.push(`streng ≥ ${a2.min_strict_days} d`);
   if (a2.min_powerful_days) req.push(`krachtig ≥ ${a2.min_powerful_days} d`);
   if (a2.min_strict_or_powerful_days) req.push(`streng of krachtig ≥ ${a2.min_strict_or_powerful_days} d`);
-  const draw = () => {
-    const list = g.days.map((d, i) => [d, i]).filter(([d]) => showAll || (grade(d) ?? 0) >= 2);
+  const draw = sel => {
+    const list = s.days.map((d, i) => [d, i]).filter(([d]) => showAll || (d.v ?? 0) >= 2);
     $('#view').innerHTML = `
-      <div class="hero"><span class="flag">${FLAG[g.country] || ''}</span>
-        ${a ? `<span class="badge bg-${a.tier}">${a.tier}</span>` : '<span style="color:var(--mut);font-size:13px">geen melding</span>'}</div>
-      <div class="toggle"><button id="tg">${showAll ? 'Alleen redelijk en beter' : 'Alle 16 dagen'}</button></div>
-      <div class="days">${list.length ? list.map(([d, i]) => dayCard(d, i)).join('') : '<div class="empty">Geen redelijke of betere dagen in de komende 16 dagen.</div>'}</div>
-      <details><summary>Spots en meldregels</summary>
-        <p>${g.spots.map(s => `${esc(s.name)} <span style="opacity:.7">(${esc(s.src)})</span>`).join('<br>')}</p>
-        <p>Melden bij: ${req.join(' · ')}</p>
-        <p>Graad: goed = de dag voldoet aan de Endless Waves-definitie; top = ook krachtig of streng goed; redelijk = één voorwaarde net niet; matig/slecht = meerdere niet. Zekerheid melding: bevestigd ≤ 3 dagen · waarschijnlijk 4–7 · kans 8+. Check Surfline voordat je boekt.</p>
+      <div class="sub">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}</div>
+      <div class="week">${s.days.slice(0, 16).map((d, i) => { const dt = new Date(d.date + 'T12:00');
+        return `<div class="d ${sel === i ? 'sel' : ''}" data-i="${i}">${WD[dt.getDay()]}<b>${dt.getDate()}</b><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}" style="width:22px;height:6px"></div></div>`; }).join('')}</div>
+      <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
+      <div class="days">${list.length ? list.map(([d, i]) => dayCard(s, d, i)).join('') : '<div class="empty">Geen aanraders in de komende 16 dagen.</div>'}</div>
+      <details><summary>Over deze spot</summary>
+        <p>Werkt bij Hs ${N(s.hs_range[0])}–${N(s.hs_range[1])} m · getij: ${esc(s.tide_pref)} · bron criteria: ${esc(s.src)}</p>
+        <p>Melding (regio ${esc(s.region_name)}): ${req.join(' · ')}</p>
+        <p>"Beste tijd" = het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen, met voorkeur voor het juiste getij, zwakke offshore wind en lange periode. Getij en golven zijn modelwaarden; check Surfline voordat je gaat.</p>
       </details>`;
-    $('#tg').addEventListener('click', () => { showAll = !showAll; draw(); });
+    $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
     document.querySelectorAll('.day').forEach(el => el.addEventListener('click', () => el.classList.toggle('open')));
+    document.querySelectorAll('.week .d').forEach(el => el.addEventListener('click', () => {
+      const i = +el.dataset.i; if (!document.getElementById('d' + i)) showAll = true; draw(i); focusDay(i);
+    }));
   };
-  draw();
-  const t = focus != null && document.getElementById('d' + focus);
-  if (t){ t.classList.add('focus', 'open'); setTimeout(() => t.scrollIntoView({block:'center'}), 30); } else window.scrollTo(0, 0);
+  const focusDay = i => { const t = document.getElementById('d' + i); if (t){ t.classList.add('focus', 'open'); setTimeout(() => t.scrollIntoView({block:'center', behavior:'smooth'}), 30); } };
+  draw(focus);
+  if (focus != null) focusDay(focus); else window.scrollTo(0, 0);
 }
 
 const problems = () => DATA.problems?.length ? `<div class="err">Data onvolledig: ${DATA.problems.length} probleem/problemen bij ophalen.</div>` : '';
-const route = () => { if (!DATA) return; const [id, i] = location.hash.slice(1).split('/'); id ? region(id, i != null ? +i : null) : home(); };
+const route = () => { if (!DATA) return; const h = location.hash.slice(1);
+  if (h.startsWith('s')){ const [k, i] = h.slice(1).split('/'); spot(+k, i != null ? +i : null); } else home(); };
 $('#back').addEventListener('click', () => { location.hash = ''; });
 window.addEventListener('hashchange', route);
 
-async function load(){
+async function load(first){
+  const t0 = Date.now();
   try {
     const d = await (await fetch('data.json?t=' + Date.now(), {cache:'no-store'})).json();
+    if (!d.spots || !d.spots.length) throw new Error('oude data');
     DATA = d;
     const t = d.fetched_at ? new Date(d.fetched_at) : null;
     const old = t && (Date.now() - t) / 36e5 > 36;
     $('#upd').textContent = t ? (old ? '⚠ ' : '') + t.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '';
     route();
   } catch (e) {
-    $('#view').innerHTML = '<div class="empty">Nog geen data. Is de GitHub Action gelopen?</div>';
+    $('#view').innerHTML = '<div class="empty" style="margin-top:12px">Nog geen (nieuwe) data. De volgende run van de GitHub Action vult dit.</div>';
   }
+  if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 1100 - (Date.now() - t0)));
 }
-load();
-document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+load(true);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(false); });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>

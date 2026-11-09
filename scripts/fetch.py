@@ -60,7 +60,20 @@ def main():
             r["marine"][m] = j
             if j.get("error"):
                 out["problems"].append(f"{reg['id']} marine {m}: {j.get('reason')}")
+        r["tide"] = {}
         for s in reg["spots"]:
+            # Getij (zeespiegel incl. getij, model van Météo-France via Open-Meteo). Valt het spotpunt op land,
+            # dan het golfpunt van de regio als reserve.
+            t = get(MARINE_URL, {"latitude": s["lat"], "longitude": s["lon"], "hourly": "sea_level_height_msl",
+                                 "forecast_days": 16, "timezone": "auto", "cell_selection": "sea"})
+            vals = (t.get("hourly") or {}).get("sea_level_height_msl") or []
+            if t.get("error") or not any(v is not None for v in vals):
+                t = get(MARINE_URL, {"latitude": lat, "longitude": lon, "hourly": "sea_level_height_msl",
+                                     "forecast_days": 16, "timezone": "auto"})
+                vals = (t.get("hourly") or {}).get("sea_level_height_msl") or []
+                if t.get("error") or not any(v is not None for v in vals):
+                    out["problems"].append(f"{reg['id']} getij {s['name']}: {t.get('reason', 'geen data')}")
+            r["tide"][s["name"]] = t
             r["wind"][s["name"]] = {}
             for m in WIND_MODELS:
                 j = fetch_model(WIND_URL, s["lat"], s["lon"], WIND_VARS, m, {"wind_speed_unit": "kn", "daily": "sunrise,sunset"})

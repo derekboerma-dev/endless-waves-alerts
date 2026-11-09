@@ -165,6 +165,7 @@ def analyse_region(reg, data):
                                                                   "spots": [], "detail": {}})
                     if strict:
                         d["strict"] = d["strict"] or e["good"]
+                        d.setdefault("strict_spots", {})[s["name"]] = e["good"]
                         continue
                     d["detail"][s["name"]] = e
                     if e["good"]:
@@ -301,7 +302,7 @@ def main():
     (ROOT / "out" / "ntfy.txt").write_text(ntfy_text(alerts))
     (ROOT / "out" / "report.html").write_text(render(alerts, per_region, today))
     (ROOT / "docs").mkdir(exist_ok=True)
-    (ROOT / "docs" / "data.json").write_text(json.dumps(app_data(alerts, per_region, today), ensure_ascii=False,
+    (ROOT / "docs" / "data.json").write_text(json.dumps(app_data(alerts, per_region, today, latest), ensure_ascii=False,
                                                         separators=(",", ":")))
     print(f"reeksen: {len(all_runs)} (boven drempel {len(alert_runs)}), nieuw: {len(new)}, "
           f"zekerder: {len(upgraded)}, vervallen: {len(cancelled)}")
@@ -345,7 +346,150 @@ def combined_hs(models):
     return round(sum(hs) / len(hs), 1) if hs else None
 
 
-def app_data(alerts, per_region, today):
+TIDE_PREF = {"low": (0.0, 0.35), "low-mid": (0.0, 0.6), "mid": (0.25, 0.75), "mid-high": (0.4, 1.0),
+             "high": (0.65, 1.0), "all": (0.0, 1.0)}
+TIDE_NL = {"low": "laag", "low-mid": "laag tot half", "mid": "half", "mid-high": "half tot hoog", "high": "hoog", "all": "alle getijden"}
+
+
+def tide_series(tj):
+    """Uurwaarden zeespiegel -> {tijd: (fractie 0=laag..1=hoog, opkomend)} en per dag de hoog- en laagwatertijden."""
+    h = (tj or {}).get("hourly") or {}
+    t, v = h.get("time") or [], h.get("sea_level_height_msl") or []
+    pts = [(a, b) for a, b in zip(t, v) if b is not None]
+    if len(pts) < 30:
+        return {}, {}
+    ext = []  # (index, 'HW'|'LW')
+    for i in range(1, len(pts) - 1):
+        a, b, c = pts[i - 1][1], pts[i][1], pts[i + 1][1]
+        if b >= a and b > c:
+            ext.append((i, "HW"))
+        elif b <= a and b < c:
+            ext.append((i, "LW"))
+    info, days = {}, {}
+    for k in range(len(ext) - 1):
+        i0, i1 = ext[k][0], ext[k + 1][0]
+        lo, hi = sorted((pts[i0][1], pts[i1][1]))
+        for i in range(i0, i1 + 1):
+            frac = 0.5 if hi - lo < 0.05 else (pts[i][1] - lo) / (hi - lo)
+            info[pts[i][0]] = (round(frac, 2), ext[k + 1][1] == "HW")
+    for i, kind in ext:
+        days.setdefault(pts[i][0][:10], []).append({"t": pts[i][0][11:16], "k": kind, "h": round(pts[i][1], 2)})
+    return info, days
+
+
+def tide_label(frac, rising):
+    stand = "laag" if frac < 0.25 else ("hoog" if frac > 0.75 else "half")
+    return f"{'opkomend' if rising else 'afgaand'}, {stand} tij" if stand == "half" else f"{stand} water"
+
+
+def best_time(spot, region, marine, wind, tinfo, day):
+    """Beste moment van de dag: alle daglichturen, getoetst op swell, periode, hoogte, wind en getij."""
+    if not marine or marine.get("error") or not wind or wind.get("error"):
+        return None
+    home = region["alert"].get("mode") == "home"
+    mh, wh = marine["hourly"], wind["hourly"]
+    widx = {t: i for i, t in enumerate(wh["time"])}
+    gusts = wh.get("wind_gusts_10m") or [None] * len(wh["time"])
+    light = daylight(wind).get(day)
+    lo_t, hi_t = TIDE_PREF.get(spot.get("tide", "all"), (0, 1))
+    hs_lo, hs_hi = spot["hs"]
+    tp_min = spot.get("tp_min", D["tp_min"])
+    glassy = spot.get("glassy_kn", D["glassy_kn"])
+    hours = []
+    for i, t in enumerate(mh["time"]):
+        if not t.startswith(day):
+            continue
+        hr = int(t[11:13])
+        if light and (hr + 0.5 < light[0] or hr > light[1] - 0.5):
+            continue
+        j = widx.get(t)
+        hs, wdir, tp = mh["wave_height"][i], mh["wave_direction"][i], mh["wave_peak_period"][i]
+        if None in (hs, wdir, tp) or j is None or wh["wind_speed_10m"][j] is None:
+            continue
+        ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
+        offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
+        ok = (in_arcs(wdir, spot["swell"]) and tp >= tp_min and hs_lo <= hs <= hs_hi
+              and (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99)))
+        ti = tinfo.get(t)
+        tide_ok = ti is None or lo_t <= ti[0] <= hi_t
+        if ti and spot.get("tide_rising") and not ti[1]:
+            tide_ok = tide_ok and ti[0] > 0.5  # Bud Bud: liefst opkomend; afgaand alleen nog boven half tij
+        val = (10 if ok else 0) + (4 if tide_ok else 0) + (2 if offshore else 0) + min(tp, 16) / 4 - ws / 8
+        hours.append({"h": hr, "ok": ok, "tide_ok": tide_ok, "val": val, "hs": hs, "tp": tp, "dir": wdir,
+                      "ws": ws, "wd": wd, "tide": ti})
+    good = [x for x in hours if x["ok"]]
+    if not good:
+        return None
+    # beste aaneengesloten blok van 1-3 goede uren
+    best, cur = None, []
+    for x in hours + [None]:
+        if x and x["ok"] and (not cur or x["h"] == cur[-1]["h"] + 1):
+            cur.append(x)
+            continue
+        for a in range(len(cur)):
+            for b in range(a, min(a + 3, len(cur))):
+                blk = cur[a:b + 1]
+                sc = sum(y["val"] for y in blk) / len(blk) + 0.8 * len(blk)
+                if best is None or sc > best[0]:
+                    best = (sc, blk)
+        cur = [x] if x and x["ok"] else []
+    blk = best[1]
+    mid = blk[len(blk) // 2]
+    return {"window": f"{blk[0]['h']:02d}–{blk[-1]['h'] + 1:02d} u", "hs": round(mid["hs"], 1), "tp": round(mid["tp"]),
+            "dir": compass(mid["dir"]), "ws": round(mid["ws"]), "wd": compass(mid["wd"]),
+            "tide_ok": all(y["tide_ok"] for y in blk),
+            "tide": tide_label(*mid["tide"]) if mid["tide"] else None,
+            "board": board_for(mid["hs"], mid["tp"], home)}
+
+
+def spot_cards(alerts, per_region, today, latest):
+    """Per spot de 16 dagen voor de app (startscherm per surfspot, gegroepeerd)."""
+    out = []
+    for reg in CFG["regions"]:
+        days = per_region.get(reg["id"], {})
+        data = latest["regions"].get(reg["id"], {})
+        run = next(iter(sorted([r for r in alerts["all_runs"] if r["region"] == reg["id"] and r["qualifies"]],
+                               key=lambda r: r["lead_days"])), None)
+        for s in reg["spots"]:
+            tinfo, tdays = tide_series((data.get("tide") or {}).get(s["name"]))
+            sdays = []
+            for k in range(16):
+                ds = (today + dt.timedelta(days=k)).isoformat()
+                models = days.get(ds, {})
+                per = {lab: v["detail"][s["name"]] for lab, v in models.items() if s["name"] in v["detail"]}
+                strict = {lab: (v.get("strict_spots") or {}).get(s["name"], False) for lab, v in models.items()}
+                sc = []
+                for lab, e in per.items():
+                    sc.append(4 if (e["good"] and (e["powerful"] or strict.get(lab))) else e["score"])
+                goods = [lab for lab, e in per.items() if e["good"]]
+                if k < D.get("long_range_from_day", 8):
+                    counts = bool(goods)
+                elif len(per) == 2:
+                    counts = len(goods) == 2
+                else:
+                    counts = bool(goods) and all(strict.get(g) for g in goods)
+                v = int(sum(sc) / len(sc)) if sc else None
+                plan = None
+                for mm, wm, lab in PAIRS:  # ECMWF eerst, anders GFS
+                    plan = best_time(s, reg, (data.get("marine") or {}).get(mm),
+                                     ((data.get("wind") or {}).get(s["name"]) or {}).get(wm), tinfo, ds)
+                    if plan:
+                        plan["model"] = lab
+                        break
+                hs = [e["hs"] for e in per.values()]
+                sdays.append({"date": ds, "lead": k, "v": v, "disagree": bool(sc) and max(sc) - min(sc) >= 2,
+                              "unsure": bool(sc) and (max(sc) - min(sc) >= 2 or (v is not None and v >= 3 and not counts)),
+                              "hs": round(sum(hs) / len(hs), 1) if hs else None, "counts": counts,
+                              "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
+                              "plan": plan, "tides": tdays.get(ds, [])})
+            out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
+                        "region_name": reg["name"], "country": reg["country"], "src": s["src"],
+                        "hs_range": s["hs"], "tide_pref": TIDE_NL.get(s.get("tide", "all")),
+                        "run": run, "days": sdays})
+    return out
+
+
+def app_data(alerts, per_region, today, latest=None):
     regions = []
     for reg in CFG["regions"]:
         days = per_region.get(reg["id"], {})
@@ -371,7 +515,8 @@ def app_data(alerts, per_region, today):
                         "days": out_days, "runs": [r for r in alerts["all_runs"] if r["region"] == reg["id"]]})
     return {"generated": alerts["generated"], "fetched_at": alerts["fetched_at"],
             "new": alerts["new"], "upgraded": alerts["upgraded"], "cancelled": alerts["cancelled"],
-            "problems": alerts["problems"], "regions": regions,
+            "problems": alerts["problems"], "regions": regions, "groups": CFG.get("groups"),
+            "spots": spot_cards(alerts, per_region, today, latest) if latest else [],
             "tiers": D.get("tiers"), "long_range_from_day": D.get("long_range_from_day")}
 
 
