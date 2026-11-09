@@ -1,1 +1,55 @@
-{"events": []}
+{
+ "events": [
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-12",
+   "end": "2026-11-12",
+   "days": 1,
+   "lead_days": 3,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-09",
+   "last_tier": "bevestigd"
+  },
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-10",
+   "end": "2026-11-12",
+   "days": 3,
+   "lead_days": 1,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-11-10",
+    "2026-11-11",
+    "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-09",
+   "last_tier": "bevestigd"
+  }
+ ]
+}
