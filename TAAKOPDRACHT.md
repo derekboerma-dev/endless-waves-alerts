@@ -16,7 +16,8 @@ Je controleert de surfvoorspelling voor Derek. Antwoord in het Nederlands, kort.
    - Plankadvies per dag staat al in `docs/data.json` (veld `board`). Gebruik die, of pas dezelfde regels toe:
      - 0,6–1,0 m of zwak: Onfire 6'0 35L.
      - 1,0–1,8 m schoon: Channel Islands Happy Everyday 5'11.
-     - 1,5–2,2 m steil/hol of wat chop: Morris 6'4 pintail; grotere schone groundswell: Bitch Boards 6'4 HP.
+     - 1,0–2,2 m zachte, vollere golven (periode < 10 s): Morris 6'4 Waterskate (breed, round tail; nooit bij hol).
+     - 1,8–2,5 m steil/hol of krachtige groundswell: Bitch Boards 6'4 HP.
      - 2,5 m+ schoon: Lost Mayhem 7'2.
    - Advies: "kans" = in de gaten houden; "waarschijnlijk" = vluchten en verblijf checken; "bevestigd" = boeken als het past. Raad aan om op Surfline (12 dagen) mee te kijken.
    - Een korte uitleg van de definitie (gelijk aan Endless Waves) en de bron: Open-Meteo, modellen ECMWF en GFS.

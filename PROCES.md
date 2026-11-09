@@ -118,9 +118,9 @@ Het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en win
 | Plank | Wanneer |
 |---|---|
 | Onfire 6'0 (35 L) | < 1,0 m (NL < 1,2 m) of Tp < 8 s |
-| Channel Islands Happy Everyday 5'11 | 1,0–1,8 m |
-| Morris 6'4 pintail | 1,8–2,5 m (Tp < 13 s) |
-| Bitch Boards 6'4 HP | 1,8–2,5 m bij Tp ≥ 13 s |
+| Morris 6'4 Waterskate (round tail, breed) | 1,0–2,2 m zachte, vollere golven (Tp < 10 s); niet bij hol (correctie van Derek: de Morris is een round tail, geen pintail) |
+| Channel Islands Happy Everyday 5'11 | 1,0–1,8 m, schoon, langere periode |
+| Bitch Boards 6'4 HP | 1,8–2,5 m, steil/hol of krachtige groundswell |
 | Lost Mayhem 7'2 | ≥ 2,5 m |
 
 ## 5. App (iPhone, web-app op GitHub Pages)

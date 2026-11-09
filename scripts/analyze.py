@@ -61,15 +61,20 @@ def tier_for(lead):
 
 
 def board_for(hs, tp, home=False):
-    """Plankadvies uit Dereks quiver op basis van golfhoogte (diep water) en periode."""
+    """Plankadvies uit Dereks quiver op basis van golfhoogte (diep water) en periode.
+    Korte periode (< 10 s) = zachtere, vollere golven -> Morris (breed, round tail, veel volume).
+    Lange periode = steilere, holle golven -> Happy Everyday of Bitch Boards HP. Nooit de Morris voor hol."""
     if hs is None:
         return None
-    if hs < (1.2 if home else 1.0) or (tp is not None and tp < 8):
+    tp = tp or 0
+    if hs < (1.2 if home else 1.0) or tp < 8:
         return "Onfire 6'0 (35L)"
+    if tp < 10 and hs < 2.2:
+        return "Morris 6'4 Waterskate"
     if hs < 1.8:
         return "Channel Islands Happy Everyday 5'11"
     if hs < 2.5:
-        return "Bitch Boards 6'4 HP" if (tp or 0) >= 13 else "Morris 6'4 pintail"
+        return "Bitch Boards 6'4 HP"
     return "Lost Mayhem 7'2"
 
 

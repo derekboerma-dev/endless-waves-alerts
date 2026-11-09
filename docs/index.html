@@ -253,6 +253,7 @@ function boardSVG(b){
   let tail;
   switch (b.tail){
     case 'pintail':   tail = `C ${cx + tailW * 0.9} ${y(0.86)} ${cx + 6} ${y(0.97)} ${cx} ${y(1)} C ${cx - 6} ${y(0.97)} ${cx - tailW * 0.9} ${y(0.86)}`; break;
+    case 'round':     tail = `C ${cx + tailW * 1.05} ${y(0.93)} ${cx + tailW * 0.7} ${y(1)} ${cx} ${y(1)} C ${cx - tailW * 0.7} ${y(1)} ${cx - tailW * 1.05} ${y(0.93)}`; break;
     case 'roundpin':  tail = `C ${cx + tailW} ${y(0.9)} ${cx + 10} ${y(1)} ${cx} ${y(1)} C ${cx - 10} ${y(1)} ${cx - tailW} ${y(0.9)}`; break;
     case 'swallow':   tail = `C ${cx + tailW} ${y(0.9)} ${cx + tailW * 0.75} ${y(0.98)} ${cx + tailW * 0.6} ${y(1)} L ${cx} ${y(0.955)} L ${cx - tailW * 0.6} ${y(1)} C ${cx - tailW * 0.75} ${y(0.98)} ${cx - tailW} ${y(0.9)}`; break;
     case 'squash-wide': tail = `C ${cx + tailW * 1.05} ${y(0.92)} ${cx + tailW * 0.75} ${y(1)} ${cx + tailW * 0.6} ${y(1)} L ${cx - tailW * 0.6} ${y(1)} C ${cx - tailW * 0.75} ${y(1)} ${cx - tailW * 1.05} ${y(0.92)}`; break;
@@ -273,7 +274,7 @@ async function quiver(){
   const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}
       <div><div class="br">${esc(b.brand)}</div><h3>${esc(b.length)} ${esc(b.name)}</h3>
-      <dl class="specs">${row('Maten', [b.length, b.width, b.thick].filter(Boolean).join(' × '))}${row('Volume', b.volume)}${row('Tail', ({swallow:'swallow', 'squash-wide':'brede squash', pintail:'pintail', squash:'squash', roundpin:'roundpin (aanname)'})[b.tail])}${row('Vinnen', b.fins)}${row('Herkomst', b.origin)}</dl>
+      <dl class="specs">${row('Maten', [b.length, b.width, b.thick].filter(Boolean).join(' × '))}${row('Volume', b.volume)}${row('Tail', ({swallow:'swallow', 'squash-wide':'brede squash', pintail:'pintail', round:'round tail', squash:'squash', roundpin:'roundpin (aanname)'})[b.tail])}${row('Vinnen', b.fins)}${row('Herkomst', b.origin)}</dl>
       <div class="use">Pak deze bij <b>${esc(b.use)}</b></div>
       ${b.note ? `<div class="qnote" style="margin:6px 0 0">${esc(b.note)}</div>` : ''}</div></div>`).join('')}</div>
     <p class="qnote">De silhouetten zijn getekend uit lengte, breedte en tailvorm. Eigen foto's toevoegen kan: zet ze in docs/img/ en geef ze door, dan koppel ik ze.</p>`;
