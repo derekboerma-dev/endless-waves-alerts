@@ -181,6 +181,18 @@ Keuzes van Derek, in volgorde:
     - **App:** tegels en grafiek tonen de spothoogte. De dagkaart toont het bereik plus de hoogte op open zee.
     - **Sessiescore:** nieuw veld "Hoe hoog was het?". De kalibratie geeft vanaf 3 sessies per spot een hint om `exposure` bij te stellen.
     - **Te doen:** Derek vergelijkt thuis via Chrome een aantal dagen met Surfline. Daarna `surf_scale` en `exposure` per spot bijstellen.
+19. **Persoonlijk maximum van 2,1 m geschrapt (Derek, 9 nov).** Het maximum per spot komt nu uit spotgidsen, als "holds up to" in hoogte op de spot. Bron per spot in `hs_max_bron`:
+    - **2,5 m:** Bud Bud, Cap Ferret, Le Truc Vert, La Gravière (wannasurf).
+    - **3,0 m:**
+      - La Sauzaie, Lostmarc'h, La Palue, Supertubos, Lagide, Tonel (wannasurf);
+      - Les Cavaliers (yeeew, zwakke bron);
+      - Beliche (geen maximum gevonden, gelijk aan Tonel).
+    - **3,5 m:**
+      - Anchor Point (surfmaroc / mondo.surf);
+      - Killer Point (surfholidays: tot dubbel overhead);
+      - Boilers (mondo.surf: experts tot 12 ft+).
+    - **4,0 m:** Lafitenia (wannasurf).
+    - **Ondergrenzen:** ongewijzigd.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

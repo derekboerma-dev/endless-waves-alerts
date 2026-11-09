@@ -31,8 +31,6 @@
    "bevestigd": 3,
    "waarschijnlijk": 7
   },
-  "max_hs_personal": 2.1,
-  "_max_hs_personal": "Persoonlijk maximum golfhoogte op de spot (m) voor alle spots behalve thuisspots (mode home).",
   "surf_scale": 0.85,
   "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). 'powerful' blijft over open zee."
  },
@@ -125,7 +123,7 @@
      ],
      "hs": [
       1.2,
-      2.2
+      2.5
      ],
      "tp_min": 11,
      "tide": "mid",
@@ -136,7 +134,8 @@
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "wannasurf: werkt vanaf 1,0–1,5 m, houdt tot 2,5 m+"
     },
     {
      "name": "La Sauzaie",
@@ -157,14 +156,15 @@
      ],
      "hs": [
       1.4,
-      2.8
+      3.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
      "hs_open_zee_oud": [
       1.0,
       2.5
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+"
     }
    ],
    "alert": {
@@ -204,14 +204,15 @@
      ],
      "hs": [
       1.4,
-      2.5
+      3.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
     },
     {
      "name": "La Palue",
@@ -232,14 +233,15 @@
      ],
      "hs": [
       1.4,
-      2.5
+      3.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+"
     }
    ],
    "alert": {
@@ -286,7 +288,8 @@
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+"
     },
     {
      "name": "Le Truc Vert",
@@ -314,7 +317,8 @@
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,5–2 m, tot 2,5 m+"
     }
    ],
    "alert": {
@@ -354,14 +358,15 @@
      ],
      "hs": [
       1.4,
-      2.8
+      2.5
      ],
      "tide": "mid",
      "group": "Frankrijk",
      "hs_open_zee_oud": [
       1.0,
       2.5
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+"
     },
     {
      "name": "Les Cavaliers (Anglet)",
@@ -382,14 +387,15 @@
      ],
      "hs": [
       1.4,
-      2.5
+      3.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
      "hs_open_zee_oud": [
       1.0,
       2.1
-     ]
+     ],
+     "hs_max_bron": "yeeew: tot 12 ft+ (algemene tekst, zwakke bron); begrensd op 3 m zoals vergelijkbare beachbreaks"
     },
     {
      "name": "Lafitenia",
@@ -410,7 +416,7 @@
      ],
      "hs": [
       1.2,
-      2.6
+      4.0
      ],
      "tide": "mid",
      "group": "Frankrijk",
@@ -418,7 +424,8 @@
      "hs_open_zee_oud": [
       1.0,
       2.8
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 4 m+"
     }
    ],
    "alert": {
@@ -467,14 +474,15 @@
      ],
      "hs": [
       1.7,
-      2.7
+      3.0
      ],
      "tide": "low-mid",
      "group": "Portugal",
      "hs_open_zee_oud": [
       1.3,
       2.3
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
     },
     {
      "name": "Lagide",
@@ -495,7 +503,7 @@
      ],
      "hs": [
       0.9,
-      2.1
+      3.0
      ],
      "tide": "mid",
      "group": "Portugal",
@@ -503,7 +511,8 @@
      "hs_open_zee_oud": [
       0.8,
       2.3
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
     }
    ],
    "alert": {
@@ -555,7 +564,7 @@
      ],
      "hs": [
       1.0,
-      2.4
+      3.0
      ],
      "tide": "all",
      "group": "Portugal",
@@ -563,7 +572,8 @@
      "hs_open_zee_oud": [
       0.8,
       2.3
-     ]
+     ],
+     "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+"
     },
     {
      "name": "Beliche",
@@ -584,7 +594,7 @@
      ],
      "hs": [
       0.9,
-      2.2
+      3.0
      ],
      "tide": "mid",
      "group": "Portugal",
@@ -592,7 +602,8 @@
      "hs_open_zee_oud": [
       1.2,
       3.5
-     ]
+     ],
+     "hs_max_bron": "thesurfatlas: werkt vanaf ±5 ft; geen maximum genoemd, gelijk aan buurspot Tonel gezet"
     }
    ]
   },
@@ -632,7 +643,7 @@
      ],
      "hs": [
       1.2,
-      2.6
+      3.5
      ],
      "tide": "all",
      "group": "Taghazout",
@@ -641,7 +652,8 @@
      "hs_open_zee_oud": [
       1.3,
       3.5
-     ]
+     ],
+     "hs_max_bron": "surfmaroc: beste maat 7 ft; mondo.surf: houdt ruim boven hoofdhoogte; geen hard maximum"
     },
     {
      "name": "Killer Point",
@@ -662,7 +674,7 @@
      ],
      "hs": [
       1.3,
-      3.0
+      3.5
      ],
      "tide": "all",
      "group": "Taghazout",
@@ -670,7 +682,8 @@
      "hs_open_zee_oud": [
       1.3,
       3.5
-     ]
+     ],
+     "hs_max_bron": "surfholidays: vanaf 4 ft tot dubbel overhead"
     },
     {
      "name": "Boilers",
@@ -691,7 +704,7 @@
      ],
      "hs": [
       1.5,
-      3.0
+      3.5
      ],
      "tide": "all",
      "group": "Taghazout",
@@ -699,7 +712,8 @@
      "hs_open_zee_oud": [
       1.3,
       3.0
-     ]
+     ],
+     "hs_max_bron": "mondo.surf: ideaal 6–8 ft, experts tot 12 ft+"
     }
    ],
    "alert": {
