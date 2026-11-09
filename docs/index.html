@@ -393,7 +393,7 @@ function boardSVG(b){
     <line x1="${cx}" y1="${y(0.03)}" x2="${cx}" y2="${y(0.97)}" stroke="currentColor" stroke-width=".7" opacity=".35"/>${finEls}</svg>`;
 }
 async function quiver(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Quiver';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Endless Waves';
   if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ $('#view').innerHTML = '<div class="empty">Quiver niet gevonden.</div>'; return; } }
   const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}

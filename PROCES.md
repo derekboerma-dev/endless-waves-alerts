@@ -78,7 +78,7 @@ Lager voor dichtbij en goedkoop, hoger voor ver en duur (keuze van Derek).
 | Vendée (Bud Bud), Crozon (Lostmarc'h) | ≥ 2 dagen op rij |
 | Cap Ferret | ≥ 3 dagen, waarvan ≥ 1 streng |
 | Zuidwest-Frankrijk (Hossegor–Guéthary) | ≥ 3 dagen, waarvan ≥ 1 streng of krachtig |
-| Peniche | ≥ 3 dagen, waarvan op ≥ 2 dagen beide modellen eens |
+| Peniche, Sagres | ≥ 3 dagen, waarvan op ≥ 2 dagen beide modellen eens |
 | Taghazout | ≥ 4 dagen, ≥ 2 krachtig, op ≥ 2 dagen beide modellen eens |
 
 ### Spots en criteria
@@ -89,16 +89,17 @@ Lager voor dichtbij en goedkoop, hoger voor ver en duur (keuze van Derek).
 | Frankrijk | Bud Bud | 1,0–2,1 | half, liefst opkomend | eigen regels (Bud Bud-skill) |
 | Frankrijk | La Sauzaie | 1,0–2,5 | half | surf-forecast |
 | Frankrijk | Lostmarc'h, La Palue | 1,0–2,1 | half | surf-forecast |
-| Frankrijk | Le Grand Crohot, Le Truc Vert | 1,0–2,1 | half | surf-forecast |
+| Frankrijk | Cap Ferret, Le Truc Vert | 1,0–2,1 | half | surf-forecast |
 | Frankrijk | La Gravière | 1,0–2,5 | half | surf-forecast (hoogte Surfline) |
-| Frankrijk | Les Cavaliers, Grande Plage | 1,0–2,1 | half | surf-forecast |
+| Frankrijk | Les Cavaliers | 1,0–2,1 | half | surf-forecast |
 | Frankrijk | Lafitenia | 1,0–2,8 | half | surf-forecast (hoogte Surfline) |
 | Portugal | Supertubos | 1,3–2,3 | laag–half | Surfline |
 | Portugal | Lagide | 0,8–2,3 | half | surf-forecast (hoogte Surfline) |
+| Portugal (Sagres) | Tonel | 0,8–2,3 | alle | surf-forecast (hoogte Surfline) |
+| Portugal (Sagres) | Beliche | 1,2–3,5 (beschut: heeft meer swell op zee nodig) | half | surf-forecast |
 | Taghazout | Anchor Point | 1,3–3,5 | alle | Surfline |
 | Taghazout | Killer Point | 1,3–3,5 | alle | surf-forecast |
 | Taghazout | Boilers | 1,3–3,0 | alle | surf-forecast (hoogte Surfline) |
-| Taghazout | Banana Point | 0,8–2,5 | alle | surf-forecast (hoogte Surfline) |
 
 - Hs-maximum 2,1 m voor beachbreaks is een keuze van Derek: hoger is vaak te groot. Riffen en points mogen hoger.
 - Getijvoorkeuren zijn aannames, behalve Bud Bud (eigen regels) en Killer Point en Banana Point (surf-forecast).
@@ -164,6 +165,8 @@ Keuzes van Derek, in volgorde:
 
 14. **Startscherm = variant A "Tegels"** (gekozen uit vijf ontwerpen op het canvas "Endless Waves – startscherm varianten"): per spot een rij gekleurde tegels met de golfhoogte erin; open tegel = onzeker; omlijnd = hoort bij een melding.
 15. **Bovenaan de spotpagina = variant B "Spotkaart met golfgrafiek"**: per dag een staafje (hoogte = golfhoogte, kleur = conditie) met de beste dag rechtsboven; tik op een staafje om naar die dag te springen.
+
+16. **Spotkeuze 9 nov (Derek):** Banana Point, Grande Plage en Le Grand Crohot verwijderd; Tonel en Beliche (Sagres) en Cap Ferret toegevoegd. De Quiver-tab houdt de titel "Endless Waves".
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
