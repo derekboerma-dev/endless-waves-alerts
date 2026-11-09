@@ -1,0 +1,487 @@
+{
+ "_doc": "Spotcriteria Endless Waves Alerts. Arcs = [middenrichting in graden, halve breedte]. Swellrichting = waar de golven vandaan komen; wind = waar de wind vandaan komt (offshore). Hs in meters (significante golfhoogte op diep water). Bron: SL = Surfline spot guide, SF = surf-forecast.com, EIGEN = Dereks eigen spotregels. Per regio stuurt het blok 'alert' wanneer er gemeld wordt; aanpassen mag altijd.",
+ "defaults": {
+  "morning_hours": [
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "min_good_hours": 2,
+  "tp_min": 10,
+  "wind_margin_deg": 22.5,
+  "glassy_kn": 6,
+  "strict": {
+   "tp_min": 12,
+   "min_good_hours": 3,
+   "glassy_kn": 0
+  },
+  "run_min_days": 3,
+  "powerful": {
+   "hs_min": 1.5,
+   "tp_min": 12
+  },
+  "max_gust_kn": 28,
+  "max_offshore_kn": 22,
+  "daylight_only": true,
+  "long_range_from_day": 8,
+  "long_range_rule": "Vanaf dag 8 telt een dag alleen als beide modellen hem goed geven; heeft maar één model nog data, dan moet die dag ook volgens de strenge variant goed zijn.",
+  "tiers": {
+   "bevestigd": 3,
+   "waarschijnlijk": 7
+  }
+ },
+ "regions": [
+  {
+   "id": "wijkaanzee",
+   "name": "Wijk aan Zee",
+   "country": "NL",
+   "wave_point": [
+    52.5,
+    4.35
+   ],
+   "alert": {
+    "mode": "home",
+    "run_min_days": 1,
+    "max_lead_days": 3,
+    "hours": "daglicht",
+    "min_strict_days": 0,
+    "min_powerful_days": 0,
+    "min_agree_days": 0,
+    "note": "Thuisspot · één goede sessie, 1–3 dagen vooruit"
+   },
+   "spots": [
+    {
+     "name": "Wijk aan Zee",
+     "src": "EIGEN (eerste schatting Noordzee, bijstellen na ervaring)",
+     "lat": 52.495,
+     "lon": 4.585,
+     "swell": [
+      [
+       315,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       100,
+       45
+      ]
+     ],
+     "hs": [
+      0.8,
+      2.5
+     ],
+     "tp_min": 6,
+     "glassy_kn": 8,
+     "powerful": {
+      "hs_min": 1.3,
+      "tp_min": 8
+     },
+     "strict": {
+      "tp_min": 8,
+      "min_good_hours": 3,
+      "glassy_kn": 0
+     }
+    }
+   ]
+  },
+  {
+   "id": "vendee",
+   "name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "wave_point": [
+    46.4,
+    -2.2
+   ],
+   "spots": [
+    {
+     "name": "Bud Bud",
+     "src": "EIGEN (Bud Bud-skill) + SF",
+     "lat": 46.381,
+     "lon": -1.491,
+     "swell": [
+      [
+       258.75,
+       33.75
+      ]
+     ],
+     "wind": [
+      [
+       67.5,
+       45
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.0
+     ],
+     "tp_min": 11
+    },
+    {
+     "name": "La Sauzaie",
+     "src": "SF",
+     "lat": 46.636,
+     "lon": -1.892,
+     "swell": [
+      [
+       247.5,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       45,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 2,
+    "min_strict_days": 0,
+    "min_powerful_days": 0,
+    "min_agree_days": 0,
+    "note": "Met de auto, goedkoop"
+   }
+  },
+  {
+   "id": "crozon",
+   "name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "wave_point": [
+    48.2,
+    -5.2
+   ],
+   "spots": [
+    {
+     "name": "Lostmarc'h",
+     "src": "SF",
+     "lat": 48.235,
+     "lon": -4.565,
+     "swell": [
+      [
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       67.5,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    },
+    {
+     "name": "La Palue",
+     "src": "SF",
+     "lat": 48.208,
+     "lon": -4.555,
+     "swell": [
+      [
+       247.5,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       90,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 2,
+    "min_strict_days": 0,
+    "min_powerful_days": 0,
+    "min_agree_days": 0,
+    "note": "Met de auto"
+   }
+  },
+  {
+   "id": "capferret",
+   "name": "Cap Ferret",
+   "country": "FR",
+   "wave_point": [
+    44.75,
+    -1.9
+   ],
+   "spots": [
+    {
+     "name": "Le Truc Vert",
+     "src": "SF",
+     "lat": 44.725,
+     "lon": -1.255,
+     "swell": [
+      [
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       112.5,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    },
+    {
+     "name": "Le Grand Crohot",
+     "src": "SF",
+     "lat": 44.8,
+     "lon": -1.245,
+     "swell": [
+      [
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       90,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 3,
+    "min_strict_days": 1,
+    "min_powerful_days": 0,
+    "min_agree_days": 0,
+    "note": "Lange rit of vlucht"
+   }
+  },
+  {
+   "id": "biarritz",
+   "name": "Biarritz-omgeving (Hossegor – Guéthary)",
+   "country": "FR",
+   "wave_point": [
+    43.6,
+    -2.0
+   ],
+   "spots": [
+    {
+     "name": "La Gravière (Hossegor)",
+     "src": "SF (richting) / SL (hoogte)",
+     "lat": 43.672,
+     "lon": -1.443,
+     "swell": [
+      [
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       90,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    },
+    {
+     "name": "Lafitenia",
+     "src": "SF (richting) / SL (hoogte)",
+     "lat": 43.425,
+     "lon": -1.63,
+     "swell": [
+      [
+       270,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       135,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.0,
+      3.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 3,
+    "min_strict_or_powerful_days": 1,
+    "min_strict_days": 0,
+    "min_powerful_days": 0,
+    "min_agree_days": 0,
+    "note": "Vlucht, middellang"
+   }
+  },
+  {
+   "id": "peniche",
+   "name": "Peniche",
+   "country": "PT",
+   "wave_point": [
+    39.35,
+    -10.0
+   ],
+   "spots": [
+    {
+     "name": "Supertubos",
+     "src": "SL",
+     "lat": 39.345,
+     "lon": -9.364,
+     "swell": [
+      [
+       270,
+       22.5
+      ],
+      [
+       292.5,
+       22.5
+      ]
+     ],
+     "wind": [
+      [
+       45,
+       22.5
+      ],
+      [
+       90,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.3,
+      3.5
+     ]
+    },
+    {
+     "name": "Lagide",
+     "src": "SF (richting) / SL (hoogte)",
+     "lat": 39.372,
+     "lon": -9.345,
+     "swell": [
+      [
+       337.5,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       180,
+       22.5
+      ]
+     ],
+     "hs": [
+      0.8,
+      2.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 3,
+    "min_strict_days": 0,
+    "min_powerful_days": 0,
+    "min_agree_days": 2,
+    "note": "Vlucht"
+   }
+  },
+  {
+   "id": "taghazout",
+   "name": "Taghazout",
+   "country": "MA",
+   "wave_point": [
+    30.9,
+    -10.4
+   ],
+   "spots": [
+    {
+     "name": "Anchor Point",
+     "src": "SL",
+     "lat": 30.544,
+     "lon": -9.726,
+     "swell": [
+      [
+       315,
+       22.5
+      ],
+      [
+       292.5,
+       22.5
+      ],
+      [
+       270,
+       22.5
+      ]
+     ],
+     "wind": [
+      [
+       45,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.3,
+      4.5
+     ]
+    },
+    {
+     "name": "Boilers",
+     "src": "SF (richting) / SL (hoogte)",
+     "lat": 30.632,
+     "lon": -9.889,
+     "swell": [
+      [
+       292.5,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       90,
+       22.5
+      ]
+     ],
+     "hs": [
+      1.3,
+      3.5
+     ]
+    }
+   ],
+   "alert": {
+    "mode": "trip",
+    "run_min_days": 4,
+    "min_strict_days": 0,
+    "min_powerful_days": 2,
+    "min_agree_days": 2,
+    "note": "Verste en duurste reis"
+   }
+  }
+ ]
+}

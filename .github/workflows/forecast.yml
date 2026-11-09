@@ -1,0 +1,55 @@
+name: Endless Waves forecast
+
+on:
+  schedule:
+    - cron: "40 7 * * *"   # dagelijks 07:40 UTC (na de 00z-run van ECMWF en GFS)
+  workflow_dispatch: {}      # handmatig starten via het tabblad Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forecast
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Voorspelling ophalen
+        run: python scripts/fetch.py
+
+      - name: Toetsen en reeksen zoeken
+        run: python scripts/analyze.py
+
+      - name: Resultaat vastleggen (ook voor de web-app)
+        run: |
+          git config user.name "endless-waves-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data out state docs
+          git diff --cached --quiet || git commit -m "Voorspelling $(date -u +%F)"
+          git push
+
+      - name: Pushmelding via ntfy
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ] || [ ! -s out/ntfy.txt ]; then echo "geen melding"; exit 0; fi
+          python - <<'PY'
+          import json, os, urllib.request
+          lines = open("out/ntfy.txt", encoding="utf-8").read().splitlines()
+          body = {"topic": os.environ["NTFY_TOPIC"], "title": lines[0], "message": "\n".join(lines[1:]),
+                  "tags": ["ocean"], "priority": 4}
+          if os.environ.get("APP_URL"):
+              body["click"] = os.environ["APP_URL"]
+          req = urllib.request.Request("https://ntfy.sh", data=json.dumps(body).encode(),
+                                       headers={"Content-Type": "application/json"})
+          print(urllib.request.urlopen(req, timeout=30).status)
+          PY
