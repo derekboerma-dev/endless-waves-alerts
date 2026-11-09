@@ -1,0 +1,25 @@
+name: Test pushmelding
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Testmelding via ntfy
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then echo "Secret NTFY_TOPIC ontbreekt"; exit 1; fi
+          python - <<'PY'
+          import json, os, urllib.request
+          body = {"topic": os.environ["NTFY_TOPIC"], "title": "Endless Waves: testmelding",
+                  "message": "Pushmeldingen werken. Tik om de app te openen.", "tags": ["ocean"], "priority": 4}
+          if os.environ.get("APP_URL"):
+              body["click"] = os.environ["APP_URL"]
+          req = urllib.request.Request("https://ntfy.sh", data=json.dumps(body).encode(),
+                                       headers={"Content-Type": "application/json"})
+          print(urllib.request.urlopen(req, timeout=30).status)
+          PY
