@@ -64,13 +64,15 @@ def conditions(data, reg, spot, day, hours):
             vals = (mh["wave_height"][i], mh["wave_peak_period"][i], mh["wave_direction"][i])
             if None in vals or j is None:
                 continue
-            rows.append(vals + (wh["wind_speed_10m"][j], wh["wind_direction_10m"][j]))
+            sh = A.surf_height(vals[0], vals[1], vals[2], spot)  # geschat op de spot
+            rows.append((sh,) + vals[1:] + (wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], vals[0]))
         if rows:
             tinfo, _ = A.tide_series((data.get("tide") or {}).get(spot["name"]))
             tide = [tinfo.get(f"{day}T{h:02d}:00") for h in hours]
             tide = [x for x in tide if x]
             mid = rows[len(rows) // 2]
             return {"model": lab, "hs": round(statistics.mean(r[0] for r in rows), 1),
+                    "hs_off": round(statistics.mean(r[5] for r in rows), 1),
                     "tp": round(statistics.mean(r[1] for r in rows)), "dir": A.compass(mid[2]),
                     "ws": round(statistics.mean(r[3] for r in rows)), "wd": A.compass(mid[4]),
                     "tide": A.tide_label(*tide[len(tide) // 2]) if tide else None,
@@ -97,7 +99,7 @@ def main():
     for r in sessions:
         reg, spot = find_spot(r["spot"])
         data_all = archive_for(r["date"])
-        rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note")}
+        rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note", "height")}
         if reg and data_all and reg["id"] in data_all.get("regions", {}):
             data = data_all["regions"][reg["id"]]
             rec["predicted"] = predicted_grade(data, reg, spot, r["date"])
@@ -127,6 +129,12 @@ def main():
             big_ok = [x for x in recs if x.get("cond") and not x["cond"]["hs_ok"] and x["score"] >= 3]
             if len(big_ok) >= 2:
                 hints.append("Meerdere goede sessies buiten het ingestelde hoogtebereik: bereik mogelijk aanpassen.")
+            hh = [(x["height"], x["cond"]["hs"]) for x in recs if x.get("height") and x.get("cond") and x["cond"]["hs"]]
+            if len(hh) >= 3:
+                ratio = statistics.mean(h / p for h, p in hh)
+                if abs(ratio - 1) >= 0.15:
+                    hints.append(f"Golfhoogte op de spot is gemiddeld {ratio:.2f}x de schatting: 'exposure' van deze spot "
+                                 f"met die factor bijstellen.")
             boards = {}
             for x in recs:
                 if x.get("board"):
@@ -134,7 +142,8 @@ def main():
             for b, sc in boards.items():
                 if len(sc) >= 3:
                     hints.append(f"{b}: gemiddeld {GRADE[round(statistics.mean(sc))]} over {len(sc)} sessies.")
-        out[name] = {"n": len(recs), "n_compared": len(diffs),
+        hh = [x["height"] / x["cond"]["hs"] for x in recs if x.get("height") and x.get("cond") and x["cond"]["hs"]]
+        out[name] = {"height_ratio": round(statistics.mean(hh), 2) if hh else None, "n": len(recs), "n_compared": len(diffs),
                      "mean_diff": round(statistics.mean(diffs), 2) if diffs else None,
                      "hints": hints, "sessions": sorted(recs, key=lambda x: x["date"], reverse=True)}
 
@@ -146,13 +155,13 @@ def main():
         md = "–" if o["mean_diff"] is None else f"{o['mean_diff']:+.1f}"
         lines += [f"## {name}", f"Sessies: {o['n']} · vergeleken: {o['n_compared']} · gemiddeld verschil: {md}", ""]
         lines += [f"- {h}" for h in o["hints"]] or ["- Nog te weinig sessies voor conclusies."]
-        lines += ["", "| Datum | Tijd | Jij | Voorspeld | Golf | Wind | Getij | Plank | Opmerking |", "|---|---|---|---|---|---|---|---|---|"]
+        lines += ["", "| Datum | Tijd | Jij | Voorspeld | Golf (spot, schatting) | Echt (m) | Wind | Getij | Plank | Opmerking |", "|---|---|---|---|---|---|---|---|---|---|"]
         for x in o["sessions"]:
             c = x.get("cond") or {}
             pred = GRADE[x["predicted"]] if x.get("predicted") is not None else "?"
             golf = f"{c.get('hs')} m {c.get('tp')} s {c.get('dir')}" if c else "?"
             wind = f"{c.get('wd')} {c.get('ws')} kn" if c else "?"
-            lines.append(f"| {x['date']} | {x.get('time') or ''} | {GRADE[x['score']]} | {pred} | {golf} | {wind} | "
+            lines.append(f"| {x['date']} | {x.get('time') or ''} | {GRADE[x['score']]} | {pred} | {golf} | {x.get('height') or ''} | {wind} | "
                          f"{c.get('tide') or ''} | {x.get('board') or ''} | {x.get('note') or ''} |")
         lines.append("")
     (ROOT / "out").mkdir(exist_ok=True)

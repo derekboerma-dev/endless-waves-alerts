@@ -215,7 +215,7 @@ function home(){
   });
   $('#view').innerHTML = `${problems()}<div class="scroll"><div class="grid">${html}</div></div>
     <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${k ? t : 'niets'}</span>`).join('')}</div>
-    <div class="legend">golfhoogte in meter · open tegel = onzeker · omlijnd = melding</div>`;
+    <div class="legend">golfhoogte op de spot (m, schatting) · open tegel = onzeker · omlijnd = melding</div>`;
   document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('click', () => {
     location.hash = 's' + el.dataset.k + (el.dataset.i ? '/' + el.dataset.i : '');
   }));
@@ -233,14 +233,15 @@ function tideChips(d, s){
   return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
 }
 
+const SURF = e => e && e.surf ? `${N(e.surf[0])}–${N(e.surf[1])} m` : (e && e.hs != null ? `${N(e.hs)} m` : '');
 function dayCard(s, d, i){
   const p = d.plan, gr = d.v ?? 0;
   const models = Object.entries(d.models).map(([lab, e]) => `<div class="m"><b>${lab} · ${GRADE[e.score ?? 0]}${e.strict ? ' ★' : ''}</b>
-      ${N(e.hs)} m · ${e.tp} s · ${esc(e.dir)} · wind ${esc(e.wd)} ${e.ws}${e.gu != null ? '/' + e.gu : ''} kn${e.window ? ' · ochtend ' + esc(e.window) : ''}</div>`).join('');
+      ${SURF(e)} · ${e.tp} s · ${esc(e.dir)} · wind ${esc(e.wd)} ${e.ws}${e.gu != null ? '/' + e.gu : ''} kn${e.window ? ' · ochtend ' + esc(e.window) : ''}</div>`).join('');
   return `<div class="day g${gr}" id="d${i}">
     <div class="l1"><b>${LONG(d.date)}</b><span class="lbl">${gr ? GRADE[gr] : 'niets te surfen'}${d.unsure ? ' ?' : ''}</span></div>
     ${p ? `<div class="when"><span class="k">beste tijd</span><span class="t">${esc(p.window)}</span></div>
-      <div class="facts"><span class="chip">${N(p.hs)} m · ${p.tp} s · ${esc(p.dir)}</span><span class="chip">wind ${esc(p.wd)} ${p.ws} kn</span>
+      <div class="facts"><span class="chip">🏄 ${SURF(p)} · ${p.tp} s · ${esc(p.dir)}</span>${p.hs_off != null ? `<span class="chip">open zee ${N(p.hs_off)} m</span>` : ''}<span class="chip">wind ${esc(p.wd)} ${p.ws} kn</span>
       ${p.tide ? `<span class="chip ${p.tide_ok ? '' : 'warn'}">${esc(p.tide)}${p.tide_ok ? '' : ' (niet ideaal)'}</span>` : ''}${tideChips(d, s)}</div>
       ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}${extras(d)}`
     : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>${extras(d)}`}
@@ -289,9 +290,10 @@ function spot(k, focus){
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
       <div class="days">${list.length ? list.map(([d, i]) => dayCard(s, d, i)).join('') : '<div class="empty">Geen aanraders in de komende 16 dagen.</div>'}</div>
       <details><summary>Over deze spot</summary>
-        <p>Werkt bij Hs ${N(s.hs_range[0])}–${N(s.hs_range[1])} m · getij: ${esc(s.tide_pref)} · bron criteria: ${esc(s.src)}</p>
+        <p>Werkt bij ${N(s.hs_range[0])}–${N(s.hs_range[1])} m op de spot · getij: ${esc(s.tide_pref)} · bron criteria: ${esc(s.src)}</p>
         <p>Melding (regio ${esc(s.region_name)}): ${req.join(' · ')}</p>
         <p>"Beste tijd" = het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen, met voorkeur voor het juiste getij, zwakke offshore wind en lange periode. Getij en golven zijn modelwaarden; check Surfline voordat je gaat.</p>
+        <p>Golfhoogte op de spot is een schatting uit de golf op open zee (30–50 km uit de kust): brekerhoogte volgens Komar &amp; Gaughan (hoogte én periode), minder als de swell schuin binnenkomt, en een beschuttingsfactor per spot. Geen bodemkaart zoals Surfline; wordt bijgesteld met de Surfline-vergelijking en je sessies.</p>
       </details>`;
     $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
     $('#rate').addEventListener('click', () => rateSheet(s));
@@ -328,7 +330,8 @@ function rateSheet(s){
   const iso = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toLocaleDateString('sv-SE'); };
   const dates = [0, 1, 2, 3].map(n => [iso(n), n === 0 ? 'vandaag' : n === 1 ? 'gisteren' : LONG(iso(n))]);
   const boards = (QUIVER?.boards || []).map(b => b.short || `${b.brand} ${b.length}`);
-  let st = {date: dates[0][0], time: '', score: null, board: '', note: ''};
+  let st = {date: dates[0][0], time: '', score: null, board: '', note: '', height: ''};
+  const HEIGHTS = [['0.3', '< 0,5'], ['0.75', '0,5–1'], ['1.25', '1–1,5'], ['1.75', '1,5–2'], ['2.25', '2–2,5'], ['2.75', '> 2,5']];
   const bg = document.createElement('div'); bg.className = 'sheet-bg';
   const paint = () => {
     const fc = s.days.find(d => d.date === st.date);
@@ -336,6 +339,7 @@ function rateSheet(s){
       <label>Wanneer</label><div class="seg" id="sd">${dates.map(([v, t]) => `<button data-v="${v}" class="${st.date === v ? 'on' : ''}">${t}</button>`).join('')}</div>
       <label>Hoe laat?</label><div class="seg" id="st">${['ochtend', 'middag', 'avond'].map(t => `<button data-v="${t}" class="${st.time === t ? 'on' : ''}">${t}</button>`).join('')}<input id="sh" type="time" value="${/^\d/.test(st.time) ? st.time : ''}" aria-label="Begintijd" style="border:1px solid var(--line);border-radius:999px;padding:6px 10px;font:inherit;background:var(--bg);color:var(--ink)"></div>
       <label>Hoe was het?</label><div class="seg" id="ss">${GRADE.map((t, k) => `<button data-v="${k}" class="g${k} ${st.score === k ? 'on' : ''}">${k ? t : 'niets'}</button>`).join('')}</div>
+      <label>Hoe hoog was het? (m, zoals Surfline)</label><div class="seg" id="shh">${HEIGHTS.map(([v, t]) => `<button data-v="${v}" class="${st.height === v ? 'on' : ''}">${t}</button>`).join('')}</div>
       <label>Plank</label><div class="seg" id="sb">${boards.map(b => `<button data-v="${esc(b)}" class="${st.board === b ? 'on' : ''}">${esc(b)}</button>`).join('')}</div>
       <label>Opmerking</label><textarea id="sn" placeholder="bijv. te vol bij hoogwater, mooie linkers">${esc(st.note)}</textarea>
       <div class="actions" style="margin:14px 0 0"><button id="sc">Annuleren</button><button class="pri" id="sk" ${st.score == null ? 'disabled style="opacity:.5"' : ''}>Versturen</button></div>
@@ -345,12 +349,13 @@ function rateSheet(s){
     bg.querySelectorAll('#st button').forEach(b => b.onclick = () => { st.time = st.time === b.dataset.v ? '' : b.dataset.v; paint(); });
     bg.querySelector('#sh').onchange = e => { st.time = e.target.value; paint(); };
     bg.querySelectorAll('#sb button').forEach(b => b.onclick = () => { st.board = st.board === b.dataset.v ? '' : b.dataset.v; paint(); });
+    bg.querySelectorAll('#shh button').forEach(b => b.onclick = () => { st.height = st.height === b.dataset.v ? '' : b.dataset.v; paint(); });
     bg.querySelector('#sn').oninput = e => { st.note = e.target.value; };
     bg.querySelector('#sc').onclick = () => bg.remove();
     bg.querySelector('#sk').onclick = () => {
       if (st.score == null) return;
-      const fcs = fc ? `${GRADE[fc.v ?? 0]}, ${N(fc.hs)} m${fc.plan ? `, beste tijd ${fc.plan.window}` : ''}` : 'niet meer in de app';
-      const body = `Spot: ${s.name}\nDatum: ${st.date}\nTijd: ${st.time}\nScore: ${st.score} (${GRADE[st.score]})\nPlank: ${st.board}\nOpmerking: ${st.note.replace(/\n/g, ' ')}\nVoorspeld: ${fcs}\n\n(ingediend vanuit de Endless Waves-app)`;
+      const fcs = fc ? `${GRADE[fc.v ?? 0]}, ${SURF(fc)}${fc.plan ? `, beste tijd ${fc.plan.window}` : ''}` : 'niet meer in de app';
+      const body = `Spot: ${s.name}\nDatum: ${st.date}\nTijd: ${st.time}\nScore: ${st.score} (${GRADE[st.score]})\nPlank: ${st.board}\nHoogte: ${st.height}\nOpmerking: ${st.note.replace(/\n/g, ' ')}\nVoorspeld: ${fcs}\n\n(ingediend vanuit de Endless Waves-app)`;
       const url = `https://github.com/${DATA.repo}/issues/new?title=${encodeURIComponent('Sessie: ' + s.name + ' ' + st.date)}&body=${encodeURIComponent(body)}`;
       try { const L = localSess(); L.unshift({spot: s.name, date: st.date, time: st.time, score: st.score, board: st.board, note: st.note, forecast: fcs}); localStorage.setItem('ew-sess', JSON.stringify(L.slice(0, 100))); } catch(e){}
       window.open(url, '_blank'); bg.remove(); route();

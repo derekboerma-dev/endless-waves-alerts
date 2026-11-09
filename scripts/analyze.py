@@ -21,6 +21,7 @@ Thuisspot (Wijk aan Zee): hele daglichtperiode, >= 2 goede uren = goede sessie.
 import datetime as dt
 import html
 import json
+import math
 import pathlib
 import sys
 
@@ -51,13 +52,37 @@ def compass(deg):
 
 
 
+def surf_height(hs, tp, wdir, spot):
+    """Geschatte golfhoogte op de spot (m, brekerhoogte zoals Surfline die ongeveer toont).
+    1. Komar & Gaughan: Hb = 0,39 * g^0,2 * (T * H0^2)^0,4 -> lange periode breekt groter.
+    2. Richting: hoe verder de swell van de dichtstbijzijnde swellboog van de spot afwijkt, hoe kleiner
+       (wortel van de cosinus van de afwijking buiten 15 graden).
+    3. Beschutting: vaste factor per spot ('exposure', standaard 1,0), plus een algemene schaal ('surf_scale').
+    Een benadering zonder bodemkaart; bij te stellen per spot met de Surfline-vergelijking en sessies."""
+    if hs is None or tp is None:
+        return None
+    hb = 0.39 * 9.81 ** 0.2 * (max(tp, 1) * hs * hs) ** 0.4
+    if wdir is not None and spot.get("swell"):
+        d = min(angdiff(wdir, c) for c, _ in spot["swell"])
+        f = math.sqrt(max(0.05, math.cos(math.radians(min(max(d - 15, 0), 90)))))
+    else:
+        f = 1.0
+    return hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)
+
+
+def surf_range(h):
+    """Weergave als bereik, zoals Surfline: ±15 % rond de schatting."""
+    return None if h is None else [round(h * 0.85, 1), round(h * 1.15, 1)]
+
+
 def hs_range(spot, region):
-    """Spotbereik, afgetopt op het persoonlijke maximum (niet voor de thuisspot)."""
+    """Hoogtebereik op de spot (m), afgetopt op het persoonlijke maximum (niet voor de thuisspot)."""
     lo, hi = spot["hs"]
     cap = CFG["defaults"].get("max_hs_personal")
     if cap and region["alert"].get("mode") != "home":
         hi = min(hi, cap)
     return [lo, hi]
+
 
 def nl_date(ds):
     d = dt.date.fromisoformat(ds)
@@ -70,7 +95,7 @@ def tier_for(lead):
 
 
 def board_for(hs, tp, home=False):
-    """Plankadvies uit Dereks quiver op basis van golfhoogte (diep water) en periode.
+    """Plankadvies uit Dereks quiver op basis van de geschatte golfhoogte op de spot en de periode.
     - Korte periode (< 10 s) = zachtere, vollere golven -> Morris (breed, round tail). Nooit de Morris voor hol.
     - Lange periode = steiler/hol -> Happy Everyday of Bitch Boards HP.
     - Lost 7'2 (Mayhem = shaper Matt Biolos) is met 20½ × 2⅝ (±42 L) een mid-length, geen step-up:
@@ -79,13 +104,13 @@ def board_for(hs, tp, home=False):
     if hs is None:
         return None
     tp = tp or 0
-    if hs < 0.8 and tp < 9:
+    if hs < 0.9 and tp < 9:
         return "Lost 7'2 (mid-length)"
-    if hs < (1.2 if home else 1.0) or tp < 8:
+    if hs < (1.3 if home else 1.1) or tp < 8:
         return "Onfire 6'0 (35L)"
-    if tp < 10 and hs < 2.2:
+    if tp < 10 and hs < 2.4:
         return "Morris 6'4 Waterskate"
-    if hs < 1.8:
+    if hs < 2.0:
         return "Channel Islands Happy Everyday 5'11"
     return "Bitch Boards 6'4 HP"
 
@@ -147,16 +172,17 @@ def evaluate_spot(spot, region, marine, wind, strict):
             continue
         ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
         rec["valid"] += 1
+        off, hs = hs, surf_height(hs, tp, wdir, spot)  # off = open zee, hs = op de spot
         dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
         swell_ok = dir_ok and tp_ok and hs_ok
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         wind_ok = (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99))
         ok = swell_ok and wind_ok
         pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)  # 0-4 voorwaarden gehaald
-        rec["rows"].append({"h": hr, "hs": hs, "tp": tp, "dir": wdir, "ws": ws, "wd": wd, "gu": gu, "ok": ok, "pts": pts})
+        rec["rows"].append({"h": hr, "hs": hs, "off": off, "tp": tp, "dir": wdir, "ws": ws, "wd": wd, "gu": gu, "ok": ok, "pts": pts})
         if ok:
             rec["good"].append(hr)
-            if hs >= powerful["hs_min"] and tp >= powerful["tp_min"]:
+            if off >= powerful["hs_min"] and tp >= powerful["tp_min"]:  # kracht: op open zee
                 rec["powerful"] = True
     out = {}
     for day, r in days.items():
@@ -164,7 +190,7 @@ def evaluate_spot(spot, region, marine, wind, strict):
             continue  # te weinig data (bijv. voorbij de modelhorizon)
         rows = r["rows"]
         pick = [x for x in rows if x["ok"]] or rows
-        best = max(pick, key=lambda x: (x["hs"] if x["ok"] else 0, x["tp"]))
+        best = max(pick, key=lambda x: (x["hs"], x["tp"]))  # grootste (goede) uur op de spot
         win = f"{min(r['good']):02d}–{max(r['good']) + 1:02d} u" if r["good"] else None
         good = len(r["good"]) >= need
         # Conditiegraad 0-4: 0 slecht · 1 matig · 2 redelijk · 3 goed · 4 top (goed + krachtig; streng komt in de regio-stap)
@@ -174,7 +200,8 @@ def evaluate_spot(spot, region, marine, wind, strict):
             p = max(x["pts"] for x in rows)
             score = 2 if (r["good"] or p == 4) else (1 if p == 3 else 0)
         out[day] = {"good": good, "score": score, "hours": len(r["good"]), "powerful": r["powerful"],
-                    "window": win, "hs": round(best["hs"], 1), "tp": round(best["tp"]), "dir": compass(best["dir"]),
+                    "window": win, "hs": round(best["hs"], 1), "hs_off": round(best["off"], 1),
+                    "surf": surf_range(best["hs"]), "tp": round(best["tp"]), "dir": compass(best["dir"]),
                     "ws": round(best["ws"]), "wd": compass(best["wd"]),
                     "gu": None if best["gu"] is None else round(best["gu"])}
     return out
@@ -436,6 +463,7 @@ def best_time(spot, region, marine, wind, tinfo, day):
         if None in (hs, wdir, tp) or j is None or wh["wind_speed_10m"][j] is None:
             continue
         ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
+        off, hs = hs, surf_height(hs, tp, wdir, spot)
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         ok = (in_arcs(wdir, spot["swell"]) and tp >= tp_min and hs_lo <= hs <= hs_hi
               and (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99)))
@@ -444,7 +472,7 @@ def best_time(spot, region, marine, wind, tinfo, day):
         if ti and spot.get("tide_rising") and not ti[1]:
             tide_ok = tide_ok and ti[0] > 0.5  # Bud Bud: liefst opkomend; afgaand alleen nog boven half tij
         val = (10 if ok else 0) + (4 if tide_ok else 0) + (2 if offshore else 0) + min(tp, 16) / 4 - ws / 8
-        hours.append({"h": hr, "ok": ok, "tide_ok": tide_ok, "val": val, "hs": hs, "tp": tp, "dir": wdir,
+        hours.append({"h": hr, "ok": ok, "tide_ok": tide_ok, "val": val, "hs": hs, "off": off, "tp": tp, "dir": wdir,
                       "ws": ws, "wd": wd, "tide": ti})
     good = [x for x in hours if x["ok"]]
     if not good:
@@ -464,7 +492,8 @@ def best_time(spot, region, marine, wind, tinfo, day):
         cur = [x] if x and x["ok"] else []
     blk = best[1]
     mid = blk[len(blk) // 2]
-    return {"window": f"{blk[0]['h']:02d}–{blk[-1]['h'] + 1:02d} u", "hs": round(mid["hs"], 1), "tp": round(mid["tp"]),
+    return {"window": f"{blk[0]['h']:02d}–{blk[-1]['h'] + 1:02d} u", "hs": round(mid["hs"], 1), "hs_off": round(mid["off"], 1),
+            "surf": surf_range(mid["hs"]), "tp": round(mid["tp"]),
             "dir": compass(mid["dir"]), "ws": round(mid["ws"]), "wd": compass(mid["wd"]),
             "tide_ok": all(y["tide_ok"] for y in blk),
             "tide": tide_label(*mid["tide"]) if mid["tide"] else None,
@@ -541,7 +570,8 @@ def spot_cards(alerts, per_region, today, latest):
                               "sun": [f"{int(light[0]):02d}:{int(round(light[0] % 1 * 60)):02d}",
                                       f"{int(light[1]):02d}:{int(round(light[1] % 1 * 60)):02d}"] if light else None,"date": ds, "lead": k, "v": v, "disagree": bool(sc) and max(sc) - min(sc) >= 2,
                               "unsure": bool(sc) and (max(sc) - min(sc) >= 2 or (v is not None and v >= 3 and not counts)),
-                              "hs": round(sum(hs) / len(hs), 1) if hs else None, "counts": counts,
+                              "hs": round(sum(hs) / len(hs), 1) if hs else None,
+                              "surf": surf_range(sum(hs) / len(hs)) if hs else None, "counts": counts,
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
                               "plan": plan, "tides": tdays.get(ds, [])})
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],

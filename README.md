@@ -53,7 +53,7 @@ Dit is een eerste schatting; stel bij na ervaring.
 | matig | twee voorwaarden niet |
 | slecht | drie of meer niet |
 
-Golfhoogte = Hs (diep water) van de beste spot, gemiddeld over beide modellen. De graad is het gemiddelde van de modellen, naar beneden afgerond. Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
+Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richting op open zee, maal een beschuttingsfactor per spot), van het grootste uur, gemiddeld over beide modellen. Alle hoogtegrenzen gaan hierover; 'krachtig' gaat over open zee. De graad is het gemiddelde van de modellen, naar beneden afgerond. Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
 
 ## Zekerheid en termijn
 
@@ -111,7 +111,7 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
 - **Getij:** zeespiegel per spot (`sea_level_height_msl`, model van Météo-France via Open-Meteo). Dit loopt ongeveer 9 dagen vooruit. Hoog- en laagwater zijn op het hele uur afgerond (±30 min).
 - **Getijvoorkeur per spot** staat in `config/spots.json` (`tide`: low, low-mid, mid, mid-high, high, all). Behalve "all" bij Killer Point en Tonel (surf-forecast) en "half, liefst opkomend" bij Bud Bud (eigen regels) zijn dit aannames om bij te stellen.
 - **Beste tijd:** het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen. Een blok met het juiste getij, zwakke offshore wind en langere periode gaat voor.
-- **Persoonlijk maximum:** `defaults.max_hs_personal` = 2,1 m. Dit geldt voor alle spots behalve Wijk aan Zee en gaat vóór het spotbereik hieronder.
+- **Persoonlijk maximum:** `defaults.max_hs_personal` = 2,1 m op de spot. Dit geldt voor alle spots behalve Wijk aan Zee en gaat vóór het spotbereik hieronder.
 - **Golfhoogte-maximum per spot:** beachbreaks 2,1 m (hoger is vaak te groot). Riffen en points mogen hoger: La Sauzaie 2,5 · La Gravière 2,5 · Lafitenia 2,8 · Supertubos en Lagide 2,3 · Tonel 2,3 · Beliche 3,5 (beschut, minimum 1,2) · Boilers 3,0 · Anchor Point en Killer Point 3,5.
 
 ## Bekende beperkingen

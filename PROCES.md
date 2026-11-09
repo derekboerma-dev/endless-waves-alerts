@@ -167,7 +167,20 @@ Keuzes van Derek, in volgorde:
 15. **Bovenaan de spotpagina = variant B "Spotkaart met golfgrafiek"**: per dag een staafje (hoogte = golfhoogte, kleur = conditie) met de beste dag rechtsboven; tik op een staafje om naar die dag te springen.
 
 16. **Spotkeuze 9 nov (Derek):** Banana Point, Grande Plage en Le Grand Crohot verwijderd; Tonel en Beliche (Sagres) en Cap Ferret toegevoegd. De Quiver-tab houdt de titel "Endless Waves".
-17. **Persoonlijk maximum 2,1 m (Derek, 9 nov):** `defaults.max_hs_personal` = 2,1 m. Dit kapt het hoogtebereik van elke spot af, behalve bij thuisspots (Wijk aan Zee). Het bereik per spot blijft in de config staan: zet je het maximum hoger of haal je het weg, dan geldt weer het spotbereik.
+17. **Persoonlijk maximum 2,1 m (Derek, 9 nov; sinds punt 18 over de hoogte op de spot):** `defaults.max_hs_personal` = 2,1 m. Dit kapt het hoogtebereik van elke spot af, behalve bij thuisspots (Wijk aan Zee). Het bereik per spot blijft in de config staan: zet je het maximum hoger of haal je het weg, dan geldt weer het spotbereik.
+18. **Golfhoogte op de spot (Derek, 9 nov, optie 1).** Alle hoogtegrenzen gaan nu over de geschatte hoogte op de spot, zoals Surfline die toont, en niet meer over open zee (30–50 km uit de kust).
+    - **Schatting** (`surf_height` in analyze.py):
+      - brekerhoogte volgens Komar & Gaughan, met hoogte én periode;
+      - minder hoogte als de swell schuin binnenkomt;
+      - beschuttingsfactor `exposure` per spot: Bud Bud 0,9 · Lafitenia 0,85 · Lagide 0,8 · Tonel 0,9 · Beliche 0,6 · Anchor 0,7 · Killer 0,8 · Boilers 0,9;
+      - algemene schaal `surf_scale` 0,85.
+    - **Weergave:** een bereik van ±15 %.
+    - **Omrekening:** de oude bereiken zijn omgerekend bij 11 s (Wijk aan Zee 7 s) met swell recht op de spot. Ze staan bewaard als `hs_open_zee_oud`.
+    - **Wat over open zee blijft gaan:** "krachtig" (Hs ≥ 1,5 m en Tp ≥ 12 s).
+    - **Plankadvies:** de grenzen zijn aangepast aan de spothoogte.
+    - **App:** tegels en grafiek tonen de spothoogte. De dagkaart toont het bereik plus de hoogte op open zee.
+    - **Sessiescore:** nieuw veld "Hoe hoog was het?". De kalibratie geeft vanaf 3 sessies per spot een hint om `exposure` bij te stellen.
+    - **Te doen:** Derek vergelijkt thuis via Chrome een aantal dagen met Surfline. Daarna `surf_scale` en `exposure` per spot bijstellen.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

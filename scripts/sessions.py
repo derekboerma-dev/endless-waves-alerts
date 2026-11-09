@@ -7,6 +7,7 @@ Een issue heeft de titel 'Sessie: <spot> <datum>' en een body met regels:
   Tijd: ochtend | middag | avond | UU:MM (optioneel)
   Score: <0-4> (<label>)
   Plank: <optioneel>
+  Hoogte: <optioneel, golfhoogte op de spot in m>
   Opmerking: <optioneel>
   Voorspeld: <graad en golf volgens de app, ter vergelijking>
 Invoer: JSON van `gh issue list` (pad als argument). Uitvoer: docs/sessions.json (alle sessies, nieuwste eerst).
@@ -17,7 +18,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FIELDS = {"spot": "spot", "datum": "date", "tijd": "time", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast"}
+FIELDS = {"spot": "spot", "datum": "date", "tijd": "time", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast", "hoogte": "height"}
 
 
 def parse(issue):
@@ -29,6 +30,9 @@ def parse(issue):
     if "score" in rec:
         m = re.match(r"(\d)", rec["score"])
         rec["score"] = int(m.group(1)) if m else None
+    if "height" in rec:
+        m = re.match(r"([\d.,]+)", rec["height"])
+        rec["height"] = float(m.group(1).replace(",", ".")) if m else None
     return rec if rec.get("spot") and rec.get("date") and rec.get("score") is not None else None
 
 
