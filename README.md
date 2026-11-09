@@ -1,6 +1,6 @@
 # Endless Waves Alerts
 
-Dagelijkse controle van de surfvoorspelling voor Wijk aan Zee, Vendée (Bud Bud), Crozon (Lostmarc'h), Cap Ferret, Biarritz-omgeving, Peniche en Taghazout. Een pushmelding komt alleen als een regio boven **zijn eigen drempel** uitkomt. Alles is te zien in een web-app op je iPhone.
+Dagelijkse controle van de surfvoorspelling voor Wijk aan Zee, Vendée (Bud Bud), Crozon (Lostmarc'h), Cap Ferret, Biarritz-omgeving, Peniche, Sagres en Taghazout. Een pushmelding komt alleen als een regio boven **zijn eigen drempel** uitkomt. Alles is te zien in een web-app op je iPhone.
 
 ## Hoe het werkt
 
@@ -71,7 +71,7 @@ Golfhoogte = Hs (diep water) van de beste spot, gemiddeld over beide modellen. D
 | Vendée, Crozon | 2 goede dagen op rij |
 | Cap Ferret | 3 dagen op rij, waarvan minstens 1 streng |
 | Biarritz-omgeving | 3 dagen op rij, waarvan minstens 1 streng of krachtig |
-| Peniche | 3 dagen op rij, waarvan op minstens 2 dagen beide modellen het eens zijn |
+| Peniche, Sagres | 3 dagen op rij, waarvan op minstens 2 dagen beide modellen het eens zijn |
 | Taghazout | 4 dagen op rij, minstens 2 krachtige dagen, op minstens 2 dagen beide modellen eens |
 
 Je kunt dit altijd aanpassen: wijzig de getallen in `config/spots.json` op GitHub (potloodje → Commit). De volgende run gebruikt ze. Reeksen onder de drempel staan wel in de app, gemarkeerd als "onder drempel", maar geven geen melding.
@@ -83,9 +83,10 @@ Je kunt dit altijd aanpassen: wijzig de getallen in `config/spots.json` op GitHu
 | Wijk aan Zee | Wijk aan Zee | eigen eerste schatting |
 | Vendée | Bud Bud, La Sauzaie | Bud Bud: eigen regels; La Sauzaie: surf-forecast |
 | Crozon | Lostmarc'h, La Palue | surf-forecast |
-| Cap Ferret | Le Truc Vert, Le Grand Crohot | surf-forecast |
+| Cap Ferret | Cap Ferret, Le Truc Vert | surf-forecast |
 | Biarritz-omgeving | La Gravière, Lafitenia | richting surf-forecast, hoogte Surfline |
 | Peniche | Supertubos, Lagide | Supertubos: Surfline; Lagide: richting surf-forecast |
+| Sagres | Tonel, Beliche | richting surf-forecast |
 | Taghazout | Anchor Point, Boilers | Anchor: Surfline; Boilers: richting surf-forecast |
 
 Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra Chrome met Surfline aan staat.
@@ -108,9 +109,9 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
 ## Getij en beste tijd
 
 - **Getij:** zeespiegel per spot (`sea_level_height_msl`, model van Météo-France via Open-Meteo). Dit loopt ongeveer 9 dagen vooruit. Hoog- en laagwater zijn op het hele uur afgerond (±30 min).
-- **Getijvoorkeur per spot** staat in `config/spots.json` (`tide`: low, low-mid, mid, mid-high, high, all). Behalve "all" bij Killer Point en Banana Point (surf-forecast) en "half, liefst opkomend" bij Bud Bud (eigen regels) zijn dit aannames om bij te stellen.
+- **Getijvoorkeur per spot** staat in `config/spots.json` (`tide`: low, low-mid, mid, mid-high, high, all). Behalve "all" bij Killer Point en Tonel (surf-forecast) en "half, liefst opkomend" bij Bud Bud (eigen regels) zijn dit aannames om bij te stellen.
 - **Beste tijd:** het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen. Een blok met het juiste getij, zwakke offshore wind en langere periode gaat voor.
-- **Golfhoogte-maximum per spot:** beachbreaks 2,1 m (hoger is vaak te groot). Riffen en points mogen hoger: La Sauzaie 2,5 · La Gravière 2,5 · Lafitenia 2,8 · Supertubos en Lagide 2,3 · Banana Point 2,5 · Boilers 3,0 · Anchor Point en Killer Point 3,5.
+- **Golfhoogte-maximum per spot:** beachbreaks 2,1 m (hoger is vaak te groot). Riffen en points mogen hoger: La Sauzaie 2,5 · La Gravière 2,5 · Lafitenia 2,8 · Supertubos en Lagide 2,3 · Tonel 2,3 · Beliche 3,5 (beschut, minimum 1,2) · Boilers 3,0 · Anchor Point en Killer Point 3,5.
 
 ## Bekende beperkingen
 
