@@ -74,7 +74,7 @@ def conditions(data, reg, spot, day, hours):
                     "tp": round(statistics.mean(r[1] for r in rows)), "dir": A.compass(mid[2]),
                     "ws": round(statistics.mean(r[3] for r in rows)), "wd": A.compass(mid[4]),
                     "tide": A.tide_label(*tide[len(tide) // 2]) if tide else None,
-                    "hs_ok": spot["hs"][0] <= statistics.mean(r[0] for r in rows) <= spot["hs"][1]}
+                    "hs_ok": A.hs_range(spot, reg)[0] <= statistics.mean(r[0] for r in rows) <= A.hs_range(spot, reg)[1]}
     return None
 
 

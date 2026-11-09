@@ -30,7 +30,9 @@
   "tiers": {
    "bevestigd": 3,
    "waarschijnlijk": 7
-  }
+  },
+  "max_hs_personal": 2.1,
+  "_max_hs_personal": "Persoonlijk maximum Hs (m) voor alle spots behalve thuisspots (mode home). Strenger dan het spotbereik, nooit ruimer."
  },
  "regions": [
   {

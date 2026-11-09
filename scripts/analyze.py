@@ -50,6 +50,15 @@ def compass(deg):
     return pts[int((deg % 360) / 22.5 + 0.5) % 16]
 
 
+
+def hs_range(spot, region):
+    """Spotbereik, afgetopt op het persoonlijke maximum (niet voor de thuisspot)."""
+    lo, hi = spot["hs"]
+    cap = CFG["defaults"].get("max_hs_personal")
+    if cap and region["alert"].get("mode") != "home":
+        hi = min(hi, cap)
+    return [lo, hi]
+
 def nl_date(ds):
     d = dt.date.fromisoformat(ds)
     return f"{DAYS_NL[d.weekday()]} {d.day} {MONTHS_NL[d.month - 1]}"
@@ -113,7 +122,7 @@ def evaluate_spot(spot, region, marine, wind, strict):
     need = st["min_good_hours"] if strict else D["min_good_hours"]
     glassy = st["glassy_kn"] if strict else spot.get("glassy_kn", D["glassy_kn"])
     powerful = spot.get("powerful", D["powerful"])
-    hs_lo, hs_hi = spot["hs"]
+    hs_lo, hs_hi = hs_range(spot, region)
     mh, wh = marine["hourly"], wind["hourly"]
     widx = {t: i for i, t in enumerate(wh["time"])}
     gusts = wh.get("wind_gusts_10m") or [None] * len(wh["time"])
@@ -412,7 +421,7 @@ def best_time(spot, region, marine, wind, tinfo, day):
     gusts = wh.get("wind_gusts_10m") or [None] * len(wh["time"])
     light = daylight(wind).get(day)
     lo_t, hi_t = TIDE_PREF.get(spot.get("tide", "all"), (0, 1))
-    hs_lo, hs_hi = spot["hs"]
+    hs_lo, hs_hi = hs_range(spot, region)
     tp_min = spot.get("tp_min", D["tp_min"])
     glassy = spot.get("glassy_kn", D["glassy_kn"])
     hours = []
@@ -538,7 +547,7 @@ def spot_cards(alerts, per_region, today, latest):
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
                         "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"),
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],
-                        "hs_range": s["hs"], "tide_pref": TIDE_NL.get(s.get("tide", "all")),
+                        "hs_range": hs_range(s, reg), "tide_pref": TIDE_NL.get(s.get("tide", "all")),
                         "run": run, "days": sdays})
     return out
 
