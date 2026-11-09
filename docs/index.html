@@ -163,7 +163,7 @@ function home(){
 }
 
 function tideChips(d, s){
-  const t = (d.tides || []).filter(x => true).map(x => `${x.k === 'HW' ? 'hoog' : 'laag'} ${x.t}`);
+  const t = (d.tides || []).map(x => `${x.k === 'HW' ? 'hoog' : 'laag'} ≈${x.t}`);
   return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
 }
 

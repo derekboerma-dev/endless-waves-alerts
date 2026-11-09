@@ -107,6 +107,13 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
    - Een tik op de melding opent dan de web-app.
 5. **Optioneel: het uitgebreide Claude-verslag.** Vul je GitHub-naam in `TAAKOPDRACHT.md` in en laat Claude de geplande taak aanmaken.
 
+## Getij en beste tijd
+
+- **Getij:** zeespiegel per spot (`sea_level_height_msl`, model van Météo-France via Open-Meteo). Dit loopt ongeveer 9 dagen vooruit. Hoog- en laagwater zijn op het hele uur afgerond (±30 min).
+- **Getijvoorkeur per spot** staat in `config/spots.json` (`tide`: low, low-mid, mid, mid-high, high, all). Behalve "all" bij Killer Point en Banana Point (surf-forecast) en "half, liefst opkomend" bij Bud Bud (eigen regels) zijn dit aannames om bij te stellen.
+- **Beste tijd:** het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen. Een blok met het juiste getij, zwakke offshore wind en langere periode gaat voor.
+- **Golfhoogte-maximum per spot:** beachbreaks 2,1 m (hoger is vaak te groot). Riffen en points mogen hoger: La Sauzaie 2,5 · La Gravière 2,5 · Lafitenia 2,8 · Supertubos en Lagide 2,3 · Banana Point 2,5 · Boilers 3,0 · Anchor Point en Killer Point 3,5.
+
 ## Bekende beperkingen
 
 - **Golfmodel op afstand.** Het golfmodel kijkt naar een punt 30–50 km uit de kust, net als Endless Waves. Lokale effecten (zandbanken, refractie, pieren) zitten er niet in. Check Surfline voordat je boekt.
