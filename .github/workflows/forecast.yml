@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: forecast
@@ -27,6 +28,17 @@ jobs:
 
       - name: Voorspelling ophalen
         run: python scripts/fetch.py
+
+      - name: Sessiescores uit de app ophalen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "Sessie in:title" --limit 200 \
+            --json number,title,body,createdAt > /tmp/issues.json || echo '[]' > /tmp/issues.json
+          python scripts/sessions.py /tmp/issues.json | tee /tmp/sessions.log
+          for n in $(tail -n 1 /tmp/sessions.log); do
+            gh issue close "$n" --repo "$GITHUB_REPOSITORY" --comment "Verwerkt in docs/sessions.json" || true
+          done
 
       - name: Toetsen en reeksen zoeken
         run: python scripts/analyze.py

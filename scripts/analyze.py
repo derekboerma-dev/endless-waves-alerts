@@ -536,6 +536,7 @@ def spot_cards(alerts, per_region, today, latest):
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
                               "plan": plan, "tides": tdays.get(ds, [])})
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
+                        "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"),
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],
                         "hs_range": s["hs"], "tide_pref": TIDE_NL.get(s.get("tide", "all")),
                         "run": run, "days": sdays})
@@ -568,7 +569,7 @@ def app_data(alerts, per_region, today, latest=None):
                         "days": out_days, "runs": [r for r in alerts["all_runs"] if r["region"] == reg["id"]]})
     return {"generated": alerts["generated"], "fetched_at": alerts["fetched_at"],
             "new": alerts["new"], "upgraded": alerts["upgraded"], "cancelled": alerts["cancelled"],
-            "problems": alerts["problems"], "regions": regions, "groups": CFG.get("groups"),
+            "problems": alerts["problems"], "regions": regions, "groups": CFG.get("groups"), "repo": CFG.get("repo"),
             "spots": spot_cards(alerts, per_region, today, latest) if latest else [],
             "tiers": D.get("tiers"), "long_range_from_day": D.get("long_range_from_day")}
 

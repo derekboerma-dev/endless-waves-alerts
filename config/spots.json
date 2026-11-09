@@ -122,7 +122,8 @@
      "tp_min": 11,
      "tide": "mid",
      "group": "Frankrijk",
-     "tide_rising": true
+     "tide_rising": true,
+     "surfline_id": "584204204e65fad6a7709023"
     },
     {
      "name": "La Sauzaie",
@@ -522,7 +523,8 @@
       3.5
      ],
      "tide": "all",
-     "group": "Taghazout"
+     "group": "Taghazout",
+     "surfline_id": "5842041f4e65fad6a7708cfd"
     },
     {
      "name": "Killer Point",
@@ -612,5 +614,6 @@
   "Frankrijk",
   "Portugal",
   "Taghazout"
- ]
+ ],
+ "repo": "derekboerma-dev/endless-waves-alerts"
 }

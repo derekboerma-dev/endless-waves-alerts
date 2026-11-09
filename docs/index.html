@@ -124,6 +124,25 @@ details{margin:14px 12px 0;background:var(--card);border:1px solid var(--line);b
 summary{cursor:pointer;color:var(--ink);font-weight:600}
 .toggle{display:flex;justify-content:flex-end;margin:10px 12px 0}
 .toggle button{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;font-size:12px;padding:5px 12px;cursor:pointer}
+.top .icon{appearance:none;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:0 2px;cursor:pointer}
+.top .icon.on{color:#f4c96b}
+.actions{display:flex;gap:8px;margin:12px 12px 0}
+.actions a,.actions button{flex:1;appearance:none;text-align:center;text-decoration:none;font-size:14px;font-weight:600;padding:11px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.actions .pri{background:var(--sea);border-color:var(--sea);color:#fff}
+.sess{margin:12px 12px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.sess h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.sess .r{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
+.sess .r:first-of-type{border-top:0}
+.sess .r .lbl{min-width:64px}
+.sheet-bg{position:fixed;inset:0;z-index:60;background:#0008;display:flex;align-items:flex-end}
+.sheet{background:var(--card);width:100%;max-width:760px;margin:0 auto;border-radius:18px 18px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
+.sheet h3{margin:0 0 10px;font-size:18px}
+.sheet label{display:block;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}
+.seg button.on{border-color:var(--ink);font-weight:700;box-shadow:inset 0 -4px 0 var(--c,var(--sea))}
+.sheet textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;background:var(--bg);color:var(--ink)}
+.sheet .hint{font-size:12px;color:var(--mut);margin-top:8px}
 .err{margin:0 12px 10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--warn);color:var(--warn);font-size:13px}
 </style>
 </head>
@@ -140,6 +159,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 <div class="top">
   <button id="back" hidden aria-label="Terug">‹</button>
   <div class="tt"><h1 id="title">Endless Waves</h1><span class="upd" id="upd"></span></div>
+  <button id="fav" class="icon" hidden aria-label="Favoriet">☆</button>
 </div>
 <main id="view"></main>
 <nav class="tabs">
@@ -159,17 +179,22 @@ let DATA = null;
 const g = d => d.v == null ? 'na' : 'g' + d.v;
 const runDates = s => new Set(s.run ? s.run.dates : []);
 
+/* favorieten: per toestel bewaard (localStorage), met try/catch voor privé-modus */
+const favs = () => { try { return JSON.parse(localStorage.getItem('ew-fav') || '[]'); } catch(e){ return []; } };
+const setFavs = a => { try { localStorage.setItem('ew-fav', JSON.stringify(a)); } catch(e){} };
+
 function home(){
-  $('#back').hidden = true; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Endless Waves';
   const days = DATA.spots[0].days;
   let html = '<div class="hd nm" style="cursor:default"></div>' + days.map((d, i) => {
     const dt = new Date(d.date + 'T12:00');
     return `<div class="hd ${i ? '' : 'today'} ${i === 7 ? 'wk' : ''}">${WD[dt.getDay()]}<b>${dt.getDate()}</b></div>`; }).join('');
-  const groups = DATA.groups || [...new Set(DATA.spots.map(s => s.group))];
+  const F = favs();
+  const groups = (F.length ? ['★ Favorieten'] : []).concat(DATA.groups || [...new Set(DATA.spots.map(s => s.group))]);
   groups.forEach(grp => {
-    const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => s.group === grp);
+    const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => grp === '★ Favorieten' ? F.includes(s.name) : (s.group === grp && !F.includes(s.name)));
     if (!list.length) return;
-    html += `<div class="grp"><span>${FLAG[list[0][0].country] || ''} ${esc(grp)}</span></div>`;
+    html += `<div class="grp"><span>${grp === '★ Favorieten' ? '' : (FLAG[list[0][0].country] || '')} ${esc(grp)}</span></div>`;
     list.forEach(([s, k]) => {
       const rd = runDates(s);
       html += `<div class="nm" data-k="${k}">${s.run ? `<i class="al bg-${s.run.tier}"></i>` : ''}<span>${esc(s.name)}</span></div>` +
@@ -215,6 +240,12 @@ function dayCard(s, d, i){
 function spot(k, focus){
   const s = DATA.spots[k]; if (!s) return home();
   $('#back').hidden = false; $('#title').textContent = s.name;
+  const fb = $('#fav'); fb.hidden = false;
+  const paintFav = () => { const on = favs().includes(s.name); fb.textContent = on ? '★' : '☆'; fb.classList.toggle('on', on); };
+  paintFav();
+  fb.onclick = () => { const F = favs(); setFavs(F.includes(s.name) ? F.filter(x => x !== s.name) : F.concat(s.name)); paintFav(); };
+  const slUrl = s.surfline_id ? `https://www.surfline.com/surf-report/x/${s.surfline_id}`
+    : `https://www.surfline.com/surf-reports-forecasts-cams-map/@${s.lat},${s.lon},13z`;
   let showAll = focus != null && (s.days[focus].v ?? 0) < 2;
   const reg = DATA.regions.find(r => r.id === s.region), a2 = reg.alert;
   const req = [a2.mode === 'home' ? `${a2.run_min_days} goede sessie, max ${a2.max_lead_days} d vooruit` : `≥ ${a2.run_min_days} goede dagen op rij`];
@@ -228,6 +259,8 @@ function spot(k, focus){
       <div class="sub">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${s.days[0].sst != null ? ` · water ${N(s.days[0].sst)}° · ${esc(s.days[0].wetsuit)}` : ''}</div>
       <div class="week">${s.days.slice(0, 16).map((d, i) => { const dt = new Date(d.date + 'T12:00');
         return `<div class="d ${sel === i ? 'sel' : ''}" data-i="${i}">${WD[dt.getDay()]}<b>${dt.getDate()}</b><div class="bar ${g(d)} ${d.unsure ? 'unsure' : ''}" style="width:22px;height:6px"></div></div>`; }).join('')}</div>
+      <div class="actions"><a href="${slUrl}" target="_blank" rel="noopener">Open in Surfline ↗</a><button class="pri" id="rate">Sessie beoordelen</button></div>
+      ${sessionsBlock(s)}
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
       <div class="days">${list.length ? list.map(([d, i]) => dayCard(s, d, i)).join('') : '<div class="empty">Geen aanraders in de komende 16 dagen.</div>'}</div>
       <details><summary>Over deze spot</summary>
@@ -236,6 +269,7 @@ function spot(k, focus){
         <p>"Beste tijd" = het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en wind kloppen, met voorkeur voor het juiste getij, zwakke offshore wind en lange periode. Getij en golven zijn modelwaarden; check Surfline voordat je gaat.</p>
       </details>`;
     $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
+    $('#rate').addEventListener('click', () => rateSheet(s));
     document.querySelectorAll('.day').forEach(el => el.addEventListener('click', () => el.classList.toggle('open')));
     document.querySelectorAll('.week .d').forEach(el => el.addEventListener('click', () => {
       const i = +el.dataset.i; if (!document.getElementById('d' + i)) showAll = true; draw(i); focusDay(i);
@@ -244,6 +278,51 @@ function spot(k, focus){
   const focusDay = i => { const t = document.getElementById('d' + i); if (t){ t.classList.add('focus', 'open'); setTimeout(() => t.scrollIntoView({block:'center', behavior:'smooth'}), 30); } };
   draw(focus);
   if (focus != null) focusDay(focus); else window.scrollTo(0, 0);
+}
+
+/* ---------- sessiescores: via een GitHub-issue naar de repository (zodat Claude ze kan gebruiken) ---------- */
+let SESS = [];
+const localSess = () => { try { return JSON.parse(localStorage.getItem('ew-sess') || '[]'); } catch(e){ return []; } };
+function sessionsBlock(s){
+  const synced = SESS.filter(r => r.spot === s.name);
+  const keys = new Set(synced.map(r => r.date + r.score));
+  const pending = localSess().filter(r => r.spot === s.name && !keys.has(r.date + r.score)).map(r => ({...r, pending:true}));
+  const all = pending.concat(synced).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
+  if (!all.length) return '';
+  return `<div class="sess"><h4>Jouw sessies</h4>${all.map(r => `<div class="r g${r.score}"><span class="lbl">${GRADE[r.score]}</span>
+    <span>${LONG(r.date)}${r.board ? ' · ' + esc(r.board) : ''}${r.note ? ' · ' + esc(r.note) : ''}${r.forecast ? `<br><span style="color:var(--mut)">voorspeld: ${esc(r.forecast)}</span>` : ''}${r.pending ? ' <span style="color:var(--mut)">(nog niet verwerkt)</span>' : ''}</span></div>`).join('')}</div>`;
+}
+function rateSheet(s){
+  const iso = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toLocaleDateString('sv-SE'); };
+  const dates = [0, 1, 2, 3].map(n => [iso(n), n === 0 ? 'vandaag' : n === 1 ? 'gisteren' : LONG(iso(n))]);
+  const boards = (QUIVER?.boards || []).map(b => b.short || `${b.brand} ${b.length}`);
+  let st = {date: dates[0][0], score: null, board: '', note: ''};
+  const bg = document.createElement('div'); bg.className = 'sheet-bg';
+  const paint = () => {
+    const fc = s.days.find(d => d.date === st.date);
+    bg.innerHTML = `<div class="sheet"><h3>Sessie ${esc(s.name)}</h3>
+      <label>Wanneer</label><div class="seg" id="sd">${dates.map(([v, t]) => `<button data-v="${v}" class="${st.date === v ? 'on' : ''}">${t}</button>`).join('')}</div>
+      <label>Hoe was het?</label><div class="seg" id="ss">${GRADE.map((t, k) => `<button data-v="${k}" class="g${k} ${st.score === k ? 'on' : ''}">${k ? t : 'niets'}</button>`).join('')}</div>
+      <label>Plank</label><div class="seg" id="sb">${boards.map(b => `<button data-v="${esc(b)}" class="${st.board === b ? 'on' : ''}">${esc(b)}</button>`).join('')}</div>
+      <label>Opmerking</label><textarea id="sn" placeholder="bijv. te vol bij hoogwater, mooie linkers">${esc(st.note)}</textarea>
+      <div class="actions" style="margin:14px 0 0"><button id="sc">Annuleren</button><button class="pri" id="sk" ${st.score == null ? 'disabled style="opacity:.5"' : ''}>Versturen</button></div>
+      <div class="hint">Versturen opent GitHub met een ingevuld formulier: tik daar op "Submit new issue". De volgende run verwerkt je score${fc ? ' samen met de voorspelling van die dag' : ''}.</div></div>`;
+    bg.querySelectorAll('#sd button').forEach(b => b.onclick = () => { st.date = b.dataset.v; paint(); });
+    bg.querySelectorAll('#ss button').forEach(b => b.onclick = () => { st.score = +b.dataset.v; paint(); });
+    bg.querySelectorAll('#sb button').forEach(b => b.onclick = () => { st.board = st.board === b.dataset.v ? '' : b.dataset.v; paint(); });
+    bg.querySelector('#sn').oninput = e => { st.note = e.target.value; };
+    bg.querySelector('#sc').onclick = () => bg.remove();
+    bg.querySelector('#sk').onclick = () => {
+      if (st.score == null) return;
+      const fcs = fc ? `${GRADE[fc.v ?? 0]}, ${N(fc.hs)} m${fc.plan ? `, beste tijd ${fc.plan.window}` : ''}` : 'niet meer in de app';
+      const body = `Spot: ${s.name}\nDatum: ${st.date}\nScore: ${st.score} (${GRADE[st.score]})\nPlank: ${st.board}\nOpmerking: ${st.note.replace(/\n/g, ' ')}\nVoorspeld: ${fcs}\n\n(ingediend vanuit de Endless Waves-app)`;
+      const url = `https://github.com/${DATA.repo}/issues/new?title=${encodeURIComponent('Sessie: ' + s.name + ' ' + st.date)}&body=${encodeURIComponent(body)}`;
+      try { const L = localSess(); L.unshift({spot: s.name, date: st.date, score: st.score, board: st.board, note: st.note, forecast: fcs}); localStorage.setItem('ew-sess', JSON.stringify(L.slice(0, 100))); } catch(e){}
+      window.open(url, '_blank'); bg.remove(); route();
+    };
+  };
+  paint(); bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
+  document.body.appendChild(bg);
 }
 
 const problems = () => DATA.problems?.length ? `<div class="err">Data onvolledig: ${DATA.problems.length} probleem/problemen bij ophalen.</div>` : '';
@@ -279,7 +358,7 @@ function boardSVG(b){
     <line x1="${cx}" y1="${y(0.03)}" x2="${cx}" y2="${y(0.97)}" stroke="currentColor" stroke-width=".7" opacity=".35"/>${finEls}</svg>`;
 }
 async function quiver(){
-  $('#back').hidden = true; $('#title').textContent = 'Quiver';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Quiver';
   if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ $('#view').innerHTML = '<div class="empty">Quiver niet gevonden.</div>'; return; } }
   const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}
@@ -301,6 +380,8 @@ async function load(first){
     const d = await (await fetch('data.json?t=' + Date.now(), {cache:'no-store'})).json();
     if (!d.spots || !d.spots.length) throw new Error('oude data');
     DATA = d;
+    try { SESS = await (await fetch('sessions.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ SESS = []; }
+    if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json', {cache:'no-store'})).json(); } catch(e){} }
     const t = d.fetched_at ? new Date(d.fetched_at) : null;
     const old = t && (Date.now() - t) / 36e5 > 36;
     $('#upd').textContent = t ? (old ? '⚠ Data verouderd · ' : 'Data bijgewerkt ') + t.toLocaleDateString('nl-NL', {weekday:'short', day:'numeric', month:'short'}) + ', ' + t.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '';

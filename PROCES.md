@@ -158,6 +158,10 @@ Keuzes van Derek, in volgorde:
 9. **Spotdetail toont ook:** watertemperatuur, luchttemperatuur, wetsuitadvies, zonsopkomst/-ondergang.
 10. **Menubalk onderin:** Voorspelling en Quiver. De quiver toont per board de maten, tail, vinnen, herkomst en wanneer je hem pakt, met een getekend silhouet. Foto's van internet zijn bewust niet gebruikt (auteursrecht); eigen foto's kunnen in `docs/img/`.
 
+11. **Favorieten:** ster rechtsboven op een spotpagina; favorieten staan bovenaan het startscherm. Bewaard op het toestel zelf.
+12. **Open in Surfline:** directe link bij Anchor Point en Bud Bud (Surfline-ID bekend); bij de andere spots de Surfline-kaart op de coördinaten van de spot. Directe links kunnen er komen zodra de Surfline-ID's bekend zijn (via Chrome).
+13. **Sessie beoordelen:** na een sessie geef je dezelfde graad als de app (niets/matig/redelijk/goed/top), met de plank en een opmerking. De app opent een ingevuld GitHub-issue ("Sessie: <spot> <datum>"); jij tikt op "Submit new issue". De volgende run zet het in `docs/sessions.json`, samen met wat de app die dag voorspelde, en sluit het issue. Onder "Jouw sessies" op de spotpagina zie je ze terug. Doel: later drempels, getijvoorkeuren en plankadvies per spot bijstellen op echte ervaring in plaats van aannames. Let op: de repository is openbaar, dus ook deze issues.
+
 Eerder afgewezen of vervangen: een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
 ## 6. Installatiestatus (9 november 2026)
@@ -174,7 +178,9 @@ Eerder afgewezen of vervangen: een kalender zonder hoogtes; een rode kleur voor 
 1. ntfy-push aanzetten (on hold).
 2. Spotrichtingen eenmalig overzetten naar de Surfline spot guides zodra Chrome met Surfline beschikbaar is. Dan is alles één bron.
 3. Getijvoorkeuren en de criteria voor Wijk aan Zee toetsen aan Dereks ervaring.
-4. Na 4–6 weken het archief gebruiken om te meten hoe vaak meldingen uitkwamen, en vergelijken met de Surfline-meldingen.
+4. Na 4–6 weken het archief en de sessiescores gebruiken om te meten hoe vaak meldingen uitkwamen, en vergelijken met de Surfline-meldingen.
+7. Surfline-ID's opzoeken voor directe links (nu alleen Anchor Point en Bud Bud).
+8. Overwogen maar niet gebouwd: reistijd en globale kosten per groep in de app.
 5. Layout verder bijschaven met echte data.
 6. Eventueel Nederland en Denemarken uitbreiden (idee uit Surf_Alert_Northsea).
 
