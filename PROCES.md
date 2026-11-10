@@ -205,6 +205,18 @@ Keuzes van Derek, in volgorde:
       - hoogtebereik = de "ideal size" uit de gids, met een vertaaltabel: heup ≈ 0,9 m · schouder 1,2 · hoofd 1,5 · overhead 2,1 · dubbel overhead 3,0 (+ = 3,7) · 3x overhead 4,5;
       - swell- en windbogen overgenomen uit de gids (punt 1 van de open punten is daarmee afgerond voor deze spots).
     - **Franse spots zonder Surfline-gids** (Bud Bud, La Sauzaie, Lostmarc'h, La Palue, Cap Ferret, Truc Vert): ondergrens meegeschaald (minimaal 0,6 m), bovengrens van wannasurf.
+21. **Uurstrook en GFS-reparatie (10 nov).**
+    - **Uurstrook:** in de dagkaart staat een knop "Per uur". Die toont 06–20 u voor de eerste 7 dagen (`hourly_days`):
+      - golfhoogte op de spot in de kleur van de graad per uur;
+      - periode en swellrichting;
+      - componenten op open zee;
+      - wind en stoten (groen offshore, rood onshore);
+      - getijcurve met hoog- en laagwater.
+      Je kunt wisselen tussen ECMWF en GFS; ⚠︎ markeert uren waarin de modellen sterk verschillen.
+    - **Gevonden:** GFS levert bij Open-Meteo geen piekperiode. Daardoor telde GFS sinds de start nooit mee: alle dagen waren alleen ECMWF, en dag 8+ moest dus altijd streng goed zijn.
+      - Reparatie: `wave_period × 1,2` als piekperiode, en per component `*_wave_period`. GFS telt nu mee; verschil met Surfline op dag 1–6 gemiddeld 0,33 m (ECMWF 0,18 m).
+      - Gevolg: dag 8+ vraagt nu dat beide modellen het eens zijn.
+    - **ECMWF WAM** levert bij Open-Meteo geen losse swellcomponenten. Swell en windzee apart (stap 1) werkt daardoor alleen voor GFS; ECMWF rekent met het totaal.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
