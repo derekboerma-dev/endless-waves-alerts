@@ -223,7 +223,7 @@ Keuzes van Derek, in volgorde:
       - `VAPID_PRIVATE_KEY`: de privésleutel. Die staat alleen in het projectdocument, niet in de repository. De publieke sleutel staat in `docs/index.html`.
       - `WEBPUSH_SUB`: de code uit de app. Meerdere apparaten kan ook, als JSON-lijst.
     - Verzending: `scripts/webpush.py` (pywebpush), als stap in de workflow vóór ntfy. Ook "Test pushmelding" stuurt een web push.
-    - Werkt alleen vanaf het beginscherm-icoon (iOS 16.4+). ntfy blijft als reserve; zet dat onderwerp in de ntfy-app eventueel op stil.
+    - Werkt alleen vanaf het beginscherm-icoon (iOS 16.4+). Een tik op een ntfy-melding opent Safari, niet de app. Daarom gaat ntfy sinds 10 nov alleen nog uit als de web push mislukt (reserve).
     - Geeft de stap 404 of 410, dan is het abonnement verlopen: in de app opnieuw 🔔 → Aanzetten en de secret vervangen.
     - ntfy-push staat sinds 10 nov aan (onderwerp in het projectdocument). Bekend iOS-probleem met ntfy: komen meldingen alleen binnen na verversen, verwijder dan het onderwerp en voeg het opnieuw toe.
 

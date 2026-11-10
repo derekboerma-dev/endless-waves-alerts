@@ -57,6 +57,7 @@ jobs:
           git push
 
       - name: Pushmelding naar de app (web push)
+        id: webpush
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
           WEBPUSH_SUB: ${{ secrets.WEBPUSH_SUB }}
@@ -64,9 +65,10 @@ jobs:
         run: |
           if [ -z "$VAPID_PRIVATE_KEY" ] || [ -z "$WEBPUSH_SUB" ] || [ ! -s out/ntfy.txt ]; then echo "geen web push"; exit 0; fi
           pip install --quiet pywebpush
-          python scripts/webpush.py || echo "web push mislukt (ntfy is reserve)"
+          if python scripts/webpush.py; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "web push mislukt: ntfy als reserve"; fi
 
-      - name: Pushmelding via ntfy
+      - name: Pushmelding via ntfy (alleen als reserve)
+        if: steps.webpush.outputs.ok != 'true'
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           APP_URL: ${{ vars.APP_URL }}

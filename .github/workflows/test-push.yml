@@ -3,6 +3,10 @@ name: Test pushmelding
 on:
   workflow_dispatch:
     inputs:
+      ntfy:
+        description: "Ook ntfy testen"
+        type: boolean
+        default: false
       expect:
         description: "Onderwerp zoals in je ntfy-app (alleen om te vergelijken)"
         required: false
@@ -12,7 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Testmelding via ntfy
+      - name: Testmelding naar de app (web push)
+        id: webpush
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          WEBPUSH_SUB: ${{ secrets.WEBPUSH_SUB }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$VAPID_PRIVATE_KEY" ] || [ -z "$WEBPUSH_SUB" ]; then echo "web push nog niet ingesteld"; exit 0; fi
+          pip install --quiet pywebpush
+          python scripts/webpush.py "Endless Waves: testmelding" "Meldingen komen nu rechtstreeks in de app. Tik om te openen." && echo "ok=true" >> "$GITHUB_OUTPUT" || echo "web push mislukt"
+
+      - name: Testmelding via ntfy (alleen als reserve, of met 'ntfy' aangevinkt)
+        if: steps.webpush.outputs.ok != 'true' || inputs.ntfy
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           APP_URL: ${{ vars.APP_URL }}
@@ -37,13 +53,3 @@ jobs:
               n = sum(1 for line in r.read().decode().splitlines() if '"event":"message"' in line)
           print("berichten op dit onderwerp in de laatste 5 min:", n)
           PY
-
-      - name: Testmelding naar de app (web push)
-        env:
-          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-          WEBPUSH_SUB: ${{ secrets.WEBPUSH_SUB }}
-          APP_URL: ${{ vars.APP_URL }}
-        run: |
-          if [ -z "$VAPID_PRIVATE_KEY" ] || [ -z "$WEBPUSH_SUB" ]; then echo "web push nog niet ingesteld"; exit 0; fi
-          pip install --quiet pywebpush
-          python scripts/webpush.py "Endless Waves: testmelding" "Meldingen komen nu rechtstreeks in de app. Tik om te openen."
