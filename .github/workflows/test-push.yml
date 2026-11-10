@@ -1,7 +1,11 @@
 name: Test pushmelding
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      expect:
+        description: "Onderwerp zoals in je ntfy-app (alleen om te vergelijken)"
+        required: false
 
 jobs:
   push:
@@ -11,15 +15,24 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           APP_URL: ${{ vars.APP_URL }}
+          EXPECT: ${{ inputs.expect }}
         run: |
           if [ -z "$NTFY_TOPIC" ]; then echo "Secret NTFY_TOPIC ontbreekt"; exit 1; fi
           python - <<'PY'
           import json, os, urllib.request
-          body = {"topic": os.environ["NTFY_TOPIC"], "title": "Endless Waves: testmelding",
+          body = {"topic": os.environ["NTFY_TOPIC"].strip(), "title": "Endless Waves: testmelding",
                   "message": "Pushmeldingen werken. Tik om de app te openen.", "tags": ["ocean"], "priority": 4}
           if os.environ.get("APP_URL"):
               body["click"] = os.environ["APP_URL"]
           req = urllib.request.Request("https://ntfy.sh", data=json.dumps(body).encode(),
                                        headers={"Content-Type": "application/json"})
-          print(urllib.request.urlopen(req, timeout=30).status)
+          print("verstuurd:", urllib.request.urlopen(req, timeout=30).status)
+          t = os.environ["NTFY_TOPIC"]
+          exp = os.environ.get("EXPECT", "")
+          print("lengte onderwerp:", len(t), "| spaties/enter aan begin of eind:", t != t.strip(),
+                "| gelijk aan verwacht onderwerp:", t.strip() == exp if exp else "niet opgegeven")
+          # staat het bericht ook echt op ntfy.sh?
+          with urllib.request.urlopen(f"https://ntfy.sh/{t.strip()}/json?poll=1&since=5m", timeout=30) as r:
+              n = sum(1 for line in r.read().decode().splitlines() if '"event":"message"' in line)
+          print("berichten op dit onderwerp in de laatste 5 min:", n)
           PY
