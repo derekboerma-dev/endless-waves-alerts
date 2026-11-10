@@ -32,7 +32,7 @@
    "waarschijnlijk": 7
   },
   "surf_scale": 0.52,
-  "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). 'powerful' blijft over open zee.",
+  "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). Ook 'powerful' (krachtig, voor 'top') gaat sinds 10 nov over de hoogte op de spot.",
   "_kalibratie": "surf_scale en exposure per spot bijgesteld op 9 nov 2026 met de Surfline LOTUS-voorspelling (16 dagen, mediaan Surfline/app). Lostmarc'h staat niet op Surfline: factor van La Palue. Op 10 nov opnieuw bijgesteld na de overstap op swell/windzee apart en golfpunt per spot (zelfde Surfline-reeks, factor per spot begrensd op 0,75–1,35)."
  },
  "regions": [
@@ -77,9 +77,9 @@
       2.0
      ],
      "tp_min": 6,
-     "glassy_kn": 8,
+     "glassy_kn": 6,
      "powerful": {
-      "hs_min": 1.3,
+      "hs_min": 1.2,
       "tp_min": 8
      },
      "strict": {

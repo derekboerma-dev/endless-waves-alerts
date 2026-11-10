@@ -35,13 +35,13 @@ Web-app (GitHub Pages, map docs/)   startscherm: per regio per dag golfhoogte + 
 - periode minstens 6 s;
 - Hs 0,8–2,5 m;
 - swell uit NNW tot W;
-- wind uit O tot ZO, of hooguit 8 kn.
+- wind uit O tot ZO, of hooguit 6 kn.
 
 Dit is een eerste schatting; stel bij na ervaring.
 
 **Strenge variant (★):** periode minstens 12 s (Wijk aan Zee 8 s), 3 goede uren, en geen windstilte-regel: alleen echte offshore wind telt.
 
-**Krachtig:** Hs minstens 1,5 m en periode minstens 12 s (Wijk aan Zee 1,3 m en 8 s).
+**Krachtig:** golfhoogte op de spot minstens 1,5 m en periode minstens 12 s (Wijk aan Zee 1,2 m en 8 s).
 
 ## Conditiegraad in de app
 
@@ -53,7 +53,7 @@ Dit is een eerste schatting; stel bij na ervaring.
 | matig | twee voorwaarden niet |
 | slecht | drie of meer niet |
 
-Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richting op open zee, maal een beschuttingsfactor per spot), van het grootste uur, gemiddeld over beide modellen. Alle hoogtegrenzen gaan hierover; 'krachtig' gaat over open zee. De graad is het gemiddelde van de modellen, naar beneden afgerond. Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
+Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richting op open zee, maal een beschuttingsfactor per spot), van het grootste uur, gemiddeld over beide modellen. Alle hoogtegrenzen gaan hierover, ook 'krachtig'. De graad is het gemiddelde van de modellen, naar beneden afgerond. Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
 
 ## Zekerheid en termijn
 

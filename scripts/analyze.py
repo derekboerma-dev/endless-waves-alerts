@@ -245,7 +245,7 @@ def evaluate_spot(spot, region, marine, wind, strict):
         rec["rows"].append({"h": hr, "hs": hs, "off": off, "tp": tp, "dir": wdir, "ws": ws, "wd": wd, "gu": gu, "ok": ok, "pts": pts})
         if ok:
             rec["good"].append(hr)
-            if off >= powerful["hs_min"] and tp >= powerful["tp_min"]:  # kracht: op open zee
+            if hs >= powerful["hs_min"] and tp >= powerful["tp_min"]:  # kracht: hoogte op de spot (sinds 10 nov)
                 rec["powerful"] = True
     out = {}
     for day, r in days.items():
@@ -514,7 +514,7 @@ def hourly_for(spot, region, data, day, tinfo):
             wind_ok = (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99))
             pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)
             if pts == 4:
-                g = 4 if (off >= powerful["hs_min"] and tp >= powerful["tp_min"]) else 3
+                g = 4 if (hs >= powerful["hs_min"] and tp >= powerful["tp_min"]) else 3
             else:
                 g = 2 if pts == 3 and wind_ok else (1 if pts == 3 else 0)
             comps = []

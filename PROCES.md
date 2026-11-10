@@ -226,6 +226,10 @@ Keuzes van Derek, in volgorde:
     - Werkt alleen vanaf het beginscherm-icoon (iOS 16.4+). Een tik op een ntfy-melding opent Safari, niet de app. Daarom gaat ntfy sinds 10 nov alleen nog uit als de web push mislukt (reserve).
     - Geeft de stap 404 of 410, dan is het abonnement verlopen: in de app opnieuw 🔔 → Aanzetten en de secret vervangen.
     - ntfy-push staat sinds 10 nov aan (onderwerp in het projectdocument). Bekend iOS-probleem met ntfy: komen meldingen alleen binnen na verversen, verwijder dan het onderwerp en voeg het opnieuw toe.
+23. **Top en windstilte (Derek, 10 nov).**
+    - "Krachtig" gaat nu over de hoogte op de spot: minstens 1,5 m en 12 s; Wijk aan Zee 1,2 m en 8 s. Voorheen was het de hoogte op open zee, waardoor 0,8 m windswell al "top" werd.
+    - Windstilte-grens Wijk aan Zee van 8 naar 6 kn.
+    - Uitleg aan Derek: de dagscore is het gemiddelde van ECMWF en GFS, de uurstrook toont één model. "?" betekent dat de modellen sterk verschillen.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
