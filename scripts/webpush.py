@@ -33,7 +33,7 @@ def main():
     for sub in subs:
         try:
             r = webpush(sub, json.dumps({"title": title, "body": body, "url": url}), vapid_private_key=key,
-                        vapid_claims={"sub": os.environ.get("VAPID_SUB", "https://derekboerma-dev.github.io/endless-waves-alerts/")}, ttl=86400)
+                        vapid_claims={"sub": os.environ.get("VAPID_SUB", "https://derekboerma-dev.github.io")}, ttl=86400)
             print("web push:", r.status_code)
             ok += 1
         except WebPushException as e:
