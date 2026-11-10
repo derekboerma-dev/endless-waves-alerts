@@ -11,6 +11,7 @@ import json
 import pathlib
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -44,6 +45,15 @@ def get(url, params, tries=4):
         try:
             with urllib.request.urlopen(f"{url}?{q}", timeout=60) as r:
                 return json.loads(r.read().decode())
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code == 400:  # onbekend model of variabele: opnieuw proberen heeft geen zin
+                try:
+                    last = json.loads(e.read().decode()).get("reason", e)
+                except Exception:  # noqa: BLE001
+                    pass
+                break
+            time.sleep(5 * (i + 1))
         except Exception as e:  # noqa: BLE001 - log en opnieuw
             last = e
             time.sleep(5 * (i + 1))
