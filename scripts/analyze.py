@@ -112,6 +112,8 @@ def sea_state(mh, i, spot):
         v = mh.get(k)
         return v[i] if v and i < len(v) else None
     hs, tp, wdir = g("wave_height"), g("wave_peak_period"), g("wave_direction")
+    if tp is None and g("wave_period") is not None:
+        tp = g("wave_period") * 1.2  # GFS levert geen piekperiode: gemiddelde periode omrekenen (Tp ≈ 1,2 Tm)
     if None in (hs, tp, wdir):
         return None
     comps, e = [], 0.0
@@ -123,7 +125,7 @@ def sea_state(mh, i, spot):
             e += h * h
     if not comps:
         return surf_height(hs, tp, wdir, spot), tp, wdir, hs
-    if "wind_wave_height" not in mh and hs * hs > e * 1.1:
+    if not any(g(k) is not None for k in ("wind_wave_height",)) and hs * hs > e * 1.1:
         # model zonder windzee-component: rest-energie als korte windzee uit de totale richting
         comps.append((math.sqrt(hs * hs - e), min(tp, 6.0), wdir))
     parts = [(surf_height(h, p, d, spot), p, d) for h, p, d in comps]
@@ -470,6 +472,66 @@ TIDE_PREF = {"low": (0.0, 0.35), "low-mid": (0.0, 0.6), "mid": (0.25, 0.75), "mi
 TIDE_NL = {"low": "laag", "low-mid": "laag tot half", "mid": "half", "mid-high": "half tot hoog", "high": "hoog", "all": "alle getijden"}
 
 
+
+def hourly_for(spot, region, data, day, tinfo):
+    """Uurdetail 06-20 u voor één dag, per model: hoogte op de spot, periode/richting, componenten op open zee,
+    wind/stoten (offshore?), graad per uur en getij. Compact, voor de uurstrook in de app."""
+    home = region["alert"].get("mode") == "home"
+    tp_min = spot.get("tp_min", D["tp_min"])
+    glassy = spot.get("glassy_kn", D["glassy_kn"])
+    powerful = spot.get("powerful", D["powerful"])
+    hs_lo, hs_hi = hs_range(spot, region)
+    raw = (data.get("tide") or {}).get(spot["name"]) or {}
+    th = raw.get("hourly") or {}
+    tlev = dict(zip(th.get("time") or [], th.get("sea_level_height_msl") or []))
+    out = {"tide": [], "models": {}}
+    for h in range(6, 21):
+        t = f"{day}T{h:02d}:00"
+        ti = tinfo.get(t)
+        lv = tlev.get(t)
+        out["tide"].append([h, None if lv is None else round(lv, 2), ti[0] if ti else None, bool(ti and ti[1])])
+    for mm, wm, lab in PAIRS:
+        marine = marine_for(data, spot, mm)
+        wind = ((data.get("wind") or {}).get(spot["name"]) or {}).get(wm)
+        if not marine or marine.get("error") or not wind or wind.get("error"):
+            continue
+        mh, wh = marine["hourly"], wind["hourly"]
+        midx = {t: i for i, t in enumerate(mh["time"])}
+        widx = {t: i for i, t in enumerate(wh["time"])}
+        gusts = wh.get("wind_gusts_10m") or [None] * len(wh["time"])
+        rows = []
+        for h in range(6, 21):
+            t = f"{day}T{h:02d}:00"
+            i, j = midx.get(t), widx.get(t)
+            stt = sea_state(mh, i, spot) if i is not None else None
+            if stt is None or j is None or wh["wind_speed_10m"][j] is None:
+                rows.append(None)
+                continue
+            hs, tp, wdir, off = stt
+            ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
+            dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
+            offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
+            wind_ok = (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99))
+            pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)
+            if pts == 4:
+                g = 4 if (off >= powerful["hs_min"] and tp >= powerful["tp_min"]) else 3
+            else:
+                g = 2 if pts == 3 and wind_ok else (1 if pts == 3 else 0)
+            comps = []
+            for kh, kps, kd in COMPONENTS:
+                v = (mh.get(kh) or [None] * (i + 1))[i]
+                pp = next(((mh.get(k) or [None] * (i + 1))[i] for k in kps if (mh.get(k) or [None] * (i + 1))[i] is not None), None)
+                dd = (mh.get(kd) or [None] * (i + 1))[i]
+                if v and v >= 0.1 and pp and dd is not None:
+                    comps.append([round(v, 1), round(pp), round(dd), kh.split("_")[0]])
+            rows.append({"s": round(hs, 2), "tp": round(tp), "d": round(wdir), "off": round(off, 1),
+                         "c": comps, "ws": round(ws), "gu": None if gu is None else round(gu), "wd": round(wd),
+                         "on": "off" if offshore else ("glassy" if ws <= glassy else "on"), "g": g,
+                         "hires": bool(wind.get("_hires")) and h is not None})
+        if any(rows):
+            out["models"][lab] = rows
+    return out
+
 def tide_series(tj):
     """Uurwaarden zeespiegel -> {tijd: (fractie 0=laag..1=hoog, opkomend)} en per dag de hoog- en laagwatertijden."""
     h = (tj or {}).get("hourly") or {}
@@ -636,7 +698,8 @@ def spot_cards(alerts, per_region, today, latest):
                               "hs": round(sum(hs) / len(hs), 1) if hs else None,
                               "surf": surf_range(sum(hs) / len(hs)) if hs else None, "counts": counts,
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
-                              "plan": plan, "tides": tdays.get(ds, [])})
+                              "plan": plan, "tides": tdays.get(ds, []),
+                              "hourly": hourly_for(s, reg, data, ds, tinfo) if k < D.get("hourly_days", 7) else None})
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
                         "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"), "guide": s.get("guide"),
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],

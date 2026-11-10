@@ -24,10 +24,10 @@ WIND_URL = "https://api.open-meteo.com/v1/forecast"
 # Twee onafhankelijke modelketens: overeenstemming = extra zekerheid.
 MARINE_MODELS = ["ecmwf_wam025", "ncep_gfswave025"]
 WIND_MODELS = ["ecmwf_ifs025", "gfs_seamless"]
-MARINE_VARS = ["wave_height", "wave_direction", "wave_peak_period",
-               "swell_wave_height", "swell_wave_direction", "swell_wave_peak_period"]
+MARINE_VARS = ["wave_height", "wave_direction", "wave_peak_period", "wave_period",
+               "swell_wave_height", "swell_wave_direction", "swell_wave_peak_period", "swell_wave_period"]
 # Losse componenten (windzee en tweede swell). Niet elk model levert alles; dan valt de aanvraag terug op MARINE_VARS.
-MARINE_VARS_FULL = MARINE_VARS + ["wind_wave_height", "wind_wave_direction", "wind_wave_peak_period",
+MARINE_VARS_FULL = MARINE_VARS + ["wind_wave_height", "wind_wave_direction", "wind_wave_peak_period", "wind_wave_period",
                                   "secondary_swell_wave_height", "secondary_swell_wave_direction",
                                   "secondary_swell_wave_period"]
 # Fijnmazige windmodellen voor de eerste ±48 uur, per land; de eerste met data wint.

@@ -146,6 +146,30 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .sess .r{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:13px}
 .sess .r:first-of-type{border-top:0}
 .sess .r .lbl{min-width:64px}
+/* uurstrook */
+.hourbtn{margin-top:10px;width:100%;border:1px solid var(--line);background:var(--hl);color:var(--ink);border-radius:12px;padding:9px;font:inherit;font-weight:600}
+.hsheet{max-height:92vh;overflow-y:auto;padding-left:0;padding-right:0}
+.hsheet .hh{display:flex;align-items:center;gap:8px;padding:0 16px}
+.hsheet .hh h3{flex:1;margin:0}
+.hsheet .nav{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;width:34px;height:34px;font-size:18px}
+.hsheet .nav:disabled{opacity:.3}
+.hsheet .seg{padding:0 16px}
+.hgrid{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:10px;padding:0 6px 6px}
+.hgrid table{border-collapse:collapse;font-size:12px}
+.hgrid th{position:sticky;left:0;background:var(--card);z-index:2;text-align:left;font-weight:600;color:var(--mut);font-size:11px;padding:4px 8px 4px 10px;white-space:nowrap}
+.hgrid td{min-width:46px;text-align:center;padding:4px 2px;vertical-align:bottom}
+.hgrid tr.hr td{color:var(--mut);font-size:11px}
+.hgrid td.dark{opacity:.45}
+.hgrid .bar{margin:0 auto;width:30px;border-radius:5px 5px 2px 2px}
+.hgrid .bv{font-weight:700;font-size:12px}
+.hgrid .arr{display:inline-block;font-size:14px;line-height:1}
+.hgrid .w{border-radius:8px;padding:3px 0;font-weight:600}
+.hgrid .w.off{background:color-mix(in srgb,var(--g3) 28%,transparent)}
+.hgrid .w.on{background:color-mix(in srgb,var(--warn) 22%,transparent)}
+.hgrid .w.glassy{background:var(--hl)}
+.hgrid .cmp{font-size:10px;color:var(--mut);line-height:1.25;white-space:nowrap}
+.hgrid tr.sep td,.hgrid tr.sep th{border-top:1px solid var(--line)}
+.hleg{font-size:11px;color:var(--mut);padding:8px 16px 0;line-height:1.5}
 .sheet-bg{position:fixed;inset:0;z-index:60;background:#0008;display:flex;align-items:flex-end}
 .sheet{background:var(--card);width:100%;max-width:760px;margin:0 auto;border-radius:18px 18px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
 .sheet h3{margin:0 0 10px;font-size:18px}
@@ -236,6 +260,59 @@ function tideChips(d, s){
 }
 
 const SURF = e => e && e.surf ? `${N(e.surf[0])}–${N(e.surf[1])} m` : (e && e.hs != null ? `${N(e.hs)} m` : '');
+
+/* uurstrook: per uur golf, periode, swell, wind en getij voor één dag (eerste 7 dagen) */
+const ARR = deg => `<span class="arr" style="transform:rotate(${deg}deg)">↓</span>`;
+const CMPN = {swell: 'swell', secondary: '2e swell', wind: 'windzee'};
+function hourSheet(s, i0){
+  const days = s.days.map((d, i) => [d, i]).filter(([d]) => d.hourly && Object.keys(d.hourly.models || {}).length);
+  if (!days.length) return;
+  let pos = Math.max(0, days.findIndex(([, i]) => i === i0)), model = null;
+  const bg = document.createElement('div'); bg.className = 'sheet-bg';
+  const close = () => bg.remove();
+  const paint = () => {
+    const [d] = days[pos], H = d.hourly, labs = Object.keys(H.models);
+    if (!model || !H.models[model]) model = labs[0];
+    const rows = H.models[model];
+    const hrs = H.tide.map(t => t[0]);
+    const sun = (d.sun || ['07:00', '18:00']).map(x => +x.slice(0, 2) + +x.slice(3) / 60);
+    const dark = h => h + 0.5 < sun[0] || h > sun[1] - 0.5;
+    const maxS = Math.max(1.5, ...rows.filter(Boolean).map(r => r.s));
+    const cell = (h, inner, cls = '') => `<td class="${dark(h) ? 'dark' : ''} ${cls}">${inner}</td>`;
+    const R = (lab, f, cls = '') => `<tr class="${cls}"><th>${lab}</th>${hrs.map((h, k) => rows[k] ? cell(h, f(rows[k], k)) : cell(h, '')).join('')}</tr>`;
+    const lv = H.tide.map(t => t[1]).filter(v => v != null), lo = Math.min(...lv), hi = Math.max(...lv);
+    const W = 46 * hrs.length, Ht = 40;
+    const pts = H.tide.map((t, k) => t[1] == null ? null : `${k * 46 + 23},${(Ht - 4 - (t[1] - lo) / Math.max(0.1, hi - lo) * (Ht - 8)).toFixed(1)}`).filter(Boolean).join(' ');
+    const other = labs.find(l => l !== model);
+    const diff = other ? H.models[other].map((r, k) => r && rows[k] ? Math.abs(r.g - rows[k].g) >= 2 || Math.abs(r.s - rows[k].s) >= 0.5 : false) : [];
+    bg.innerHTML = `<div class="sheet hsheet">
+      <div class="hh"><button class="nav" id="hp" ${pos ? '' : 'disabled'} aria-label="vorige dag">‹</button>
+        <h3>${esc(s.name)} · ${LONG(d.date)}</h3>
+        <button class="nav" id="hn" ${pos < days.length - 1 ? '' : 'disabled'} aria-label="volgende dag">›</button>
+        <button class="nav" id="hx" aria-label="sluiten">×</button></div>
+      ${labs.length > 1 ? `<div class="seg" style="margin-top:10px">${labs.map(l => `<button data-m="${l}" class="${l === model ? 'on' : ''}">${l}</button>`).join('')}</div>` : ''}
+      <div class="hgrid"><table>
+        <tr class="hr"><th></th>${hrs.map(h => `<td class="${dark(h) ? 'dark' : ''}">${h}u${diff[hrs.indexOf(h)] ? '<br>⚠︎' : ''}</td>`).join('')}</tr>
+        ${R('Golf (m)', r => `<div class="bv">${N(Math.round(r.s * 10) / 10)}</div><div class="bar" style="height:${Math.max(4, r.s / maxS * 56)}px;background:var(--g${r.g})"></div>`)}
+        ${R('Periode', r => `${r.tp} s<br>${ARR(r.d)}`, 'sep')}
+        ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
+        ${R('Wind (kn)', r => `<div class="w ${r.on}">${r.ws}${r.gu != null ? `<small>/${r.gu}</small>` : ''}<br>${ARR(r.wd)}</div>`, 'sep')}
+        <tr class="sep"><th>Getij</th><td colspan="${hrs.length}" style="padding:0"><svg width="${W}" height="${Ht}" style="display:block"><polyline points="${pts}" fill="none" stroke="var(--sea)" stroke-width="2"/></svg></td></tr>
+        <tr class="hr"><th></th>${H.tide.map(t => { const x = (d.tides || []).find(e => +e.t.slice(0, 2) === t[0]); return `<td>${x ? `<b style="color:var(--sea)">${x.k === 'HW' ? 'hoog' : 'laag'}<br>${x.t}</b>` : (t[1] == null ? '' : N(Math.round(t[1] * 10) / 10))}</td>`; }).join('')}</tr>
+      </table></div>
+      <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · grijs zwak · rood onshore; klein getal = stoten.
+        Op zee = swellcomponenten (30–50 km uit de kust). ⚠︎ = ECMWF en GFS verschillen sterk.</div>
+    </div>`;
+    bg.querySelector('#hx').onclick = close;
+    bg.querySelector('#hp').onclick = () => { pos--; paint(); };
+    bg.querySelector('#hn').onclick = () => { pos++; paint(); };
+    bg.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { model = b.dataset.m; paint(); });
+    const best = rows.findIndex(r => r && r.g >= 3);
+    const g = bg.querySelector('.hgrid'); if (best > 2) g.scrollLeft = (best - 2) * 46;
+  };
+  bg.addEventListener('click', e => { if (e.target === bg) close(); });
+  document.body.appendChild(bg); paint();
+}
 function dayCard(s, d, i){
   const p = d.plan, gr = d.v ?? 0;
   const models = Object.entries(d.models).map(([lab, e]) => `<div class="m"><b>${lab} · ${GRADE[e.score ?? 0]}${e.strict ? ' ★' : ''}</b>
@@ -248,6 +325,7 @@ function dayCard(s, d, i){
       ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}${extras(d)}`
     : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>${extras(d)}`}
     ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
+    ${d.hourly ? `<button class="hourbtn" data-hour="${i}">Per uur ›</button>` : ''}
     <div class="more">${models}</div></div>`;
 }
 
@@ -305,6 +383,7 @@ function spot(k, focus){
     $('#tg').addEventListener('click', () => { showAll = !showAll; draw(sel); });
     $('#rate').addEventListener('click', () => rateSheet(s));
     document.querySelectorAll('.day').forEach(el => el.addEventListener('click', () => el.classList.toggle('open')));
+    document.querySelectorAll('.hourbtn').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); hourSheet(s, +el.dataset.hour); }));
     document.querySelectorAll('.bars button').forEach(el => el.addEventListener('click', () => {
       const i = +el.dataset.i; if (!document.getElementById('d' + i)) showAll = true; draw(i); focusDay(i);
     }));
