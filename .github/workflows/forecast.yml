@@ -2,7 +2,8 @@ name: Endless Waves forecast
 
 on:
   schedule:
-    - cron: "40 7 * * *"   # dagelijks 07:40 UTC (na de 00z-run van ECMWF en GFS)
+    - cron: "23 6 * * *"   # dagelijks 06:23 UTC (na de 00z-run van ECMWF en GFS); geen heel/half uur, minder vertraging bij GitHub
+    - cron: "47 15 * * *"  # reserve en middagupdate (na de 06z/12z-runs)
   workflow_dispatch: {}      # handmatig starten via het tabblad Actions
   push:                      # ook direct draaien na een wijziging in instellingen of scripts
     branches: [main]
