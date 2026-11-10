@@ -11,6 +11,7 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
       - name: Testmelding via ntfy
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
@@ -36,3 +37,13 @@ jobs:
               n = sum(1 for line in r.read().decode().splitlines() if '"event":"message"' in line)
           print("berichten op dit onderwerp in de laatste 5 min:", n)
           PY
+
+      - name: Testmelding naar de app (web push)
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          WEBPUSH_SUB: ${{ secrets.WEBPUSH_SUB }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$VAPID_PRIVATE_KEY" ] || [ -z "$WEBPUSH_SUB" ]; then echo "web push nog niet ingesteld"; exit 0; fi
+          pip install --quiet pywebpush
+          python scripts/webpush.py "Endless Waves: testmelding" "Meldingen komen nu rechtstreeks in de app. Tik om te openen."

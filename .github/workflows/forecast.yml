@@ -56,6 +56,16 @@ jobs:
           git pull --rebase origin main
           git push
 
+      - name: Pushmelding naar de app (web push)
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          WEBPUSH_SUB: ${{ secrets.WEBPUSH_SUB }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$VAPID_PRIVATE_KEY" ] || [ -z "$WEBPUSH_SUB" ] || [ ! -s out/ntfy.txt ]; then echo "geen web push"; exit 0; fi
+          pip install --quiet pywebpush
+          python scripts/webpush.py || echo "web push mislukt (ntfy is reserve)"
+
       - name: Pushmelding via ntfy
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}

@@ -217,6 +217,15 @@ Keuzes van Derek, in volgorde:
       - Reparatie: `wave_period × 1,2` als piekperiode, en per component `*_wave_period`. GFS telt nu mee; verschil met Surfline op dag 1–6 gemiddeld 0,33 m (ECMWF 0,18 m).
       - Gevolg: dag 8+ vraagt nu dat beide modellen het eens zijn.
     - **ECMWF WAM** levert bij Open-Meteo geen losse swellcomponenten. Swell en windzee apart (stap 1) werkt daardoor alleen voor GFS; ECMWF rekent met het totaal.
+22. **Meldingen rechtstreeks in de app (web push, 10 nov).**
+    - In de app: 🔔 rechtsboven op het startscherm → "Aanzetten". De iPhone vraagt toestemming en de app toont daarna een code (het abonnement).
+    - In GitHub komen twee secrets:
+      - `VAPID_PRIVATE_KEY`: de privésleutel. Die staat alleen in het projectdocument, niet in de repository. De publieke sleutel staat in `docs/index.html`.
+      - `WEBPUSH_SUB`: de code uit de app. Meerdere apparaten kan ook, als JSON-lijst.
+    - Verzending: `scripts/webpush.py` (pywebpush), als stap in de workflow vóór ntfy. Ook "Test pushmelding" stuurt een web push.
+    - Werkt alleen vanaf het beginscherm-icoon (iOS 16.4+). ntfy blijft als reserve; zet dat onderwerp in de ntfy-app eventueel op stil.
+    - Geeft de stap 404 of 410, dan is het abonnement verlopen: in de app opnieuw 🔔 → Aanzetten en de secret vervangen.
+    - ntfy-push staat sinds 10 nov aan (onderwerp in het projectdocument). Bekend iOS-probleem met ntfy: komen meldingen alleen binnen na verversen, verwijder dan het onderwerp en voeg het opnieuw toe.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
@@ -248,7 +257,7 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 
 ## 7. Open punten
 
-1. ntfy-push aanzetten (on hold).
+1. Push: ntfy werkt (10 nov); web push direct in de app gebouwd (punt 22).
 2. Getijvoorkeuren en de criteria voor Wijk aan Zee toetsen aan Dereks ervaring.
 3. Layout verder bijschaven met echte data.
 4. Eventueel Nederland en Denemarken uitbreiden (idee uit Surf_Alert_Northsea).

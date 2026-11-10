@@ -198,6 +198,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
   <button id="back" hidden aria-label="Terug">‹</button>
   <div class="tt"><h1 id="title">Endless Waves</h1><span class="upd" id="upd"></span></div>
   <button id="fav" class="icon" hidden aria-label="Favoriet">☆</button>
+  <button id="bell" class="icon" aria-label="Meldingen" style="font-size:22px">🔔</button>
 </div>
 <main id="view"></main>
 <nav class="tabs">
@@ -222,7 +223,7 @@ const favs = () => { try { return JSON.parse(localStorage.getItem('ew-fav') || '
 const setFavs = a => { try { localStorage.setItem('ew-fav', JSON.stringify(a)); } catch(e){} };
 
 function home(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
   const days = DATA.spots[0].days;
   let html = '<div class="hd nm" style="cursor:default"></div>' + days.map((d, i) => {
     const dt = new Date(d.date + 'T12:00');
@@ -313,6 +314,35 @@ function hourSheet(s, i0){
   bg.addEventListener('click', e => { if (e.target === bg) close(); });
   document.body.appendChild(bg); paint();
 }
+
+/* meldingen rechtstreeks in de app (web push, iOS 16.4+ vanaf het beginscherm) */
+const VAPID_PUBLIC = 'BOyVGawNeVYC0j1g6cLv9wh5R4Vo9-pyGq2JQ8smMxpTzN6QrZGwjXrmPxy-45zljKh12q9j_Okh3QEWftMuBE8';
+const b64u = s => { const p = '='.repeat((4 - s.length % 4) % 4); const r = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+function bellSheet(){
+  const bg = document.createElement('div'); bg.className = 'sheet-bg';
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const ok = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  const show = html => { bg.innerHTML = `<div class="sheet"><h3>Meldingen in de app</h3>${html}<div class="seg" style="margin-top:14px"><button id="bx">Sluiten</button></div></div>`; bg.querySelector('#bx').onclick = () => bg.remove(); };
+  bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
+  document.body.appendChild(bg);
+  if (!standalone) return show('<p>Open de app via het icoon op je beginscherm (niet in Safari) en tik daar op 🔔.</p>');
+  if (!ok) return show('<p>Deze iPhone ondersteunt geen meldingen voor web-apps. Werk iOS bij naar 16.4 of nieuwer.</p>');
+  show('<p>Na "Aanzetten" vraagt je iPhone toestemming. Daarna verschijnt een code die je één keer in GitHub zet.</p><div class="seg"><button id="bon" class="on">Aanzetten</button></div>');
+  bg.querySelector('#bon').onclick = async () => {
+    try {
+      if (await Notification.requestPermission() !== 'granted') return show('<p>Geen toestemming gegeven. Zet het aan via Instellingen → Meldingen → Endless Waves.</p>');
+      const reg = await navigator.serviceWorker.ready;
+      const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64u(VAPID_PUBLIC)});
+      const code = JSON.stringify(sub);
+      show(`<p><b>1.</b> Kopieer deze code:</p><textarea id="bcode" readonly style="min-height:110px;font-size:11px">${esc(code)}</textarea>
+        <div class="seg"><button id="bcopy" class="on">Kopieer</button></div>
+        <p><b>2.</b> Zet hem in GitHub als secret met de naam <b>WEBPUSH_SUB</b>:</p>
+        <div class="seg"><a href="https://github.com/${esc(DATA.repo)}/settings/secrets/actions/new" target="_blank" rel="noopener"><button>Open GitHub</button></a></div>
+        <p class="hint">Dit is je persoonlijke meldingsadres; zet het niet in de openbare repository.</p>`);
+      bg.querySelector('#bcopy').onclick = async () => { try { await navigator.clipboard.writeText(code); bg.querySelector('#bcopy').textContent = 'Gekopieerd ✓'; } catch (_) { const t = bg.querySelector('#bcode'); t.select(); document.execCommand('copy'); } };
+    } catch (err) { show(`<p>Lukt niet: ${esc(err.message || err)}</p>`); }
+  };
+}
 function dayCard(s, d, i){
   const p = d.plan, gr = d.v ?? 0;
   const models = Object.entries(d.models).map(([lab, e]) => `<div class="m"><b>${lab} · ${GRADE[e.score ?? 0]}${e.strict ? ' ★' : ''}</b>
@@ -348,7 +378,7 @@ function waveCard(s, sel){
 function spot(k, focus){
   const s = DATA.spots[k]; if (!s) return home();
   $('#back').hidden = false; $('#title').textContent = s.name;
-  const fb = $('#fav'); fb.hidden = false;
+  const fb = $('#fav'); fb.hidden = false; $('#bell').hidden = true;
   const paintFav = () => { const on = favs().includes(s.name); fb.textContent = on ? '★' : '☆'; fb.classList.toggle('on', on); };
   paintFav();
   fb.onclick = () => { const F = favs(); setFavs(F.includes(s.name) ? F.filter(x => x !== s.name) : F.concat(s.name)); paintFav(); };
@@ -484,7 +514,7 @@ function boardSVG(b){
     <line x1="${cx}" y1="${y(0.03)}" x2="${cx}" y2="${y(0.97)}" stroke="currentColor" stroke-width=".7" opacity=".35"/>${finEls}</svg>`;
 }
 async function quiver(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
   if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ $('#view').innerHTML = '<div class="empty">Quiver niet gevonden.</div>'; return; } }
   const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}
@@ -499,6 +529,7 @@ async function quiver(){
 $('#back').addEventListener('click', () => { location.hash = ''; });
 $('#tab-f').addEventListener('click', e => { e.preventDefault(); location.hash = ''; route(); });
 window.addEventListener('hashchange', route);
+$('#bell').addEventListener('click', () => bellSheet());
 
 async function load(first){
   const t0 = Date.now();
