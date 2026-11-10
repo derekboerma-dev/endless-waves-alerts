@@ -33,11 +33,12 @@ def main():
     for sub in subs:
         try:
             r = webpush(sub, json.dumps({"title": title, "body": body, "url": url}), vapid_private_key=key,
-                        vapid_claims={"sub": "mailto:noreply@endless-waves.invalid"}, ttl=86400)
+                        vapid_claims={"sub": os.environ.get("VAPID_SUB", "https://derekboerma-dev.github.io/endless-waves-alerts/")}, ttl=86400)
             print("web push:", r.status_code)
             ok += 1
         except WebPushException as e:
             code = getattr(e.response, "status_code", None)
+            print("antwoord:", getattr(e.response, "text", "")[:300])
             print("web push mislukt:", code, "(404/410 = abonnement verlopen: in de app opnieuw 'Meldingen aan')" if code in (404, 410) else e)
     if not ok:
         sys.exit(1)
