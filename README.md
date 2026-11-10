@@ -106,6 +106,18 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
      - Variable `APP_URL` = de Pages-URL.
    - Een tik op de melding opent dan de web-app.
 
+## Rekenmodel golfhoogte en wind (sinds 10 nov 2026)
+
+- **Golfpunt per spot:** de dichtstbijzijnde zeecel van ECMWF WAM en GFS Wave bij elke spot. Lukt dat niet, dan geldt het regiopunt.
+- **Swell en windzee apart:** per component (swell, tweede swell, windzee) de brekerhoogte op de spot, met de richtingsfactor en de beschuttingsfactor (`exposure`). Opgeteld via energie. Periode en richting komen van de grootste component.
+- **Wind eerste 48 uur fijnmazig:**
+  - Nederland: KNMI HARMONIE;
+  - Frankrijk: Météo-France AROME HD;
+  - Portugal en Marokko: ICON-EU.
+  Daarna ECMWF en GFS.
+- **Gekalibreerd op Surfline LOTUS** (9–10 nov): op de dagen 1–6 gemiddeld 0,1–0,3 m verschil per spot.
+- **Verbeterplan** met de volgende stappen: zie PROCES.md, §7a.
+
 ## Getij en beste tijd
 
 - **Getij:** zeespiegel per spot (`sea_level_height_msl`, model van Météo-France via Open-Meteo). Dit loopt ongeveer 9 dagen vooruit. Hoog- en laagwater zijn op het hele uur afgerond (±30 min).

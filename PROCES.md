@@ -247,8 +247,8 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 
 | # | Stap | Status | Wat |
 |---|---|---|---|
-| 1 | Swell en windzee apart | **gebouwd 10 nov** | Hoogte op de spot per component (swell, tweede swell, windzee) en samen via energie. Periode en richting van de grootste component. Mist een model de windzee, dan wordt de rest-energie als korte windzee gerekend. |
-| 2 | Fijnmazige wind eerste 48 uur | **gebouwd 10 nov** | Per land het eerste model met data: NL KNMI HARMONIE · FR Météo-France AROME HD · PT/MA DMI HARMONIE Europe, anders ICON-EU. Vervangt ECMWF- en GFS-wind voor de eerste 48 uur (`hires_wind_hours`). |
+| 1 | Swell en windzee apart | **gebouwd 10 nov**, daarna exposure opnieuw gefit (verschil met Surfline dag 1–6: 0,1–0,3 m) | Hoogte op de spot per component (swell, tweede swell, windzee) en samen via energie. Periode en richting van de grootste component. Mist een model de windzee, dan wordt de rest-energie als korte windzee gerekend. |
+| 2 | Fijnmazige wind eerste 48 uur | **gebouwd 10 nov** | Per land het eerste model met data: NL KNMI HARMONIE · FR Météo-France AROME HD · PT/MA ICON-EU (DMI HARMONIE Europe gaf geen data). Vervangt ECMWF- en GFS-wind voor de eerste 48 uur (`hires_wind_hours`). |
 | 3 | Golfpunt per spot | **gebouwd 10 nov** | Golfdata van de dichtstbijzijnde zeecel bij elke spot, met het regiopunt als reserve. |
 | 4 | Vaker vergelijken met Surfline | open | Als Chrome met Surfline openstaat: Surfline-dagwaarden opslaan (`data/surfline/<datum>.json`) en per spot een factor fitten die afhangt van periode en richting, niet één vaste factor. Na 3–4 keer stabiel. Werkwijze: zie punt 20 in de beslissingen (iframes op surfline.com, regel "LOTUS Model" gevolgd door 16 dagwaarden). |
 | 5 | Sessiescores als meting | doorlopend | Derek vult na elke sessie graad en "hoe hoog was het" in. Vanaf 3 sessies per spot geeft de kalibratie hints; vanaf ±10 automatisch bijstellen. |

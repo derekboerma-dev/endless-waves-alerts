@@ -33,7 +33,7 @@
   },
   "surf_scale": 0.52,
   "_hs": "Alle hoogtebereiken (spot 'hs', max_hs_personal) gaan over de GESCHATTE HOOGTE OP DE SPOT (surf_height in analyze.py), niet over open zee. 'exposure' = beschuttingsfactor per spot (1 = open). 'powerful' blijft over open zee.",
-  "_kalibratie": "surf_scale en exposure per spot bijgesteld op 9 nov 2026 met de Surfline LOTUS-voorspelling (16 dagen, mediaan Surfline/app). Lostmarc'h staat niet op Surfline: factor van La Palue."
+  "_kalibratie": "surf_scale en exposure per spot bijgesteld op 9 nov 2026 met de Surfline LOTUS-voorspelling (16 dagen, mediaan Surfline/app). Lostmarc'h staat niet op Surfline: factor van La Palue. Op 10 nov opnieuw bijgesteld na de overstap op swell/windzee apart en golfpunt per spot (zelfde Surfline-reeks, factor per spot begrensd op 0,75–1,35)."
  },
  "regions": [
   {
@@ -94,7 +94,7 @@
       2.0
      ],
      "surfline_id": "584204204e65fad6a77095ea",
-     "exposure": 0.73,
+     "exposure": 0.55,
      "guide": {
       "about": "Lang strand in de luwte van de noordpier van het Noordzeekanaal, dicht bij Amsterdam. Buiten de zomer vooral kleine, piekerige windswell; af en toe een lange noorderswell met lange rechts en links. De pier geeft beschutting bij zuidwestenwind.",
       "swell": "NW tot N (soms ZW-windswell)",
@@ -144,7 +144,7 @@
      "group": "Frankrijk",
      "tide_rising": true,
      "surfline_id": "584204204e65fad6a7709023",
-     "exposure": 0.55,
+     "exposure": 0.74,
      "hs_open_zee_oud": [
       1.0,
       2.1
@@ -180,7 +180,7 @@
      ],
      "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
      "surfline_id": "584204204e65fad6a770901f",
-     "exposure": 0.92
+     "exposure": 1.06
     }
    ],
    "alert": {
@@ -229,7 +229,7 @@
       2.1
      ],
      "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+",
-     "exposure": 0.81
+     "exposure": 0.93
     },
     {
      "name": "La Palue",
@@ -260,7 +260,7 @@
      ],
      "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
      "surfline_id": "584204204e65fad6a7709009",
-     "exposure": 0.81
+     "exposure": 0.93
     }
    ],
    "alert": {
@@ -310,7 +310,7 @@
      ],
      "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+",
      "surfline_id": "584204204e65fad6a7708fe7",
-     "exposure": 1.02
+     "exposure": 1.12
     },
     {
      "name": "Le Truc Vert",
@@ -433,7 +433,7 @@
      ],
      "hs_max_bron": "Surfline spotgids: schouder tot dubbel overhead",
      "surfline_id": "5842041f4e65fad6a7708c8f",
-     "exposure": 1.0,
+     "exposure": 0.75,
      "guide": {
       "about": "Topbeachbreak van de Baskische kust, net ten zuiden van de monding van de Adour. Pieren houden de zandbanken op hun plek; dat geeft een stevige A-frame met holle, snelle links en rechts. Werkt op elke westswell.",
       "swell": "W tot NW",
@@ -469,7 +469,7 @@
      ],
      "tide": "mid",
      "group": "Frankrijk",
-     "exposure": 0.94,
+     "exposure": 0.78,
      "hs_open_zee_oud": [
       1.0,
       2.8
@@ -573,7 +573,7 @@
      ],
      "tide": "mid",
      "group": "Portugal",
-     "exposure": 0.84,
+     "exposure": 0.7,
      "hs_open_zee_oud": [
       0.8,
       2.3
@@ -684,7 +684,7 @@
      ],
      "tide": "mid",
      "group": "Portugal",
-     "exposure": 0.77,
+     "exposure": 0.65,
      "hs_open_zee_oud": [
       1.2,
       3.5
@@ -738,7 +738,7 @@
      "tide": "all",
      "group": "Taghazout",
      "surfline_id": "5842041f4e65fad6a7708cfd",
-     "exposure": 0.81,
+     "exposure": 0.99,
      "hs_open_zee_oud": [
       1.3,
       3.5
@@ -779,7 +779,7 @@
      ],
      "tide": "all",
      "group": "Taghazout",
-     "exposure": 0.81,
+     "exposure": 1.09,
      "hs_open_zee_oud": [
       1.3,
       3.5
