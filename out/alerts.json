@@ -1,8 +1,35 @@
 {
  "generated": "2026-11-10",
- "fetched_at": "2026-11-10T16:18+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-10T21:25+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
@@ -51,6 +78,32 @@
     "2026-11-10",
     "2026-11-11",
     "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
    ],
    "qualifies": true,
    "below_threshold": []
