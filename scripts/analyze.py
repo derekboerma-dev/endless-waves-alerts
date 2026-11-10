@@ -70,6 +70,67 @@ def surf_height(hs, tp, wdir, spot):
     return hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)
 
 
+
+def marine_for(data, spot, model):
+    """Golfdata van het punt bij de spot, anders het regiopunt."""
+    m = ((data.get("marine_spot") or {}).get(spot["name"]) or {}).get(model)
+    return m if m and (m.get("hourly") or {}).get("wave_height") else (data.get("marine") or {}).get(model)
+
+
+def merge_hires_wind(data, hours=None):
+    """Vervang de eerste uren wind (ECMWF en GFS) door het fijnmazige model, als dat er is."""
+    hours = hours or D.get("hires_wind_hours", 48)
+    for name, hj in (data.get("wind_hires") or {}).items():
+        hh = hj.get("hourly") or {}
+        times = (hh.get("time") or [])[:hours]
+        hi = {t: k for k, t in enumerate(times)}
+        for wm, wj in ((data.get("wind") or {}).get(name) or {}).items():
+            wh = (wj or {}).get("hourly") or {}
+            if wj.get("_hires") or not wh.get("time"):
+                continue
+            for i, t in enumerate(wh["time"]):
+                k = hi.get(t)
+                if k is None or hh["wind_speed_10m"][k] is None:
+                    continue
+                for v in ("wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"):
+                    if v in wh and hh.get(v) and hh[v][k] is not None:
+                        wh[v][i] = hh[v][k]
+            wj["_hires"] = hj.get("model")
+    return data
+
+
+COMPONENTS = [("swell_wave_height", ("swell_wave_peak_period", "swell_wave_period"), "swell_wave_direction"),
+              ("secondary_swell_wave_height", ("secondary_swell_wave_period",), "secondary_swell_wave_direction"),
+              ("wind_wave_height", ("wind_wave_peak_period", "wind_wave_period"), "wind_wave_direction")]
+
+
+def sea_state(mh, i, spot):
+    """(hoogte op spot, periode, richting, Hs open zee) voor uur i.
+    Per golfcomponent (swell, tweede swell, windzee) de hoogte op de spot; samen via energie (wortel van de
+    kwadratensom). Periode en richting = van de component die het meest bijdraagt. Zonder componenten: totaal."""
+    def g(k):
+        v = mh.get(k)
+        return v[i] if v and i < len(v) else None
+    hs, tp, wdir = g("wave_height"), g("wave_peak_period"), g("wave_direction")
+    if None in (hs, tp, wdir):
+        return None
+    comps, e = [], 0.0
+    for kh, kps, kd in COMPONENTS:
+        h, d = g(kh), g(kd)
+        p = next((g(k) for k in kps if g(k) is not None), None)
+        if h and p and d is not None and h > 0.05:
+            comps.append((h, p, d))
+            e += h * h
+    if not comps:
+        return surf_height(hs, tp, wdir, spot), tp, wdir, hs
+    if "wind_wave_height" not in mh and hs * hs > e * 1.1:
+        # model zonder windzee-component: rest-energie als korte windzee uit de totale richting
+        comps.append((math.sqrt(hs * hs - e), min(tp, 6.0), wdir))
+    parts = [(surf_height(h, p, d, spot), p, d) for h, p, d in comps]
+    total = math.sqrt(sum(x[0] ** 2 for x in parts))
+    dom = max(parts, key=lambda x: x[0])
+    return total, dom[1], dom[2], hs
+
 def surf_range(h):
     """Weergave als bereik, zoals Surfline: ±15 % rond de schatting."""
     return None if h is None else [round(h * 0.85, 1), round(h * 1.15, 1)]
@@ -166,13 +227,13 @@ def evaluate_spot(spot, region, marine, wind, strict):
         if not home and hr not in D["morning_hours"]:
             continue
         rec = days.setdefault(day, {"good": [], "valid": 0, "powerful": False, "rows": []})
-        hs, wdir, tp = mh["wave_height"][i], mh["wave_direction"][i], mh["wave_peak_period"][i]
         j = widx.get(t)
-        if None in (hs, wdir, tp) or j is None or wh["wind_speed_10m"][j] is None:
+        st = sea_state(mh, i, spot)
+        if st is None or j is None or wh["wind_speed_10m"][j] is None:
             continue
         ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
         rec["valid"] += 1
-        off, hs = hs, surf_height(hs, tp, wdir, spot)  # off = open zee, hs = op de spot
+        hs, tp, wdir, off = st  # hs = op de spot, off = open zee; tp/wdir van de dominante component
         dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
         swell_ok = dir_ok and tp_ok and hs_ok
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
@@ -212,9 +273,9 @@ def analyse_region(reg, data):
     """{datum: {model: {good, strict, powerful, spots, best, detail}}}"""
     res = {}
     for mm, wm, label in PAIRS:
-        marine = (data.get("marine") or {}).get(mm)
         for strict in (False, True):
             for s in reg["spots"]:
+                marine = marine_for(data, s, mm)
                 wind = ((data.get("wind") or {}).get(s["name"]) or {}).get(wm)
                 for day, e in evaluate_spot(s, reg, marine, wind, strict).items():
                     d = res.setdefault(day, {}).setdefault(label, {"good": False, "strict": False, "powerful": False,
@@ -312,6 +373,8 @@ def overlap(a, b):
 # ---------------------------------------------------------------- hoofdprogramma
 def main():
     latest = json.loads((ROOT / "data" / "latest.json").read_text())
+    for _rd in (latest.get("regions") or {}).values():
+        merge_hires_wind(_rd)
     state_p = ROOT / "state" / "alerted.json"
     state = json.loads(state_p.read_text()) if state_p.exists() else {"events": []}
     today = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()
@@ -459,11 +522,11 @@ def best_time(spot, region, marine, wind, tinfo, day):
         if light and (hr + 0.5 < light[0] or hr > light[1] - 0.5):
             continue
         j = widx.get(t)
-        hs, wdir, tp = mh["wave_height"][i], mh["wave_direction"][i], mh["wave_peak_period"][i]
-        if None in (hs, wdir, tp) or j is None or wh["wind_speed_10m"][j] is None:
+        st = sea_state(mh, i, spot)
+        if st is None or j is None or wh["wind_speed_10m"][j] is None:
             continue
         ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
-        off, hs = hs, surf_height(hs, tp, wdir, spot)
+        hs, tp, wdir, off = st
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         ok = (in_arcs(wdir, spot["swell"]) and tp >= tp_min and hs_lo <= hs <= hs_hi
               and (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99)))
@@ -552,7 +615,7 @@ def spot_cards(alerts, per_region, today, latest):
                 v = int(sum(sc) / len(sc)) if sc else None
                 plan = None
                 for mm, wm, lab in PAIRS:  # ECMWF eerst, anders GFS
-                    plan = best_time(s, reg, (data.get("marine") or {}).get(mm),
+                    plan = best_time(s, reg, marine_for(data, s, mm),
                                      ((data.get("wind") or {}).get(s["name"]) or {}).get(wm), tinfo, ds)
                     if plan:
                         plan["model"] = lab

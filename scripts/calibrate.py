@@ -52,7 +52,7 @@ def find_spot(name):
 def conditions(data, reg, spot, day, hours):
     """Gemiddelde omstandigheden op de sessie-uren (ECMWF, anders GFS)."""
     for mm, wm, lab in A.PAIRS:
-        marine = (data.get("marine") or {}).get(mm) or {}
+        marine = A.marine_for(data, spot, mm) or {}
         wind = ((data.get("wind") or {}).get(spot["name"]) or {}).get(wm) or {}
         mh, wh = marine.get("hourly") or {}, wind.get("hourly") or {}
         widx = {t: i for i, t in enumerate(wh.get("time") or [])}
@@ -61,11 +61,10 @@ def conditions(data, reg, spot, day, hours):
             if not t.startswith(day) or int(t[11:13]) not in hours:
                 continue
             j = widx.get(t)
-            vals = (mh["wave_height"][i], mh["wave_peak_period"][i], mh["wave_direction"][i])
-            if None in vals or j is None:
+            st = A.sea_state(mh, i, spot)  # hoogte op de spot, periode, richting, Hs open zee
+            if st is None or j is None:
                 continue
-            sh = A.surf_height(vals[0], vals[1], vals[2], spot)  # geschat op de spot
-            rows.append((sh,) + vals[1:] + (wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], vals[0]))
+            rows.append((st[0], st[1], st[2], wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], st[3]))
         if rows:
             tinfo, _ = A.tide_series((data.get("tide") or {}).get(spot["name"]))
             tide = [tinfo.get(f"{day}T{h:02d}:00") for h in hours]
@@ -83,7 +82,7 @@ def conditions(data, reg, spot, day, hours):
 def predicted_grade(data, reg, spot, day):
     sc = []
     for mm, wm, lab in A.PAIRS:
-        marine = (data.get("marine") or {}).get(mm)
+        marine = A.marine_for(data, spot, mm)
         wind = ((data.get("wind") or {}).get(spot["name"]) or {}).get(wm)
         e = A.evaluate_spot(spot, reg, marine, wind, False).get(day)
         st = A.evaluate_spot(spot, reg, marine, wind, True).get(day)
@@ -101,7 +100,7 @@ def main():
         data_all = archive_for(r["date"])
         rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note", "height")}
         if reg and data_all and reg["id"] in data_all.get("regions", {}):
-            data = data_all["regions"][reg["id"]]
+            data = A.merge_hires_wind(data_all["regions"][reg["id"]])
             rec["predicted"] = predicted_grade(data, reg, spot, r["date"])
             rec["cond"] = conditions(data, reg, spot, r["date"], hours_for(r.get("time")))
         else:

@@ -25,6 +25,15 @@ MARINE_MODELS = ["ecmwf_wam025", "ncep_gfswave025"]
 WIND_MODELS = ["ecmwf_ifs025", "gfs_seamless"]
 MARINE_VARS = ["wave_height", "wave_direction", "wave_peak_period",
                "swell_wave_height", "swell_wave_direction", "swell_wave_peak_period"]
+# Losse componenten (windzee en tweede swell). Niet elk model levert alles; dan valt de aanvraag terug op MARINE_VARS.
+MARINE_VARS_FULL = MARINE_VARS + ["wind_wave_height", "wind_wave_direction", "wind_wave_peak_period",
+                                  "secondary_swell_wave_height", "secondary_swell_wave_direction",
+                                  "secondary_swell_wave_period"]
+# Fijnmazige windmodellen voor de eerste ±48 uur, per land; de eerste met data wint.
+HIRES_WIND = {"NL": ["knmi_harmonie_arome_netherlands", "knmi_seamless"],
+              "FR": ["meteofrance_arome_france_hd", "meteofrance_arome_france"],
+              "PT": ["dmi_harmonie_arome_europe", "icon_eu"],
+              "MA": ["dmi_harmonie_arome_europe", "icon_eu"]}
 WIND_VARS = ["wind_speed_10m", "wind_direction_10m", "wind_gusts_10m", "temperature_2m"]
 
 
@@ -49,6 +58,18 @@ def fetch_model(url, lat, lon, variables, model, extra):
     return get(url, params)
 
 
+def has_values(j, var):
+    return not j.get("error") and any(v is not None for v in (j.get("hourly") or {}).get(var) or [])
+
+
+def fetch_marine(lat, lon, model, extra):
+    """Eerst met alle componenten; lukt dat niet, dan de basisset."""
+    j = fetch_model(MARINE_URL, lat, lon, MARINE_VARS_FULL, model, extra)
+    if j.get("error"):
+        j = fetch_model(MARINE_URL, lat, lon, MARINE_VARS, model, extra)
+    return j
+
+
 def main():
     out = {"fetched_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
            "regions": {}, "problems": []}
@@ -56,12 +77,31 @@ def main():
         lat, lon = reg["wave_point"]
         r = {"marine": {}, "wind": {}}
         for m in MARINE_MODELS:
-            j = fetch_model(MARINE_URL, lat, lon, MARINE_VARS, m, {})
+            j = fetch_marine(lat, lon, m, {})
             r["marine"][m] = j
             if j.get("error"):
                 out["problems"].append(f"{reg['id']} marine {m}: {j.get('reason')}")
         r["tide"] = {}
+        r["marine_spot"], r["wind_hires"] = {}, {}
+        country = reg.get("country") or ("NL" if reg["alert"].get("mode") == "home" else "FR")
         for s in reg["spots"]:
+            # Golfpunt per spot: dichtstbijzijnde zeecel bij de spot (golfmodellen ±25 km raster).
+            r["marine_spot"][s["name"]] = {}
+            for m in MARINE_MODELS:
+                j = fetch_marine(s["lat"], s["lon"], m, {"cell_selection": "sea"})
+                if has_values(j, "wave_height"):
+                    r["marine_spot"][s["name"]][m] = j
+            # Fijnmazige wind voor de korte termijn.
+            for m in reg.get("hires_wind") or HIRES_WIND.get(country, []):
+                j = get(WIND_URL, {"latitude": s["lat"], "longitude": s["lon"],
+                                   "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+                                   "models": m, "forecast_days": 3, "timezone": "auto", "wind_speed_unit": "kn"})
+                if has_values(j, "wind_speed_10m"):
+                    j["model"] = m
+                    r["wind_hires"][s["name"]] = j
+                    break
+            else:
+                out["problems"].append(f"{reg['id']} fijnmazige wind {s['name']}: geen model met data (niet erg)")
             # Getij (zeespiegel incl. getij, model van Météo-France via Open-Meteo). Valt het spotpunt op land,
             # dan het golfpunt van de regio als reserve.
             t = get(MARINE_URL, {"latitude": s["lat"], "longitude": s["lon"], "hourly": "sea_level_height_msl",

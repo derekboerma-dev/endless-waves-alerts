@@ -237,13 +237,22 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 ## 7. Open punten
 
 1. ntfy-push aanzetten (on hold).
-2. Spotrichtingen eenmalig overzetten naar de Surfline spot guides zodra Chrome met Surfline beschikbaar is. Dan is alles één bron.
-3. Getijvoorkeuren en de criteria voor Wijk aan Zee toetsen aan Dereks ervaring.
-4. Na 4–6 weken het archief en de sessiescores gebruiken om te meten hoe vaak meldingen uitkwamen, en vergelijken met de Surfline-meldingen.
-7. Surfline-ID's opzoeken voor directe links (nu alleen Anchor Point en Bud Bud).
-8. Overwogen maar niet gebouwd: reistijd en globale kosten per groep in de app.
-5. Layout verder bijschaven met echte data.
-6. Eventueel Nederland en Denemarken uitbreiden (idee uit Surf_Alert_Northsea).
+2. Getijvoorkeuren en de criteria voor Wijk aan Zee toetsen aan Dereks ervaring.
+3. Layout verder bijschaven met echte data.
+4. Eventueel Nederland en Denemarken uitbreiden (idee uit Surf_Alert_Northsea).
+5. Overwogen maar niet gebouwd: reistijd en globale kosten per groep in de app.
+6. Afgerond op 9 nov: spotrichtingen naar de Surfline-gidsen (waar die bestaan) en Surfline-ID's voor alle spots behalve Lostmarc'h.
+
+### 7a. Verbeterplan voorspelling (afgesproken 10 nov)
+
+| # | Stap | Status | Wat |
+|---|---|---|---|
+| 1 | Swell en windzee apart | **gebouwd 10 nov** | Hoogte op de spot per component (swell, tweede swell, windzee) en samen via energie. Periode en richting van de grootste component. Mist een model de windzee, dan wordt de rest-energie als korte windzee gerekend. |
+| 2 | Fijnmazige wind eerste 48 uur | **gebouwd 10 nov** | Per land het eerste model met data: NL KNMI HARMONIE · FR Météo-France AROME HD · PT/MA DMI HARMONIE Europe, anders ICON-EU. Vervangt ECMWF- en GFS-wind voor de eerste 48 uur (`hires_wind_hours`). |
+| 3 | Golfpunt per spot | **gebouwd 10 nov** | Golfdata van de dichtstbijzijnde zeecel bij elke spot, met het regiopunt als reserve. |
+| 4 | Vaker vergelijken met Surfline | open | Als Chrome met Surfline openstaat: Surfline-dagwaarden opslaan (`data/surfline/<datum>.json`) en per spot een factor fitten die afhangt van periode en richting, niet één vaste factor. Na 3–4 keer stabiel. Werkwijze: zie punt 20 in de beslissingen (iframes op surfline.com, regel "LOTUS Model" gevolgd door 16 dagwaarden). |
+| 5 | Sessiescores als meting | doorlopend | Derek vult na elke sessie graad en "hoe hoog was het" in. Vanaf 3 sessies per spot geeft de kalibratie hints; vanaf ±10 automatisch bijstellen. |
+| 6 | Trefzekerheid meten | open, vanaf ±1 dec | Uit `data/archive/` meten hoe vaak meldingen op dag 1–3, 4–7 en 8+ uitkwamen; daarna de drempels per termijn bijstellen. |
 
 ## 8. Werkwijze met Claude
 
