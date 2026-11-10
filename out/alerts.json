@@ -1,58 +1,8 @@
 {
  "generated": "2026-11-10",
- "fetched_at": "2026-11-10T13:07+00:00",
- "notify": true,
- "new": [
-  {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-11",
-   "end": "2026-11-12",
-   "days": 2,
-   "lead_days": 1,
-   "tier": "bevestigd",
-   "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 1,
-   "spots": [
-    "Bud Bud",
-    "La Sauzaie"
-   ],
-   "dates": [
-    "2026-11-11",
-    "2026-11-12"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  },
-  {
-   "region": "crozon",
-   "region_name": "Crozon (Lostmarc'h)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-10",
-   "end": "2026-11-12",
-   "days": 3,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 0,
-   "strict_days": 1,
-   "powerful_days": 1,
-   "spots": [
-    "La Palue",
-    "Lostmarc'h"
-   ],
-   "dates": [
-    "2026-11-10",
-    "2026-11-11",
-    "2026-11-12"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  }
- ],
+ "fetched_at": "2026-11-10T16:18+00:00",
+ "notify": false,
+ "new": [],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
