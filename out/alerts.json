@@ -1,8 +1,35 @@
 {
  "generated": "2026-11-10",
- "fetched_at": "2026-11-10T11:07+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-10T11:29+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-18",
+   "end": "2026-11-21",
+   "days": 4,
+   "lead_days": 8,
+   "tier": "kans",
+   "models_agree_days": 4,
+   "strict_days": 3,
+   "powerful_days": 4,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
@@ -16,7 +43,7 @@
    "days": 2,
    "lead_days": 1,
    "tier": "bevestigd",
-   "models_agree_days": 0,
+   "models_agree_days": 2,
    "strict_days": 1,
    "powerful_days": 1,
    "spots": [
@@ -51,6 +78,32 @@
     "2026-11-10",
     "2026-11-11",
     "2026-11-12"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-18",
+   "end": "2026-11-21",
+   "days": 4,
+   "lead_days": 8,
+   "tier": "kans",
+   "models_agree_days": 4,
+   "strict_days": 3,
+   "powerful_days": 4,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
    ],
    "qualifies": true,
    "below_threshold": []
