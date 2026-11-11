@@ -249,6 +249,11 @@ Keuzes van Derek, in volgorde:
       - het getij als silhouet;
       - dagen die horizontaal synchroon scrollen.
     - **Getijgrafiek zoals Surfline:** een vloeiende curve met tijd en hoogte van hoog- en laagwater, de nacht gearceerd en een nu-markering. Hoogte ten opzichte van het laagste laagwater van de reeks. Staat in de dagkaart en in de uurstrook.
+26. **Tabblad Alerts (11 nov).** Het staat tussen Voorspelling en Quiver; een bolletje op het tabblad toont het aantal alerts.
+    - Eén tijdlijn van 16 dagen met per alert een kaart: vlag, regio, zekerheid en datums groot.
+    - Daaronder een balk waarin de dagen van de reeks gekleurd zijn naar de graad van de beste spot, met de hoogte erin.
+    - Reeksen onder de drempel staan grijs onder "Onder drempel".
+    - Een tik opent de beste spot op de eerste dag.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

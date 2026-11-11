@@ -202,6 +202,25 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .tchart{margin-top:10px;background:color-mix(in srgb,var(--bg) 60%,transparent);border-radius:14px;padding:8px 6px 4px}
 .tchart .tt{font-size:11px;color:var(--mut);padding:0 6px}
 .tchart svg{display:block;width:100%;height:auto}
+/* alerts-tijdlijn */
+.acount{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:var(--g1);color:#1a0f05;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.al-wrap{padding:14px 16px 24px}
+.al-head,.al-bar{display:grid;grid-template-columns:repeat(var(--nd),1fr);gap:2px}
+.al-head{position:sticky;top:var(--toph,0px);z-index:4;background:var(--bg);padding:8px 0 6px;margin-bottom:6px}
+.al-head div{text-align:center;font-size:10px;color:var(--mut);line-height:1.15}
+.al-head div b{display:block;font-size:13px;color:var(--ink)}
+.al-head div.we b{color:var(--sea)}
+.al-head div.now b{background:var(--sea);color:var(--bg);border-radius:6px}
+.al-row{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 12px;margin-bottom:10px;color:var(--ink);font:inherit;cursor:pointer}
+.al-row .t{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.al-row .t .rn{font-weight:800;font-size:16px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.al-row .t .dt{font-weight:800;font-size:15px;white-space:nowrap}
+.al-row .t .badge{font-size:10px}
+.al-bar div{height:30px;border-radius:5px;background:var(--hl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(0,0,0,.65)}
+.al-bar div.in{box-shadow:inset 0 0 0 2px var(--ink)}
+.al-row.dim{opacity:.45}
+.al-sec{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:18px 2px 8px}
+.al-empty{text-align:center;color:var(--mut);padding:40px 0;font-size:15px}
 .sheet-bg{position:fixed;inset:0;z-index:60;background:#0008;display:flex;align-items:flex-end}
 .sheet{background:var(--card);width:100%;max-width:760px;margin:0 auto;border-radius:18px 18px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
 .sheet h3{margin:0 0 10px;font-size:18px}
@@ -235,6 +254,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 <main id="view"></main>
 <nav class="tabs">
   <a href="#" id="tab-f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 14c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/><path d="M2 19c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3"/><circle cx="17" cy="6" r="2.5"/></svg>Voorspelling</a>
+  <a href="#alerts" id="tab-a" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Alerts<span id="acount" class="acount" hidden></span></a>
   <a href="#quiver" id="tab-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2c3 3 4.5 8 4.5 12.5 0 3.5-1.5 6-4.5 7.5-3-1.5-4.5-4-4.5-7.5C7.5 10 9 5 12 2z"/><path d="M12 6v12"/></svg>Quiver</a>
 </nav>
 <script>
@@ -573,10 +593,53 @@ function rateSheet(s){
   document.body.appendChild(bg);
 }
 
+
+/* ---------- alerts: alle reeksen op één tijdlijn, in één oogopslag te vergelijken ---------- */
+function alerts(){
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
+  const days = DATA.spots[0].days.map(d => d.date), nd = days.length;
+  const today = new Date().toISOString().slice(0, 10);
+  const short = ds => { const t = new Date(ds + 'T12:00'); return `${WD[t.getDay()]} ${t.getDate()}`; };
+  const head = days.map(ds => { const t = new Date(ds + 'T12:00'), w = t.getDay();
+    return `<div class="${w === 0 || w === 6 ? 'we' : ''} ${ds === today ? 'now' : ''}">${WD[w][0]}<b>${t.getDate()}</b></div>`; }).join('');
+  const regionSpots = id => DATA.spots.map((s, k) => [s, k]).filter(([s]) => s.region === id);
+  const rows = [];
+  (DATA.regions || []).forEach(reg => (reg.runs || []).forEach(r => rows.push({reg, r})));
+  rows.sort((a, b) => (b.r.qualifies - a.r.qualifies) || a.r.start.localeCompare(b.r.start));
+  const row = ({reg, r}) => {
+    const sp = regionSpots(reg.id);
+    const best = (ds) => { let m = null; sp.forEach(([s, k]) => { const i = s.days.findIndex(d => d.date === ds); const d = s.days[i];
+      if (d && d.v != null && (!m || d.v > m.v || (d.v === m.v && (d.hs || 0) > (m.hs || 0)))) m = {v: d.v, hs: d.hs, k, i}; }); return m; };
+    const set = new Set(r.dates);
+    const cells = days.map(ds => { const b = set.has(ds) ? best(ds) : null;
+      return b ? `<div class="in" style="background:var(--g${b.v})">${b.hs != null ? N(b.hs) : ''}</div>` : '<div></div>'; }).join('');
+    const tgt = best(r.start) || {k: sp[0][1], i: 0};
+    const dt = r.start === r.end ? short(r.start) : `${short(r.start)}–${short(r.end)}`;
+    return `<button class="al-row ${r.qualifies ? '' : 'dim'}" data-go="s${tgt.k}/${tgt.i}">
+      <div class="t"><span>${FLAG[reg.country] || ''}</span><span class="rn">${esc(reg.name.replace(/ \(.*\)$/, ''))}</span>
+        ${r.qualifies ? `<span class="badge bg-${r.tier}">${r.tier}</span>` : ''}<span class="dt">${dt}</span></div>
+      <div class="al-bar">${cells}</div></button>`;
+  };
+  const on = rows.filter(x => x.r.qualifies), off = rows.filter(x => !x.r.qualifies);
+  $('#view').innerHTML = `<div class="al-wrap" style="--nd:${nd}">
+    <div class="al-head">${head}</div>
+    ${on.length ? on.map(row).join('') : '<div class="al-empty">Geen alerts 🌊</div>'}
+    ${off.length ? `<div class="al-sec">Onder drempel</div>${off.map(row).join('')}` : ''}
+  </div>`;
+  document.documentElement.style.setProperty('--toph', ($('.top') ? $('.top').offsetHeight : 0) + 'px');
+  document.querySelectorAll('[data-go]').forEach(el => el.onclick = () => location.hash = el.dataset.go);
+}
+function alertCount(){
+  const n = (DATA.regions || []).reduce((a, r) => a + (r.runs || []).filter(x => x.qualifies).length, 0);
+  const el = $('#acount'); if (el) { el.textContent = n; el.hidden = !n; }
+}
+
 const problems = () => DATA.problems?.length ? `<div class="err">Data onvolledig: ${DATA.problems.length} probleem/problemen bij ophalen.</div>` : '';
 const route = () => { const h = location.hash.slice(1);
-  $('#tab-q').classList.toggle('on', h === 'quiver'); $('#tab-f').classList.toggle('on', h !== 'quiver');
+  $('#tab-q').classList.toggle('on', h === 'quiver'); $('#tab-a').classList.toggle('on', h === 'alerts'); $('#tab-f').classList.toggle('on', h !== 'quiver' && h !== 'alerts');
   if (h === 'quiver') return quiver();
+  if (h === 'alerts') { if (DATA) { alertCount(); alerts(); } return; }
+  if (DATA) alertCount();
   if (!DATA) return; if (h.startsWith('s')){ const [k, i] = h.slice(1).split('/'); spot(+k, i != null ? +i : null); } else home(); };
 
 /* ---------- quiver: getekende silhouetten op basis van lengte, breedte en tailvorm ---------- */
