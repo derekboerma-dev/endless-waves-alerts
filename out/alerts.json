@@ -1,10 +1,39 @@
 {
  "generated": "2026-11-11",
- "fetched_at": "2026-11-11T11:10+00:00",
- "notify": false,
+ "fetched_at": "2026-11-11T11:20+00:00",
+ "notify": true,
  "new": [],
  "upgraded": [],
- "cancelled": [],
+ "cancelled": [
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-16",
+   "end": "2026-11-18",
+   "days": 3,
+   "lead_days": 5,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 2,
+   "powerful_days": 2,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-16",
+    "2026-11-17",
+    "2026-11-18"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-11",
+   "last_tier": "waarschijnlijk",
+   "cancelled": "2026-11-11"
+  }
+ ],
  "all_runs": [
   {
    "region": "vendee",
@@ -40,9 +69,9 @@
    "days": 2,
    "lead_days": 0,
    "tier": "bevestigd",
-   "models_agree_days": 0,
+   "models_agree_days": 2,
    "strict_days": 1,
-   "powerful_days": 1,
+   "powerful_days": 0,
    "spots": [
     "La Palue",
     "Lostmarc'h"
@@ -50,31 +79,6 @@
    "dates": [
     "2026-11-11",
     "2026-11-12"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  },
-  {
-   "region": "peniche",
-   "region_name": "Peniche",
-   "country": "PT",
-   "mode": "trip",
-   "start": "2026-11-16",
-   "end": "2026-11-18",
-   "days": 3,
-   "lead_days": 5,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 1,
-   "spots": [
-    "Lagide",
-    "Supertubos"
-   ],
-   "dates": [
-    "2026-11-16",
-    "2026-11-17",
-    "2026-11-18"
    ],
    "qualifies": true,
    "below_threshold": []
