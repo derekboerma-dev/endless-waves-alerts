@@ -602,21 +602,21 @@ function alerts(){
   const short = ds => { const t = new Date(ds + 'T12:00'); return `${WD[t.getDay()]} ${t.getDate()}`; };
   const head = days.map(ds => { const t = new Date(ds + 'T12:00'), w = t.getDay();
     return `<div class="${w === 0 || w === 6 ? 'we' : ''} ${ds === today ? 'now' : ''}">${WD[w][0]}<b>${t.getDate()}</b></div>`; }).join('');
-  const regionSpots = id => DATA.spots.map((s, k) => [s, k]).filter(([s]) => s.region === id);
   const rows = [];
-  (DATA.regions || []).forEach(reg => (reg.runs || []).forEach(r => rows.push({reg, r})));
-  rows.sort((a, b) => (b.r.qualifies - a.r.qualifies) || a.r.start.localeCompare(b.r.start));
-  const row = ({reg, r}) => {
-    const sp = regionSpots(reg.id);
-    const best = (ds) => { let m = null; sp.forEach(([s, k]) => { const i = s.days.findIndex(d => d.date === ds); const d = s.days[i];
-      if (d && d.v != null && (!m || d.v > m.v || (d.v === m.v && (d.hs || 0) > (m.hs || 0)))) m = {v: d.v, hs: d.hs, k, i}; }); return m; };
-    const set = new Set(r.dates);
-    const cells = days.map(ds => { const b = set.has(ds) ? best(ds) : null;
-      return b ? `<div class="in" style="background:var(--g${b.v})">${b.hs != null ? N(b.hs) : ''}</div>` : '<div></div>'; }).join('');
-    const tgt = best(r.start) || {k: sp[0][1], i: 0};
+  (DATA.regions || []).forEach(reg => (reg.runs || []).forEach(r => (r.spots || []).forEach(name => {
+    const k = DATA.spots.findIndex(s => s.name === name); if (k < 0) return;
+    const s = DATA.spots[k], set = new Set(r.dates);
+    const ds = s.days.map((d, i) => [d, i]).filter(([d]) => set.has(d.date));
+    const top = Math.max(-1, ...ds.map(([d]) => d.v ?? -1));
+    rows.push({reg, r, s, k, set, top, first: (ds[0] || [null, 0])[1]});
+  })));
+  rows.sort((a, b) => (b.r.qualifies - a.r.qualifies) || a.r.start.localeCompare(b.r.start) || (b.top - a.top));
+  const row = ({reg, r, s, k, set, first}) => {
+    const cells = s.days.map(d => set.has(d.date) && d.v != null
+      ? `<div class="in" style="background:var(--g${d.v})">${d.hs != null ? N(d.hs) : ''}</div>` : '<div></div>').join('');
     const dt = r.start === r.end ? short(r.start) : `${short(r.start)}–${short(r.end)}`;
-    return `<button class="al-row ${r.qualifies ? '' : 'dim'}" data-go="s${tgt.k}/${tgt.i}">
-      <div class="t"><span>${FLAG[reg.country] || ''}</span><span class="rn">${esc(reg.name.replace(/ \(.*\)$/, ''))}</span>
+    return `<button class="al-row ${r.qualifies ? '' : 'dim'}" data-go="s${k}/${first}">
+      <div class="t"><span>${FLAG[reg.country] || ''}</span><span class="rn">${esc(s.name)}</span>
         ${r.qualifies ? `<span class="badge bg-${r.tier}">${r.tier}</span>` : ''}<span class="dt">${dt}</span></div>
       <div class="al-bar">${cells}</div></button>`;
   };
@@ -630,7 +630,7 @@ function alerts(){
   document.querySelectorAll('[data-go]').forEach(el => el.onclick = () => location.hash = el.dataset.go);
 }
 function alertCount(){
-  const n = (DATA.regions || []).reduce((a, r) => a + (r.runs || []).filter(x => x.qualifies).length, 0);
+  const n = (DATA.regions || []).reduce((a, r) => a + (r.runs || []).filter(x => x.qualifies).reduce((b, x) => b + (x.spots || []).length, 0), 0);
   const el = $('#acount'); if (el) { el.textContent = n; el.hidden = !n; }
 }
 
