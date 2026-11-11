@@ -233,6 +233,7 @@ Keuzes van Derek, in volgorde:
 24. **Betrouwbaar starten (11 nov).** GitHub start geplande runs uren te laat of helemaal niet: de cron van 15:47 UTC startte pas om 21:25, die van 06:23 helemaal niet.
     - **Hoofdtrigger:** een geplande Claude-taak om 07:13 en 14:13 (NL-tijd) die `workflow_dispatch` start.
     - **Reserve:** GitHub-cron elk uur (:17). De job `check` slaat over als `data/latest.json` jonger is dan 6 uur, of als het nacht is (22–05 UTC).
+    - **Vastleggen:** `git pull --rebase -X theirs` vóór de push. Lopen twee runs vlak na elkaar, dan wint de nieuwste data in plaats van een merge-conflict.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
