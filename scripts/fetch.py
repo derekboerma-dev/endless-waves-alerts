@@ -98,7 +98,12 @@ def main():
             # Golfpunt per spot: dichtstbijzijnde zeecel bij de spot (golfmodellen ±25 km raster).
             r["marine_spot"][s["name"]] = {}
             for m in MARINE_MODELS:
-                j = fetch_marine(s["lat"], s["lon"], m, {"cell_selection": "sea"})
+                # punt ±0,3° zeewaarts richting het regiopunt: de cel direct op de kust is vaak half land
+                wl, wo = reg["wave_point"]
+                dl, do = wl - s["lat"], wo - s["lon"]
+                n = max(1e-6, (dl * dl + do * do) ** 0.5)
+                f = min(1.0, 0.3 / n)
+                j = fetch_marine(s["lat"] + dl * f, s["lon"] + do * f, m, {"cell_selection": "sea"})
                 if has_values(j, "wave_height"):
                     r["marine_spot"][s["name"]][m] = j
             # Fijnmazige wind voor de korte termijn.

@@ -67,14 +67,31 @@ def surf_height(hs, tp, wdir, spot):
         f = math.sqrt(max(0.05, math.cos(math.radians(min(max(d - 15, 0), 90)))))
     else:
         f = 1.0
-    return hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)
+    h = hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)
+    # grootte-correctie (fit op Surfline 11 nov: grote dagen groeien sneller dan Komar-Gaughan aangeeft)
+    piv, ex = D.get("surf_pivot", 1.2), D.get("surf_size_exp", 1.0)
+    return piv * (h / piv) ** ex if h > 0 else 0.0
 
+
+
+def _med(j, var):
+    v = sorted(x for x in ((j or {}).get("hourly") or {}).get(var) or [] if x is not None)
+    return v[len(v) // 2] if v else None
 
 
 def marine_for(data, spot, model):
-    """Golfdata van het punt bij de spot, anders het regiopunt."""
+    """Golfdata van het punt bij de spot, maar alleen als dat punt echt op zee ligt.
+    Een rastercel die half op land valt geeft 0 m of gedempte golven (gezien bij Cap Ferret, Truc Vert, Cavaliers):
+    dan het regiopunt. Grens: mediane Hs minstens 75 % van het regiopunt en een periode boven 0."""
+    reg = (data.get("marine") or {}).get(model)
     m = ((data.get("marine_spot") or {}).get(spot["name"]) or {}).get(model)
-    return m if m and (m.get("hourly") or {}).get("wave_height") else (data.get("marine") or {}).get(model)
+    if not m or not (m.get("hourly") or {}).get("wave_height"):
+        return reg
+    hs_s, hs_r = _med(m, "wave_height"), _med(reg, "wave_height")
+    per = _med(m, "wave_peak_period") or _med(m, "wave_period")
+    if not hs_s or not per or (hs_r and hs_s < 0.75 * hs_r):
+        return reg
+    return m
 
 
 def merge_hires_wind(data, hours=None):
@@ -112,7 +129,9 @@ def sea_state(mh, i, spot):
         v = mh.get(k)
         return v[i] if v and i < len(v) else None
     hs, tp, wdir = g("wave_height"), g("wave_peak_period"), g("wave_direction")
-    if tp is None and g("wave_period") is not None:
+    if tp is not None and tp <= 0:
+        tp = None
+    if tp is None and g("wave_period"):
         tp = g("wave_period") * 1.2  # GFS levert geen piekperiode: gemiddelde periode omrekenen (Tp ≈ 1,2 Tm)
     if None in (hs, tp, wdir):
         return None
@@ -134,8 +153,8 @@ def sea_state(mh, i, spot):
     return total, dom[1], dom[2], hs
 
 def surf_range(h):
-    """Weergave als bereik, zoals Surfline: ±15 % rond de schatting."""
-    return None if h is None else [round(h * 0.85, 1), round(h * 1.15, 1)]
+    """Weergave als bereik, zoals Surfline (die meldt de kleinere en de grotere sets): -20 % tot +20 %."""
+    return None if h is None else [round(h * 0.8, 1), round(h * 1.2, 1)]
 
 
 def hs_range(spot, region):
@@ -532,6 +551,37 @@ def hourly_for(spot, region, data, day, tinfo):
             out["models"][lab] = rows
     return out
 
+
+PARTS = [(7, 10), (11, 14), (15, 18)]  # ochtend, middag, eind van de dag
+
+
+def parts_and_tide(hourly, data, spot, day):
+    """Drie dagdelen (graad, wind) zoals de Surfline-favorieten, plus het getij per uur (0-23 u)."""
+    parts = []
+    models = list((hourly or {}).get("models", {}).values())
+    for a, b in PARTS:
+        gs, ws, wx, wy, on = [], [], 0.0, 0.0, []
+        for rows in models:
+            sel = [r for k, r in enumerate(rows) if r and a <= 6 + k <= b]
+            if sel:
+                gs.append(sum(r["g"] for r in sel) / len(sel))
+        rows = models[0] if models else []
+        for k, r in enumerate(rows):
+            if r and a <= 6 + k <= b:
+                ws.append(r["ws"])
+                wx += math.sin(math.radians(r["wd"]))
+                wy += math.cos(math.radians(r["wd"]))
+                on.append(r["on"])
+        if not gs:
+            parts.append(None)
+            continue
+        parts.append([int(sum(gs) / len(gs) + 0.5), round(math.degrees(math.atan2(wx, wy)) % 360),
+                      round(sum(ws) / len(ws)), max(set(on), key=on.count)])
+    th = ((data.get("tide") or {}).get(spot["name"]) or {}).get("hourly") or {}
+    lv = dict(zip(th.get("time") or [], th.get("sea_level_height_msl") or []))
+    tl = [lv.get(f"{day}T{h:02d}:00") for h in range(24)]
+    return parts, ([None if v is None else round(v, 2) for v in tl] if any(v is not None for v in tl) else None)
+
 def tide_series(tj):
     """Uurwaarden zeespiegel -> {tijd: (fractie 0=laag..1=hoog, opkomend)} en per dag de hoog- en laagwatertijden."""
     h = (tj or {}).get("hourly") or {}
@@ -699,7 +749,11 @@ def spot_cards(alerts, per_region, today, latest):
                               "surf": surf_range(sum(hs) / len(hs)) if hs else None, "counts": counts,
                               "models": {lab: {**e, "strict": strict.get(lab, False)} for lab, e in per.items()},
                               "plan": plan, "tides": tdays.get(ds, []),
-                              "hourly": hourly_for(s, reg, data, ds, tinfo) if k < D.get("hourly_days", 7) else None})
+                              "hourly": hourly_for(s, reg, data, ds, tinfo)})
+                hh = sdays[-1]["hourly"]
+                sdays[-1]["parts"], sdays[-1]["tlev"] = parts_and_tide(hh, data, s, ds)
+                if k >= D.get("hourly_days", 7):
+                    sdays[-1]["hourly"] = None
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
                         "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"), "guide": s.get("guide"),
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],

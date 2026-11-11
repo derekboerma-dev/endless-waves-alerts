@@ -170,6 +170,38 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .hgrid .cmp{font-size:10px;color:var(--mut);line-height:1.25;white-space:nowrap}
 .hgrid tr.sep td,.hgrid tr.sep th{border-top:1px solid var(--line)}
 .hleg{font-size:11px;color:var(--mut);padding:8px 16px 0;line-height:1.5}
+/* startscherm zoals Surfline-favorieten */
+.slbar{display:flex;gap:10px;align-items:center;padding:12px 16px 4px}
+.slbar select{flex:1;appearance:none;-webkit-appearance:none;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:10px 38px 10px 16px;font:inherit;font-size:16px;font-weight:600;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat}
+.dayhd{position:sticky;top:var(--toph,0px);z-index:5;margin:8px 16px 10px;background:var(--card);border:1px solid var(--line);border-radius:999px;overflow-x:auto;scrollbar-width:none}
+.dayhd::-webkit-scrollbar,.slrow::-webkit-scrollbar{display:none}
+.dayhd .in{display:flex}
+.dayhd .c{flex:0 0 var(--cw);text-align:center;padding:7px 0;font-size:12px;color:var(--mut);line-height:1.15}
+.dayhd .c b{display:block;font-size:17px;color:var(--ink)}
+.dayhd .c.now b{color:var(--sea)}
+.slcard{margin:0 16px 14px;background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.slcard h3{margin:0;padding:14px 18px 12px;font-size:19px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);cursor:pointer}
+.slcard h3 .badge{font-size:11px}
+.slcard h3 .go{margin-left:auto;color:var(--mut);font-weight:400;font-size:18px}
+.slrow{overflow-x:auto;scrollbar-width:none;position:relative}
+.slrow .in{display:flex;position:relative;min-height:128px}
+.slrow svg.tide{position:absolute;left:0;bottom:0;pointer-events:none}
+.slcol{flex:0 0 var(--cw);position:relative;z-index:1;text-align:center;padding:12px 0 10px;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer}
+.slcol.run{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--ink) 55%,transparent);border-radius:14px}
+.slcol .r{font-weight:800;font-size:16px;letter-spacing:-.3px}
+.slcol .r small{font-size:11px;font-weight:600}
+.slcol .r.na{color:var(--mut);font-weight:600}
+.slcol .sub{font-size:12px;color:var(--mut);margin-top:2px}
+.slcol .ar{display:flex;justify-content:center;gap:12px;margin-top:14px;font-size:15px;height:18px}
+.slcol .ar span{display:inline-block}
+.slcol .ar .off{color:var(--g3)} .slcol .ar .on{color:var(--g1)} .slcol .ar .glassy{color:var(--ink)}
+.slcol .sg{display:flex;justify-content:center;gap:3px;margin-top:12px}
+.slcol .sg i{width:20px;height:6px;border-radius:3px;background:var(--g0)}
+.slcol .q{position:absolute;top:8px;right:8px;font-size:10px;color:var(--mut)}
+/* getijgrafiek */
+.tchart{margin-top:10px;background:color-mix(in srgb,var(--bg) 60%,transparent);border-radius:14px;padding:8px 6px 4px}
+.tchart .tt{font-size:11px;color:var(--mut);padding:0 6px}
+.tchart svg{display:block;width:100%;height:auto}
 .sheet-bg{position:fixed;inset:0;z-index:60;background:#0008;display:flex;align-items:flex-end}
 .sheet{background:var(--card);width:100%;max-width:760px;margin:0 auto;border-radius:18px 18px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
 .sheet h3{margin:0 0 10px;font-size:18px}
@@ -224,25 +256,47 @@ const setFavs = a => { try { localStorage.setItem('ew-fav', JSON.stringify(a)); 
 
 function home(){
   $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
-  const days = DATA.spots[0].days;
-  let html = '<div class="hd nm" style="cursor:default"></div>' + days.map((d, i) => {
-    const dt = new Date(d.date + 'T12:00');
-    return `<div class="hd ${i ? '' : 'today'}">${WD[dt.getDay()]}<b>${dt.getDate()}</b></div>`; }).join('');
   const F = favs();
-  const groups = (F.length ? ['★ Favorieten'] : []).concat(DATA.groups || [...new Set(DATA.spots.map(s => s.group))]);
-  groups.forEach(grp => {
-    const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => grp === '★ Favorieten' ? F.includes(s.name) : (s.group === grp && !F.includes(s.name)));
-    if (!list.length) return;
-    html += `<div class="grp"><span>${grp === '★ Favorieten' ? '' : (FLAG[list[0][0].country] || '')} ${esc(grp)}</span></div>`;
-    list.forEach(([s, k]) => {
-      const rd = runDates(s);
-      html += `<div class="nm" data-k="${k}">${s.run ? `<i class="al bg-${s.run.tier}"></i>` : ''}<span>${esc(s.name)}</span></div>` +
-        s.days.map((d, i) => `<button class="tile ${d.v == null ? 'na' : 'g' + d.v + ' v' + d.v} ${d.unsure ? 'unsure' : ''} ${rd.has(d.date) ? 'run' : ''}" data-k="${k}" data-i="${i}" aria-label="${esc(s.name)} ${esc(d.date)}">${N(d.hs)}</button>`).join('');
-    });
-  });
-  $('#view').innerHTML = `${problems()}<div class="scroll"><div class="grid">${html}</div></div>
+  const groups = (DATA.groups || [...new Set(DATA.spots.map(s => s.group))]);
+  const opts = ['Alle spots'].concat(F.length ? ['★ Favorieten'] : [], groups);
+  let sel = 'Alle spots'; try { sel = localStorage.getItem('ew-grp') || sel; } catch (_) {}
+  if (!opts.includes(sel)) sel = 'Alle spots';
+  const days = DATA.spots[0].days;
+  const today = new Date().toISOString().slice(0, 10);
+  const dayName = (d, i) => { const dt = new Date(d.date + 'T12:00'); return d.date === today ? 'Vandaag' : (i === 1 || (days[i - 1] && days[i - 1].date === today) ? 'Morgen' : WD[dt.getDay()]); };
+  const head = `<div class="dayhd sync"><div class="in">${days.map((d, i) => `<div class="c ${d.date === today ? 'now' : ''}">${dayName(d, i)}<b>${new Date(d.date + 'T12:00').getDate()}</b></div>`).join('')}</div></div>`;
+  const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => sel === 'Alle spots' ? true : sel === '★ Favorieten' ? F.includes(s.name) : s.group === sel)
+    .sort((a, b) => sel === 'Alle spots' ? (F.includes(b[0].name) - F.includes(a[0].name)) : 0);
+  const ARW = (deg, cls) => `<span class="${cls}" style="transform:rotate(${deg}deg)">↓</span>`;
+  const cards = list.map(([s, k]) => {
+    const rd = runDates(s);
+    const tl = s.days.flatMap(d => d.tlev || Array(24).fill(null));
+    const tv = tl.filter(v => v != null), lo = Math.min(...tv), hi = Math.max(...tv);
+    const cw = 92, W = cw * s.days.length, Ht = 70;
+    const pts = tl.map((v, h) => v == null ? null : [h / 24 * cw, Ht - 4 - (v - lo) / Math.max(0.1, hi - lo) * 22]).filter(Boolean);
+    const tsvg = tv.length ? `<svg class="tide" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}"><path d="${smooth(pts)} L${pts[pts.length - 1][0]},${Ht} L${pts[0][0]},${Ht} Z" fill="var(--sea)" opacity=".13"/></svg>` : '';
+    const cols = s.days.map((d, i) => {
+      const r = d.hs != null ? RNG(d.hs, '<small>m</small>') : '–';
+      const e = d.models && (d.models.ECMWF || d.models.GFS);
+      const sub = e ? `${e.tp} s · ${esc(e.dir || '')}` : '';
+      const P = d.parts || [];
+      return `<button class="slcol ${rd.has(d.date) ? 'run' : ''}" data-k="${k}" data-i="${i}" aria-label="${esc(s.name)} ${esc(d.date)}">
+        ${d.unsure ? '<span class="q">?</span>' : ''}<div class="r ${d.hs == null ? 'na' : ''}">${r}</div><div class="sub">${sub}</div>
+        <div class="ar">${P.map(p => p ? ARW(p[1], p[3]) : '<span></span>').join('')}</div>
+        <div class="sg">${(P.length ? P : [null, null, null]).map(p => `<i style="background:var(--g${p ? p[0] : 0})"></i>`).join('')}</div></button>`;
+    }).join('');
+    return `<div class="slcard"><h3 data-k="${k}">${s.run ? `<span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${esc(s.name)}${F.includes(s.name) ? ' <span style="color:var(--g2)">★</span>' : ''}<span class="go">›</span></h3>
+      <div class="slrow sync"><div class="in" style="width:${W}px">${tsvg}${cols}</div></div></div>`;
+  }).join('');
+  $('#view').innerHTML = `${problems()}<div class="slbar"><select id="grp" aria-label="Groep">${opts.map(o => `<option ${o === sel ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></div>
+    ${head}<div style="--cw:92px">${cards || '<p class="hint" style="padding:0 16px">Nog geen favorieten.</p>'}</div>
     <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${k ? t : 'niets'}</span>`).join('')}</div>
-    <div class="legend">golfhoogte op de spot (m, schatting) · open tegel = onzeker · omlijnd = melding</div>`;
+    <div class="legend">golfhoogte op de spot (schatting) · pijlen = wind ochtend/middag/eind (groen offshore, oranje onshore) · balkjes = graad per dagdeel · omlijnd = melding · ? = modellen oneens</div>`;
+  document.documentElement.style.setProperty('--cw', '92px');
+  document.documentElement.style.setProperty('--toph', ($('.top') ? $('.top').offsetHeight : 0) + 'px');
+  $('#grp').onchange = e => { try { localStorage.setItem('ew-grp', e.target.value); } catch (_) {} home(); };
+  const sync = [...document.querySelectorAll('.sync')]; let lock = false;
+  sync.forEach(el => el.addEventListener('scroll', () => { if (lock) return; lock = true; sync.forEach(o => { if (o !== el) o.scrollLeft = el.scrollLeft; }); requestAnimationFrame(() => lock = false); }, {passive: true}));
   document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('click', () => {
     location.hash = 's' + el.dataset.k + (el.dataset.i ? '/' + el.dataset.i : '');
   }));
@@ -260,7 +314,45 @@ function tideChips(d, s){
   return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
 }
 
-const SURF = e => e && e.surf ? `${N(e.surf[0])}–${N(e.surf[1])} m` : (e && e.hs != null ? `${N(e.hs)} m` : '');
+
+/* getijgrafiek zoals Surfline: vloeiende curve, hoog/laag met tijd en hoogte, daglicht, nu-markering */
+function smooth(pts){
+  if (pts.length < 2) return '';
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)},${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)},${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+function tideChart(d, s){
+  const L0 = d.tlev; if (!L0) return '';
+  const base = s ? Math.min(...s.days.flatMap(x => (x.tlev || []).filter(v => v != null))) - 0.1 : 0;
+  const L = L0.map(v => v == null ? null : v - base);
+  const W = 360, H = 130, top = 46, bot = 104, x = h => 8 + h / 23 * (W - 16);
+  const vals = L.filter(v => v != null), lo = Math.min(...vals), hi = Math.max(...vals);
+  const y = v => bot - (v - lo) / Math.max(0.1, hi - lo) * (bot - top);
+  const pts = L.map((v, h) => v == null ? null : [x(h), y(v)]).filter(Boolean);
+  const line = smooth(pts), area = line + ` L${pts[pts.length - 1][0]},${bot + 4} L${pts[0][0]},${bot + 4} Z`;
+  const sun = (d.sun || []).map(t => +t.slice(0, 2) + +t.slice(3) / 60);
+  const night = sun.length ? `<rect x="0" y="0" width="${x(sun[0])}" height="${bot + 4}" fill="var(--ink)" opacity=".06"/><rect x="${x(sun[1])}" y="0" width="${W - x(sun[1])}" height="${bot + 4}" fill="var(--ink)" opacity=".06"/>` : '';
+  const ext = (d.tides || []).map(e => { const h = +e.t.slice(0, 2) + +e.t.slice(3) / 60, X = x(h), eh = e.h != null ? e.h - base : null, Y = y(eh ?? (e.k === 'HW' ? hi : lo));
+    const lab = Math.min(W - 30, Math.max(30, X));
+    return `<line x1="${X}" x2="${X}" y1="${Y}" y2="${bot + 4}" stroke="var(--sea)" stroke-width="1" opacity=".6"/>
+      <text x="${lab}" y="${e.k === 'HW' ? 14 : 26}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">${e.t}</text>
+      <text x="${lab}" y="${e.k === 'HW' ? 28 : 40}" text-anchor="middle" font-size="11" fill="var(--mut)">${eh != null ? N(eh) + ' m' : (e.k === 'HW' ? 'hoog' : 'laag')}</text>`; }).join('');
+  const now = new Date(), isToday = d.date === now.toISOString().slice(0, 10);
+  const nh = now.getHours() + now.getMinutes() / 60, nv = L[Math.floor(nh)];
+  const mark = isToday && nv != null ? `<line x1="${x(nh)}" x2="${x(nh)}" y1="${y(nv)}" y2="${bot + 4}" stroke="var(--ink)" stroke-width="1.5"/><circle cx="${x(nh)}" cy="${y(nv)}" r="4" fill="var(--card)" stroke="var(--sea)" stroke-width="2"/>` : '';
+  const ax = [3, 6, 9, 12, 15, 18, 21].map(h => `<text x="${x(h)}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--mut)">${h === 12 ? '12u' : h + 'u'}</text>`).join('');
+  return `<div class="tchart"><div class="tt">Getij (m, t.o.v. laagste laagwater)</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="getij">
+    ${night}<path d="${area}" fill="var(--sea)" opacity=".18"/><path d="${line}" fill="none" stroke="var(--sea)" stroke-width="2.2"/>${ext}${mark}${ax}</svg></div>`;
+}
+
+const BUCKETS = [[0, .3], [.3, .6], [.6, .9], [.6, 1.1], [.9, 1.2], [.9, 1.4], [1.2, 1.5], [1.2, 1.8], [1.5, 2.1], [1.8, 2.4], [2.4, 3], [2.4, 3.7], [3, 4.5], [3.7, 4.9], [4.5, 6.1], [6.1, 7.6], [7.6, 9.1]];
+const BK = h => h == null ? null : BUCKETS.reduce((b, x) => Math.abs((x[0] + x[1]) / 2 - h) < Math.abs((b[0] + b[1]) / 2 - h) ? x : b);
+const RNG = (h, unit = 'm') => { const b = BK(h); return b ? `${N(b[0])}–${N(b[1])}${unit}` : '–'; };
+const SURF = e => e && e.hs != null ? RNG(e.hs, ' m') : '';
 
 /* uurstrook: per uur golf, periode, swell, wind en getij voor één dag (eerste 7 dagen) */
 const ARR = deg => `<span class="arr" style="transform:rotate(${deg}deg)">↓</span>`;
@@ -298,9 +390,8 @@ function hourSheet(s, i0){
         ${R('Periode', r => `${r.tp} s<br>${ARR(r.d)}`, 'sep')}
         ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
         ${R('Wind (kn)', r => `<div class="w ${r.on}">${r.ws}${r.gu != null ? `<small>/${r.gu}</small>` : ''}<br>${ARR(r.wd)}</div>`, 'sep')}
-        <tr class="sep"><th>Getij</th><td colspan="${hrs.length}" style="padding:0"><svg width="${W}" height="${Ht}" style="display:block"><polyline points="${pts}" fill="none" stroke="var(--sea)" stroke-width="2"/></svg></td></tr>
-        <tr class="hr"><th></th>${H.tide.map(t => { const x = (d.tides || []).find(e => +e.t.slice(0, 2) === t[0]); return `<td>${x ? `<b style="color:var(--sea)">${x.k === 'HW' ? 'hoog' : 'laag'}<br>${x.t}</b>` : (t[1] == null ? '' : N(Math.round(t[1] * 10) / 10))}</td>`; }).join('')}</tr>
       </table></div>
+      <div style="padding:0 12px">${tideChart(d, s)}</div>
       <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · grijs zwak · rood onshore; klein getal = stoten.
         Op zee = swellcomponenten (30–50 km uit de kust). ⚠︎ = ECMWF en GFS verschillen sterk.</div>
     </div>`;
@@ -355,6 +446,7 @@ function dayCard(s, d, i){
       ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}${extras(d)}`
     : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>${extras(d)}`}
     ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
+    ${tideChart(d, s)}
     ${d.hourly ? `<button class="hourbtn" data-hour="${i}">Per uur ›</button>` : ''}
     <div class="more">${models}</div></div>`;
 }

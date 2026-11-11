@@ -234,6 +234,21 @@ Keuzes van Derek, in volgorde:
     - **Hoofdtrigger:** een geplande Claude-taak om 07:13 en 14:13 (NL-tijd) die `workflow_dispatch` start.
     - **Reserve:** GitHub-cron elk uur (:17). De job `check` slaat over als `data/latest.json` jonger is dan 6 uur, of als het nacht is (22–05 UTC).
     - **Vastleggen:** `git pull --rebase -X theirs` vóór de push. Lopen twee runs vlak na elkaar, dan wint de nieuwste data in plaats van een merge-conflict.
+25. **Surfline-vergelijking 2 en nieuw startscherm (11 nov).**
+    - **Gevonden:** het golfpunt per spot viel bij Cap Ferret, Truc Vert en Cavaliers op een kustcel die half op land ligt. GFS gaf daar 0 m en ECMWF gedempte golven; Bud Bud en Cap Ferret waren daardoor te laag.
+      - Reparatie in de analyse: het spotpunt wordt alleen gebruikt als het minstens 75 % van de Hs van het regiopunt heeft en een periode boven 0.
+      - Reparatie bij het ophalen: een punt 0,3° zeewaarts.
+    - **Grootte-correctie:** grote dagen groeien bij Surfline sneller dan Komar-Gaughan aangeeft. Fit op 93 dagen: exponent 1,14 rond 1,2 m (`surf_size_exp`, `surf_pivot`). Daarna `exposure` per spot opnieuw bijgesteld, met maximaal 0,8–1,25 per keer. Verschil met Surfline over dag 0–6 gemiddeld 0,23 m; Bud Bud 0,15 m.
+    - **Hoogte als Surfline-klasse:** 0,0–0,3 · 0,3–0,6 · 0,6–0,9 · 0,6–1,1 · 0,9–1,2 · 0,9–1,4 · 1,2–1,5 · 1,2–1,8 · 1,5–2,1 · 1,8–2,4 · 2,4–3,0 · 2,4–3,7 · 3,0–4,5 enzovoort.
+    - **Startscherm zoals de Surfline-favorieten:**
+      - een groepskeuze (alle spots, favorieten, land);
+      - een kaart per spot met de naam erboven;
+      - per dag een hoogteklasse, periode en richting;
+      - 3 windpijlen (ochtend, middag, eind) in groen (offshore) of oranje (onshore);
+      - 3 kleurbalkjes met de graad per dagdeel;
+      - het getij als silhouet;
+      - dagen die horizontaal synchroon scrollen.
+    - **Getijgrafiek zoals Surfline:** een vloeiende curve met tijd en hoogte van hoog- en laagwater, de nacht gearceerd en een nu-markering. Hoogte ten opzichte van het laagste laagwater van de reeks. Staat in de dagkaart en in de uurstrook.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
@@ -279,7 +294,7 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 | 1 | Swell en windzee apart | **gebouwd 10 nov**, daarna exposure opnieuw gefit (verschil met Surfline dag 1–6: 0,1–0,3 m) | Hoogte op de spot per component (swell, tweede swell, windzee) en samen via energie. Periode en richting van de grootste component. Mist een model de windzee, dan wordt de rest-energie als korte windzee gerekend. |
 | 2 | Fijnmazige wind eerste 48 uur | **gebouwd 10 nov** | Per land het eerste model met data: NL KNMI HARMONIE · FR Météo-France AROME HD · PT/MA ICON-EU (DMI HARMONIE Europe gaf geen data). Vervangt ECMWF- en GFS-wind voor de eerste 48 uur (`hires_wind_hours`). |
 | 3 | Golfpunt per spot | **gebouwd 10 nov** | Golfdata van de dichtstbijzijnde zeecel bij elke spot, met het regiopunt als reserve. |
-| 4 | Vaker vergelijken met Surfline | open | Als Chrome met Surfline openstaat: Surfline-dagwaarden opslaan (`data/surfline/<datum>.json`) en per spot een factor fitten die afhangt van periode en richting, niet één vaste factor. Na 3–4 keer stabiel. Werkwijze: zie punt 20 in de beslissingen (iframes op surfline.com, regel "LOTUS Model" gevolgd door 16 dagwaarden). |
+| 4 | Vaker vergelijken met Surfline | 1e keer 11 nov (data/surfline/2026-11-11.json) | Als Chrome met Surfline openstaat: Surfline-dagwaarden opslaan (`data/surfline/<datum>.json`) en per spot een factor fitten die afhangt van periode en richting, niet één vaste factor. Na 3–4 keer stabiel. Werkwijze: zie punt 20 in de beslissingen (iframes op surfline.com, regel "LOTUS Model" gevolgd door 16 dagwaarden). |
 | 5 | Sessiescores als meting | doorlopend | Derek vult na elke sessie graad en "hoe hoog was het" in. Vanaf 3 sessies per spot geeft de kalibratie hints; vanaf ±10 automatisch bijstellen. |
 | 6 | Trefzekerheid meten | open, vanaf ±1 dec | Uit `data/archive/` meten hoe vaak meldingen op dag 1–3, 4–7 en 8+ uitkwamen; daarna de drempels per termijn bijstellen. |
 
