@@ -2,8 +2,10 @@ name: Endless Waves forecast
 
 on:
   schedule:
-    - cron: "23 6 * * *"   # dagelijks 06:23 UTC (na de 00z-run van ECMWF en GFS); geen heel/half uur, minder vertraging bij GitHub
-    - cron: "47 15 * * *"  # reserve en middagupdate (na de 06z/12z-runs)
+    # GitHub start geplande runs vaak uren te laat of helemaal niet. Daarom elk uur een poging; de job
+    # 'check' slaat over als de data nog vers genoeg is. Hoofdtrigger: een geplande Claude-taak die om
+    # 07:13 en 14:13 (NL) workflow_dispatch start.
+    - cron: "17 * * * *"
   workflow_dispatch: {}      # handmatig starten via het tabblad Actions
   push:                      # ook direct draaien na een wijziging in instellingen of scripts
     branches: [main]
@@ -18,7 +20,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.c.outputs.go }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: data/latest.json
+          sparse-checkout-cone-mode: false
+      - id: c
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then echo "go=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, datetime as dt
+          try:
+              f = json.load(open("data/latest.json"))["fetched_at"]
+              t = dt.datetime.fromisoformat(f.replace("Z", "+00:00"))
+              age = (dt.datetime.now(dt.timezone.utc) - t).total_seconds() / 3600
+          except Exception:
+              age = 99
+          now = dt.datetime.now(dt.timezone.utc).hour
+          # vers genoeg: jonger dan 6 uur; 's nachts (22-05 UTC) niet draaien
+          print("go=" + ("true" if age >= 6 and 5 <= now <= 21 else "false"))
+          PY
+
   run:
+    needs: check
+    if: needs.check.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

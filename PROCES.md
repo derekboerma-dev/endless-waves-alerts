@@ -230,6 +230,9 @@ Keuzes van Derek, in volgorde:
     - "Krachtig" gaat nu over de hoogte op de spot: minstens 1,5 m en 12 s; Wijk aan Zee 1,2 m en 8 s. Voorheen was het de hoogte op open zee, waardoor 0,8 m windswell al "top" werd.
     - Windstilte-grens Wijk aan Zee van 8 naar 6 kn.
     - Uitleg aan Derek: de dagscore is het gemiddelde van ECMWF en GFS, de uurstrook toont één model. "?" betekent dat de modellen sterk verschillen.
+24. **Betrouwbaar starten (11 nov).** GitHub start geplande runs uren te laat of helemaal niet: de cron van 15:47 UTC startte pas om 21:25, die van 06:23 helemaal niet.
+    - **Hoofdtrigger:** een geplande Claude-taak om 07:13 en 14:13 (NL-tijd) die `workflow_dispatch` start.
+    - **Reserve:** GitHub-cron elk uur (:17). De job `check` slaat over als `data/latest.json` jonger is dan 6 uur, of als het nacht is (22–05 UTC).
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
