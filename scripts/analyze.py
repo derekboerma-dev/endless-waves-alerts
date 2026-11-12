@@ -560,21 +560,20 @@ def parts_and_tide(hourly, data, spot, day):
     parts = []
     models = list((hourly or {}).get("models", {}).values())
     for a, b in PARTS:
-        gs, ws, wx, wy, on = [], [], 0.0, 0.0, []
+        gs, wsel = [], None
         for rows in models:
             sel = [r for k, r in enumerate(rows) if r and a <= 6 + k <= b]
             if sel:
                 gs.append(sum(r["g"] for r in sel) / len(sel))
-        rows = models[0] if models else []
-        for k, r in enumerate(rows):
-            if r and a <= 6 + k <= b:
-                ws.append(r["ws"])
-                wx += math.sin(math.radians(r["wd"]))
-                wy += math.cos(math.radians(r["wd"]))
-                on.append(r["on"])
-        if not gs:
+                if wsel is None:
+                    wsel = sel  # wind uit het eerste model dat dit dagdeel dekt
+        if not gs or not wsel:
             parts.append(None)
             continue
+        ws = [r["ws"] for r in wsel]
+        on = [r["on"] for r in wsel]
+        wx = sum(math.sin(math.radians(r["wd"])) for r in wsel)
+        wy = sum(math.cos(math.radians(r["wd"])) for r in wsel)
         parts.append([int(sum(gs) / len(gs) + 0.5), round(math.degrees(math.atan2(wx, wy)) % 360),
                       round(sum(ws) / len(ws)), max(set(on), key=on.count)])
     th = ((data.get("tide") or {}).get(spot["name"]) or {}).get("hourly") or {}
