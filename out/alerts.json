@@ -1,55 +1,58 @@
 {
- "generated": "2026-11-11",
- "fetched_at": "2026-11-11T13:19+00:00",
- "notify": false,
- "new": [],
+ "generated": "2026-11-12",
+ "fetched_at": "2026-11-12T06:41+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 3,
+   "powerful_days": 2,
+   "spots": [
+    "Beliche",
+    "Tonel"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
   {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
-   "country": "FR",
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
    "mode": "trip",
-   "start": "2026-11-11",
-   "end": "2026-11-12",
-   "days": 2,
-   "lead_days": 0,
-   "tier": "bevestigd",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
    "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 1,
+   "strict_days": 3,
+   "powerful_days": 2,
    "spots": [
-    "Bud Bud",
-    "La Sauzaie"
+    "Beliche",
+    "Tonel"
    ],
    "dates": [
-    "2026-11-11",
-    "2026-11-12"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  },
-  {
-   "region": "crozon",
-   "region_name": "Crozon (Lostmarc'h)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-11",
-   "end": "2026-11-12",
-   "days": 2,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 0,
-   "spots": [
-    "La Palue",
-    "Lostmarc'h"
-   ],
-   "dates": [
-    "2026-11-11",
-    "2026-11-12"
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
    ],
    "qualifies": true,
    "below_threshold": []

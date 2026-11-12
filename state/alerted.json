@@ -51,6 +51,33 @@
    "below_threshold": [],
    "first_alert": "2026-11-10",
    "last_tier": "bevestigd"
+  },
+  {
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 3,
+   "powerful_days": 2,
+   "spots": [
+    "Beliche",
+    "Tonel"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-12",
+   "last_tier": "waarschijnlijk"
   }
  ]
 }
