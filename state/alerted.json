@@ -5,79 +5,81 @@
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-11",
-   "end": "2026-11-12",
+   "start": "2026-11-20",
+   "end": "2026-11-21",
    "days": 2,
-   "lead_days": 1,
-   "tier": "bevestigd",
-   "models_agree_days": 2,
-   "strict_days": 1,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 0,
    "powerful_days": 1,
    "spots": [
     "Bud Bud",
     "La Sauzaie"
    ],
    "dates": [
-    "2026-11-11",
-    "2026-11-12"
+    "2026-11-20",
+    "2026-11-21"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-10",
-   "last_tier": "bevestigd"
+   "first_alert": "2026-11-13",
+   "last_tier": "waarschijnlijk"
   },
   {
-   "region": "crozon",
-   "region_name": "Crozon (Lostmarc'h)",
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-11",
-   "end": "2026-11-12",
-   "days": 2,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 0,
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 3,
    "strict_days": 1,
-   "powerful_days": 1,
+   "powerful_days": 3,
    "spots": [
-    "La Palue",
-    "Lostmarc'h"
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
    ],
    "dates": [
-    "2026-11-11",
-    "2026-11-12"
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-10",
-   "last_tier": "bevestigd"
+   "first_alert": "2026-11-13",
+   "last_tier": "waarschijnlijk"
   },
   {
-   "region": "sagres",
-   "region_name": "Sagres",
+   "region": "peniche",
+   "region_name": "Peniche",
    "country": "PT",
    "mode": "trip",
-   "start": "2026-11-21",
-   "end": "2026-11-23",
+   "start": "2026-11-18",
+   "end": "2026-11-20",
    "days": 3,
-   "lead_days": 9,
-   "tier": "kans",
-   "models_agree_days": 3,
-   "strict_days": 0,
-   "powerful_days": 0,
+   "lead_days": 5,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 2,
+   "powerful_days": 2,
    "spots": [
-    "Beliche",
-    "Tonel"
+    "Lagide",
+    "Supertubos"
    ],
    "dates": [
-    "2026-11-21",
-    "2026-11-22",
-    "2026-11-23"
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-12",
-   "last_tier": "kans"
+   "first_alert": "2026-11-13",
+   "last_tier": "waarschijnlijk"
   }
  ]
 }

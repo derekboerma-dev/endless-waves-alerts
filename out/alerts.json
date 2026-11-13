@@ -1,29 +1,79 @@
 {
- "generated": "2026-11-12",
- "fetched_at": "2026-11-12T13:18+00:00",
+ "generated": "2026-11-13",
+ "fetched_at": "2026-11-13T06:14+00:00",
  "notify": true,
  "new": [
   {
-   "region": "sagres",
-   "region_name": "Sagres",
-   "country": "PT",
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
    "mode": "trip",
-   "start": "2026-11-21",
-   "end": "2026-11-23",
-   "days": 3,
-   "lead_days": 9,
-   "tier": "kans",
-   "models_agree_days": 3,
+   "start": "2026-11-20",
+   "end": "2026-11-21",
+   "days": 2,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
    "strict_days": 0,
-   "powerful_days": 0,
+   "powerful_days": 1,
    "spots": [
-    "Beliche",
-    "Tonel"
+    "Bud Bud",
+    "La Sauzaie"
    ],
    "dates": [
-    "2026-11-21",
-    "2026-11-22",
-    "2026-11-23"
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 3,
+   "strict_days": 1,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-18",
+   "end": "2026-11-20",
+   "days": 3,
+   "lead_days": 5,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 2,
+   "powerful_days": 2,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20"
    ],
    "qualifies": true,
    "below_threshold": []
@@ -36,61 +86,6 @@
    "region_name": "Sagres",
    "country": "PT",
    "mode": "trip",
-   "start": "2026-11-19",
-   "end": "2026-11-21",
-   "days": 3,
-   "lead_days": 7,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 2,
-   "strict_days": 3,
-   "powerful_days": 2,
-   "spots": [
-    "Beliche",
-    "Tonel"
-   ],
-   "dates": [
-    "2026-11-19",
-    "2026-11-20",
-    "2026-11-21"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-12",
-   "last_tier": "waarschijnlijk",
-   "cancelled": "2026-11-12"
-  }
- ],
- "all_runs": [
-  {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
-   "start": "2026-11-18",
-   "end": "2026-11-19",
-   "days": 2,
-   "lead_days": 6,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 0,
-   "strict_days": 0,
-   "powerful_days": 0,
-   "spots": [
-    "Wijk aan Zee"
-   ],
-   "dates": [
-    "2026-11-18",
-    "2026-11-19"
-   ],
-   "qualifies": false,
-   "below_threshold": [
-    "begint over 6 dagen (thuisspot: max 3)"
-   ]
-  },
-  {
-   "region": "sagres",
-   "region_name": "Sagres",
-   "country": "PT",
-   "mode": "trip",
    "start": "2026-11-21",
    "end": "2026-11-23",
    "days": 3,
@@ -107,6 +102,86 @@
     "2026-11-21",
     "2026-11-22",
     "2026-11-23"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-12",
+   "last_tier": "kans",
+   "cancelled": "2026-11-13"
+  }
+ ],
+ "all_runs": [
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-20",
+   "end": "2026-11-21",
+   "days": 2,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-19",
+   "end": "2026-11-21",
+   "days": 3,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 3,
+   "strict_days": 1,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-21"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-18",
+   "end": "2026-11-20",
+   "days": 3,
+   "lead_days": 5,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 2,
+   "strict_days": 2,
+   "powerful_days": 2,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20"
    ],
    "qualifies": true,
    "below_threshold": []
