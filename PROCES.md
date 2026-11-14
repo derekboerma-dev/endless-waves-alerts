@@ -254,6 +254,11 @@ Keuzes van Derek, in volgorde:
     - Daaronder een balk waarin de dagen van de reeks gekleurd zijn naar de graad van de beste spot, met de hoogte erin.
     - Reeksen onder de drempel staan grijs onder "Onder drempel".
     - Een tik opent de beste spot op de eerste dag.
+27. **Wijk aan Zee bijgesteld op een waarneming (14 nov).** Een surfer ter plaatse meldde 's ochtends heuphoog en offshore, bij een Z–ZZW-wind van 7–9 kn (KNMI HARMONIE). De app gaf 0,5 m, "onshore" en de graad "niets". Surfline gaf 0,3–0,6 m.
+    - Windboog van O–ZO (100° ± 45°) naar ZO–ZZW (150° ± 60°), vanwege de beschutting van de noordpier en de wind die daar schuin aflandig staat.
+    - Ondergrens van 0,6 naar 0,4 m.
+    - `exposure` van 0,64 naar 0,80.
+    - Resultaat voor die ochtend: 0,6–0,7 m, offshore, graad goed.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

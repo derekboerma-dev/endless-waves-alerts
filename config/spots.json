@@ -70,12 +70,12 @@
      ],
      "wind": [
       [
-       100,
-       45
+       150,
+       60
       ]
      ],
      "hs": [
-      0.6,
+      0.4,
       2.0
      ],
      "tp_min": 6,
@@ -96,7 +96,7 @@
       2.0
      ],
      "surfline_id": "584204204e65fad6a77095ea",
-     "exposure": 0.64,
+     "exposure": 0.8,
      "guide": {
       "about": "Lang strand in de luwte van de noordpier van het Noordzeekanaal, dicht bij Amsterdam. Buiten de zomer vooral kleine, piekerige windswell; af en toe een lange noorderswell met lange rechts en links. De pier geeft beschutting bij zuidwestenwind.",
       "swell": "NW tot N (soms ZW-windswell)",
@@ -107,7 +107,8 @@
       "level": "beginner–gemiddeld",
       "bottom": "zand",
       "hazards": "muistromen als het groter wordt"
-     }
+     },
+     "_waarneming": "14 nov 2026 ochtend: heuphoog (±0,7 m) en offshore bij lichte Z-ZZW-wind 7-9 kn (bericht van een surfer ter plaatse). App gaf 0,5 m en 'onshore': windboog verbreed naar ZO-ZZW (pier + schuin aflandig), ondergrens 0,4 m, exposure x1,25."
     }
    ]
   },
