@@ -10,3 +10,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: python scripts/buoy.py
+      - run: |
+          python3 - <<'PY'
+          import json
+          d = json.load(open("data/buoy/latest.json"))
+          for g, s in d["series"].items():
+              print(g, s["station"], [(t, v) for t, v in s["data"] if "T05" <= t[10:13] <= "T11" and t[8:10] == "14" and t[14:16] in ("00",)])
+          PY
