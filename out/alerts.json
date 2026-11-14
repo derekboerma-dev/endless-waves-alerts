@@ -1,31 +1,8 @@
 {
  "generated": "2026-11-14",
- "fetched_at": "2026-11-14T21:59+00:00",
- "notify": true,
- "new": [
-  {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
-   "start": "2026-11-14",
-   "end": "2026-11-14",
-   "days": 1,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 1,
-   "strict_days": 1,
-   "powerful_days": 0,
-   "spots": [
-    "Wijk aan Zee"
-   ],
-   "dates": [
-    "2026-11-14"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  }
- ],
+ "fetched_at": "2026-11-14T22:10+00:00",
+ "notify": false,
+ "new": [],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
