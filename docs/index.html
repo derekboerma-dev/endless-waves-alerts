@@ -409,6 +409,7 @@ function hourSheet(s, i0){
         ${R('Golf (m)', r => `<div class="bv">${N(Math.round(r.s * 10) / 10)}</div><div class="bar" style="height:${Math.max(4, r.s / maxS * 56)}px;background:var(--g${r.g})"></div>`)}
         ${R('Periode', r => `${r.tp} s<br>${ARR(r.d)}`, 'sep')}
         ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
+        ${s.buoy && d.date === new Date().toISOString().slice(0, 10) && Object.keys(s.buoy.today || {}).length ? `<tr><th>Boei</th>${hrs.map(h => { const v = s.buoy.today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v != null ? N(v) + ' m' : ''}</div></td>`; }).join('')}</tr>` : ''}
         ${R('Wind (kn)', r => `<div class="w ${r.on}">${r.ws}${r.gu != null ? `<small>/${r.gu}</small>` : ''}<br>${ARR(r.wd)}</div>`, 'sep')}
       </table></div>
       <div style="padding:0 12px">${tideChart(d, s)}</div>
@@ -508,6 +509,7 @@ function spot(k, focus){
     $('#view').innerHTML = `
       ${waveCard(s, sel)}
       <div class="actions"><a href="${slUrl}" target="_blank" rel="noopener">Open in Surfline ↗</a><button class="pri" id="rate">Sessie beoordelen</button></div>
+      ${buoyBlock(s)}
       ${sessionsBlock(s)}
       <div class="toggle"><button id="tg">${showAll ? 'Alleen aanraders' : 'Alle 16 dagen'}</button></div>
       <div class="days">${list.length ? list.map(([d, i]) => dayCard(s, d, i)).join('') : '<div class="empty">Geen aanraders in de komende 16 dagen.</div>'}</div>
@@ -539,6 +541,18 @@ function spot(k, focus){
 let SESS = [];
 const localSess = () => { try { return JSON.parse(localStorage.getItem('ew-sess') || '[]'); } catch(e){ return []; } };
 let CAL = {};
+
+/* gemeten: boei van Rijkswaterstaat bij de thuisspot */
+function buoyBlock(s){
+  const b = s.buoy; if (!b || !b.last || b.last.hs == null) return '';
+  const t = b.last.t ? b.last.t.slice(11, 16) : '';
+  const f = b.factor || {}, fk = Object.keys(f);
+  const corr = fk.length ? fk.map(k => `${k} ×${N(f[k])}`).join(' · ') : `start na 3 dagen metingen (nu ${b.n_days})`;
+  return `<div class="sess buoy"><h3>Gemeten</h3>
+    <div class="chips"><span class="chip">🛟 ${N(b.last.hs)} m</span><span class="chip">${b.last.tm != null ? N(b.last.tm) + ' s gem.' : ''}</span>${b.last.dir != null ? `<span class="chip">uit ${COMPASS(b.last.dir)}</span>` : ''}<span class="chip">${t}</span></div>
+    <p class="hint">Boei ${esc(b.station || '')} (${N(b.km)} km uit de kust), golfhoogte op open zee. Modelcorrectie: ${corr}.</p></div>`;
+}
+const COMPASS = d => ['N','NNO','NO','ONO','O','OZO','ZO','ZZO','Z','ZZW','ZW','WZW','W','WNW','NW','NNW'][Math.round(((d % 360) + 360) % 360 / 22.5) % 16];
 function sessionsBlock(s){
   const cal = CAL[s.name];
   const calBy = Object.fromEntries((cal?.sessions || []).map(r => [r.date + '|' + (r.time || '') + '|' + r.score, r]));

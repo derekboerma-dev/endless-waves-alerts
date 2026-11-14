@@ -396,6 +396,10 @@ def main():
     latest = json.loads((ROOT / "data" / "latest.json").read_text())
     for _rd in (latest.get("regions") or {}).values():
         merge_hires_wind(_rd)
+    try:
+        buoy_bias(latest)
+    except Exception as e:  # noqa: BLE001 - metingen zijn een extraatje
+        print("boei: overgeslagen:", e)
     state_p = ROOT / "state" / "alerted.json"
     state = json.loads(state_p.read_text()) if state_p.exists() else {"events": []}
     today = dt.date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else dt.date.today()
@@ -581,6 +585,79 @@ def parts_and_tide(hourly, data, spot, day):
     tl = [lv.get(f"{day}T{h:02d}:00") for h in range(24)]
     return parts, ([None if v is None else round(v, 2) for v in tl] if any(v is not None for v in tl) else None)
 
+
+# ---------- metingen (boei Rijkswaterstaat) bij de thuisspot ----------
+BUOY = None
+
+
+def buoy_bias(latest):
+    """Vergelijk de golfhoogte op open zee (model) met de boei bij de thuisspot en corrigeer het model.
+
+    Per dag en per model: mediaan van boei-Hm0 / model-Hs over de gemeten uren (06-21 u).
+    Correctie = mediaan van de laatste 14 dagen, pas vanaf 3 dagen, begrensd op 0,85-1,15.
+    Alleen voor de thuisspot (de boei ligt 6 km uit de kust); spotomrekening en wind blijven ongemoeid.
+    Uitkomst in state/buoy_bias.json en in de app."""
+    global BUOY
+    bp = ROOT / "data" / "buoy" / "latest.json"
+    home = next((r for r in CFG["regions"] if r["alert"].get("mode") == "home"), None)
+    if not bp.exists() or not home:
+        return
+    b = json.loads(bp.read_text())
+    hm = {t: v / 100 for t, v in (b["series"].get("Hm0") or {}).get("data", []) if v and 0 < v < 2000}
+    hourly = {t: v for t, v in hm.items() if t.endswith(":00")}
+    st_p = ROOT / "state" / "buoy_bias.json"
+    st = json.loads(st_p.read_text()) if st_p.exists() else {"days": {}}
+    rd = (latest.get("regions") or {}).get(home["id"]) or {}
+    spot = home["spots"][0]
+    for mm, wm, lab in PAIRS:
+        mj = marine_for(rd, spot, mm)
+        if not mj or mj.get("error"):
+            continue
+        h = mj["hourly"]
+        by_day = {}
+        for t, v in zip(h["time"], h["wave_height"]):
+            if v and t in hourly and 6 <= int(t[11:13]) <= 21 and v > 0.2:
+                by_day.setdefault(t[:10], []).append(hourly[t] / v)
+        for day, rs in by_day.items():
+            if len(rs) >= 4:
+                rs.sort()
+                st["days"].setdefault(day, {})[lab] = round(rs[len(rs) // 2], 3)
+    keep = sorted(st["days"])[-30:]
+    st["days"] = {k: st["days"][k] for k in keep}
+    fac = {}
+    for lab in ("ECMWF", "GFS"):
+        rs = sorted(st["days"][k][lab] for k in keep[-14:] if lab in st["days"][k])
+        if len(rs) >= 3:
+            fac[lab] = round(min(1.15, max(0.85, rs[len(rs) // 2])), 3)
+    st["factor"], st["n_days"] = fac, len(keep)
+    st_p.parent.mkdir(exist_ok=True)
+    st_p.write_text(json.dumps(st, indent=1))
+    # toepassen op de golfhoogtes van de thuisregio (open zee, alle componenten)
+    for mm, wm, lab in PAIRS:
+        f = fac.get(lab)
+        if not f:
+            continue
+        for src in [(rd.get("marine") or {}).get(mm)] + [m.get(mm) for m in (rd.get("marine_spot") or {}).values()]:
+            if not src or src.get("_bias"):
+                continue
+            for k in ("wave_height", "swell_wave_height", "wind_wave_height", "secondary_swell_wave_height"):
+                arr = (src.get("hourly") or {}).get(k)
+                if arr:
+                    src["hourly"][k] = [None if x is None else x * f for x in arr]
+            src["_bias"] = f
+    last = {}
+    for g in ("Hm0", "Tm02", "Th0"):
+        dd = (b["series"].get(g) or {}).get("data") or []
+        if dd:
+            last[g] = dd[-1]
+    today = dt.date.today().isoformat()
+    BUOY = {"station": (b["series"].get("Hm0") or {}).get("naam"), "km": (b["series"].get("Hm0") or {}).get("km"),
+            "fetched_at": b.get("fetched_at"), "spot": spot["name"],
+            "last": {"t": (last.get("Hm0") or [None])[0], "hs": round(last["Hm0"][1] / 100, 2) if "Hm0" in last else None,
+                     "tm": last.get("Tm02", [None, None])[1], "dir": last.get("Th0", [None, None])[1]},
+            "today": {t[11:13]: round(v, 2) for t, v in hourly.items() if t.startswith(today)},
+            "factor": fac, "n_days": len(keep)}
+
 def tide_series(tj):
     """Uurwaarden zeespiegel -> {tijd: (fractie 0=laag..1=hoog, opkomend)} en per dag de hoog- en laagwatertijden."""
     h = (tj or {}).get("hourly") or {}
@@ -755,6 +832,7 @@ def spot_cards(alerts, per_region, today, latest):
                     sdays[-1]["hourly"] = None
             out.append({"name": s["name"], "group": s.get("group", reg["country"]), "region": reg["id"],
                         "lat": s["lat"], "lon": s["lon"], "surfline_id": s.get("surfline_id"), "guide": s.get("guide"),
+                        "buoy": BUOY if BUOY and BUOY.get("spot") == s["name"] else None,
                         "region_name": reg["name"], "country": reg["country"], "src": s["src"],
                         "hs_range": hs_range(s, reg), "tide_pref": TIDE_NL.get(s.get("tide", "all")),
                         "run": run, "days": sdays})

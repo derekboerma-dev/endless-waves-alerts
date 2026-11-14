@@ -259,6 +259,19 @@ Keuzes van Derek, in volgorde:
     - Ondergrens van 0,6 naar 0,4 m.
     - `exposure` van 0,64 naar 0,80.
     - Resultaat voor die ochtend: 0,6–0,7 m, offshore, graad goed.
+28. **Metingen Rijkswaterstaat bij Wijk aan Zee (14 nov).**
+    - **Bron:** `scripts/buoy.py` haalt via de DD-API 2.0 van Rijkswaterstaat (`ddapi20-waterwebservices.rijkswaterstaat.nl`, geen sleutel nodig) de laatste 36 uur op van de dichtstbijzijnde meetpunten:
+      - golfhoogte Hm0 en periode Tm02: boei IJGeul 1, 6 km uit de kust;
+      - golfrichting Th0: IJgeul 3, 19 km.
+      Binnen 40 km is geen windmeting van Rijkswaterstaat gevonden.
+    - **Opslag:** `data/buoy/latest.json` en per dag in `data/buoy/<datum>.json`.
+    - **Eerste vergelijking, 14 nov 06–11 u:** boei 1,0–1,45 m tegenover ECMWF 1,2–1,3 m en GFS 1,1–1,2 m. De golven op zee kloppen dus. De fout van die ochtend zat in de omrekening naar de spot en in de wind (punt 27).
+    - **Automatische correctie, alleen voor de thuisspot:**
+      - per dag en model de mediaan van boei/model over 06–21 u (`state/buoy_bias.json`);
+      - correctiefactor = mediaan van de laatste 14 dagen, pas vanaf 3 dagen, begrensd op 0,85–1,15;
+      - werkt alleen op de golfhoogte op open zee, niet op de spotomrekening of de wind.
+      - Waarom zo beperkt: eenvoudig te controleren en het model blijft stabiel. De spotomrekening blijft afhankelijk van sessies en waarnemingen.
+    - **App:** blok "Gemeten" bij Wijk aan Zee (laatste meting plus correctie) en een rij "Boei" in de uurstrook van vandaag.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
