@@ -26,20 +26,29 @@ jobs:
               ll = B.latlon(l)
               if not ll: continue
               d = B.km(here, ll)
-              if d < 70: found.setdefault(l.get("Code"), [d, l.get("Naam"), set()])[2].add(g)
+              if d < 12: found.setdefault(l.get("Code"), [d, l.get("Naam"), set()])[2].add(g)
           for c, (d, n, gs) in sorted(found.items(), key=lambda x: x[1][0]):
               print("STATION", c, n, round(d), sorted(gs))
           per = {"Begindatumtijd": "2026-11-14T05:00:00.000+01:00", "Einddatumtijd": "2026-11-14T11:00:00.000+01:00"}
-          for c, (d, n, gs) in sorted(found.items(), key=lambda x: x[1][0])[:3]:
+          import urllib.request
+          def raw(body):
+              req = urllib.request.Request(B.BASE + "/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return r.status, r.read().decode()
+          for c, (d, n, gs) in sorted(found.items(), key=lambda x: x[1][0])[:14]:
               for g in ("WINDSHD", "WINDRTG"):
-                  if g not in gs: continue
-                  try:
-                      r = B.post("/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", {"Locatie": {"Code": c}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": {"Compartiment": {"Code": "LT"}, "Grootheid": {"Code": g}}}, "Periode": per})
-                  except Exception as e:
+                  ok = False
+                  for meta in ({"Compartiment": {"Code": "LT"}, "Grootheid": {"Code": g}, "ProcesType": "meting"},
+                               {"Compartiment": {"Code": "LT"}, "Grootheid": {"Code": g}}):
                       try:
-                          r = B.post("/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", {"Locatie": {"Code": c}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": {"Grootheid": {"Code": g}}}, "Periode": per})
-                      except Exception as e2:
-                          print("FOUT", c, g, e2); continue
-                  pts = sorted((x["Tijdstip"][11:16], x["Meetwaarde"]["Waarde_Numeriek"]) for w in r.get("WaarnemingenLijst") or [] for x in w.get("MetingenLijst") or [])
-                  print("DATA", c, g, [p for p in pts if p[0].endswith("0")][::3])
+                          st, txt = raw({"Locatie": {"Code": c}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": meta}, "Periode": per})
+                      except Exception as e:
+                          st, txt = getattr(e, "code", "?"), str(e)[:80]
+                      if txt.strip().startswith("{"):
+                          r = json.loads(txt)
+                          pts = sorted((x["Tijdstip"][11:16], x["Meetwaarde"]["Waarde_Numeriek"]) for w in r.get("WaarnemingenLijst") or [] for x in w.get("MetingenLijst") or [])
+                          if pts:
+                              print("DATA", c, n, round(d), g, [p for p in pts if p[0].endswith(":00")])
+                              ok = True; break
+                  if not ok: print("LEEG", c, g, st)
           PY
