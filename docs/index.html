@@ -167,6 +167,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .hgrid .w.off{background:color-mix(in srgb,var(--g3) 28%,transparent)}
 .hgrid .w.on{background:color-mix(in srgb,var(--warn) 22%,transparent)}
 .hgrid .w.glassy{background:var(--hl)}
+.hgrid .w.cross{background:color-mix(in srgb,var(--g2) 22%,transparent)}
 .hgrid .cmp{font-size:10px;color:var(--mut);line-height:1.25;white-space:nowrap}
 .hgrid tr.sep td,.hgrid tr.sep th{border-top:1px solid var(--line)}
 .hleg{font-size:11px;color:var(--mut);padding:8px 16px 0;line-height:1.5}
@@ -194,7 +195,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .slcol .sub{font-size:12px;color:var(--mut);margin-top:2px}
 .slcol .ar{display:flex;justify-content:center;gap:12px;margin-top:14px;font-size:15px;height:18px}
 .slcol .ar span{display:inline-block}
-.slcol .ar .off{color:var(--g3)} .slcol .ar .on{color:var(--g1)} .slcol .ar .glassy{color:var(--ink)}
+.slcol .ar .off{color:var(--g3)} .slcol .ar .on{color:var(--g1)} .slcol .ar .glassy{color:var(--ink)} .slcol .ar .cross{color:var(--g2)}
 .slcol .sg{display:flex;justify-content:center;gap:3px;margin-top:12px}
 .slcol .sg i{width:20px;height:6px;border-radius:3px;background:var(--g0)}
 .slcol .q{position:absolute;top:8px;right:8px;font-size:10px;color:var(--mut)}
@@ -311,7 +312,7 @@ function home(){
   $('#view').innerHTML = `${problems()}<div class="slbar"><select id="grp" aria-label="Groep">${opts.map(o => `<option ${o === sel ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></div>
     ${head}<div style="--cw:92px">${cards || '<p class="hint" style="padding:0 16px">Nog geen favorieten.</p>'}</div>
     <div class="legend">${GRADE.map((t, k) => `<span><i style="background:var(--g${k})"></i>${k ? t : 'niets'}</span>`).join('')}</div>
-    <div class="legend">golfhoogte op de spot (schatting) · pijlen = wind ochtend/middag/eind (groen offshore, oranje onshore) · balkjes = graad per dagdeel · omlijnd = melding · ? = modellen oneens</div>`;
+    <div class="legend">golfhoogte op de spot (schatting) · pijlen = wind ochtend/middag/eind (groen offshore, geel zijwind, oranje onshore) · balkjes = graad per dagdeel · omlijnd = melding · ? = modellen oneens</div>`;
   document.documentElement.style.setProperty('--cw', '92px');
   document.documentElement.style.setProperty('--toph', ($('.top') ? $('.top').offsetHeight : 0) + 'px');
   $('#grp').onchange = e => { try { localStorage.setItem('ew-grp', e.target.value); } catch (_) {} home(); };
@@ -411,9 +412,10 @@ function hourSheet(s, i0){
         ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
         ${s.buoy && d.date === new Date().toISOString().slice(0, 10) && Object.keys(s.buoy.today || {}).length ? `<tr><th>Boei</th>${hrs.map(h => { const v = s.buoy.today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v != null ? N(v) + ' m' : ''}</div></td>`; }).join('')}</tr>` : ''}
         ${R('Wind (kn)', r => `<div class="w ${r.on}">${r.ws}${r.gu != null ? `<small>/${r.gu}</small>` : ''}<br>${ARR(r.wd)}</div>`, 'sep')}
+        ${s.buoy && d.date === new Date().toISOString().slice(0, 10) && Object.keys(s.buoy.wind_today || {}).length ? `<tr><th>Wind gemeten</th>${hrs.map(h => { const v = s.buoy.wind_today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v ? `${v[0]}<br>${v[1] != null ? ARR(v[1]) : ''}` : ''}</div></td>`; }).join('')}</tr>` : ''}
       </table></div>
       <div style="padding:0 12px">${tideChart(d, s)}</div>
-      <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · grijs zwak · rood onshore; klein getal = stoten.
+      <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · geel zijwind (nog goed) · grijs zwak · rood onshore; klein getal = stoten.
         Op zee = swellcomponenten (30–50 km uit de kust). ⚠︎ = ECMWF en GFS verschillen sterk.</div>
     </div>`;
     bg.querySelector('#hx').onclick = close;
@@ -550,7 +552,8 @@ function buoyBlock(s){
   const corr = fk.length ? fk.map(k => `${k} ×${N(f[k])}`).join(' · ') : `start na 3 dagen metingen (nu ${b.n_days})`;
   return `<div class="sess buoy"><h3>Gemeten</h3>
     <div class="chips"><span class="chip">🛟 ${N(b.last.hs)} m</span><span class="chip">${b.last.tm != null ? N(b.last.tm) + ' s gem.' : ''}</span>${b.last.dir != null ? `<span class="chip">uit ${COMPASS(b.last.dir)}</span>` : ''}<span class="chip">${t}</span></div>
-    <p class="hint">Boei ${esc(b.station || '')} (${N(b.km)} km uit de kust), golfhoogte op open zee. Modelcorrectie: ${corr}.</p></div>`;
+    ${b.wind && b.wind.kn != null ? `<div class="chips"><span class="chip">💨 ${b.wind.kn} kn uit ${COMPASS(b.wind.dir)} (${Math.round(b.wind.dir)}°)</span><span class="chip">${(b.wind.t || '').slice(11, 16)}</span></div>` : ''}
+    <p class="hint">Golf: boei ${esc(b.station || '')} (${N(b.km)} km uit de kust), op open zee. Wind: Rijkswaterstaat ${esc(b.wind_station || '')}. Offshore is hier oost-zuidoost; zuid is zijwind. Modelcorrectie: ${corr}.</p></div>`;
 }
 const COMPASS = d => ['N','NNO','NO','ONO','O','OZO','ZO','ZZO','Z','ZZW','ZW','WZW','W','WNW','NW','NNW'][Math.round(((d % 360) + 360) % 360 / 22.5) % 16];
 function sessionsBlock(s){

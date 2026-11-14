@@ -112,6 +112,25 @@ def main():
         out["series"][g] = {"station": l.get("Code"), "naam": l.get("Naam"), "km": round(d, 1),
                             "eenheid": (m.get("Eenheid") or {}).get("Code"), "data": pts}
         print(f"{g}: {len(pts)} metingen, laatste {pts[-1] if pts else '-'}")
+    # windmeting op het opgegeven Rijkswaterstaat-station (luchtcompartiment), bijv. IJmuiden buitenhaven
+    st = spot.get("rws_wind")
+    for g in ("WINDSHD", "WINDRTG") if st else ():
+        body = {"Locatie": {"Code": st}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": {
+            "Compartiment": {"Code": "LT"}, "Grootheid": {"Code": g}, "ProcesType": "meting"}}, "Periode": per}
+        try:
+            r = post("/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", body)
+        except Exception as e:  # noqa: BLE001
+            print(f"wind {g}: ophalen mislukt: {e}")
+            continue
+        pts = sorted([x["Tijdstip"][:16], x["Meetwaarde"]["Waarde_Numeriek"]] for w in r.get("WaarnemingenLijst") or []
+                     for x in w.get("MetingenLijst") or [] if (x.get("Meetwaarde") or {}).get("Waarde_Numeriek") is not None
+                     and x["Meetwaarde"]["Waarde_Numeriek"] < 9e3)
+        dedup = {}
+        for t, v in pts:
+            dedup.setdefault(t, v)
+        out["series"][g] = {"station": st, "naam": st, "km": None, "eenheid": "m/s" if g == "WINDSHD" else "graad",
+                            "data": [[t, v] for t, v in sorted(dedup.items())]}
+        print(f"wind {g}: {len(dedup)} metingen")
     if not out["series"]:
         print("geen metingen gevonden")
         sys.exit(0)

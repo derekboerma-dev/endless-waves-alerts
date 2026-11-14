@@ -152,6 +152,13 @@ def sea_state(mh, i, spot):
     dom = max(parts, key=lambda x: x[0])
     return total, dom[1], dom[2], hs
 
+
+def is_cross(spot, wd, ws):
+    """Zijwind (cross-shore) die op deze spot nog prima is, bijv. door beschutting van een pier.
+    Telt als 'wind in orde', maar nooit als offshore en niet in de strenge variant."""
+    arcs = spot.get("wind_cross")
+    return bool(arcs) and in_arcs(wd, arcs, 0) and ws <= spot.get("cross_max_kn", 12)
+
 def surf_range(h):
     """Weergave als bereik, zoals Surfline (die meldt de kleinere en de grotere sets): -20 % tot +20 %."""
     return None if h is None else [round(h * 0.8, 1), round(h * 1.2, 1)]
@@ -258,7 +265,8 @@ def evaluate_spot(spot, region, marine, wind, strict):
         dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
         swell_ok = dir_ok and tp_ok and hs_ok
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
-        wind_ok = (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99))
+        cross = not strict and is_cross(spot, wd, ws)
+        wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= D.get("max_gust_kn", 99))
         ok = swell_ok and wind_ok
         pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)  # 0-4 voorwaarden gehaald
         rec["rows"].append({"h": hr, "hs": hs, "off": off, "tp": tp, "dir": wdir, "ws": ws, "wd": wd, "gu": gu, "ok": ok, "pts": pts})
@@ -534,7 +542,8 @@ def hourly_for(spot, region, data, day, tinfo):
             ws, wd, gu = wh["wind_speed_10m"][j], wh["wind_direction_10m"][j], gusts[j]
             dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
             offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
-            wind_ok = (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99))
+            cross = is_cross(spot, wd, ws)
+            wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= D.get("max_gust_kn", 99))
             pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)
             if pts == 4:
                 g = 4 if (hs >= powerful["hs_min"] and tp >= powerful["tp_min"]) else 3
@@ -549,7 +558,7 @@ def hourly_for(spot, region, data, day, tinfo):
                     comps.append([round(v, 1), round(pp), round(dd), kh.split("_")[0]])
             rows.append({"s": round(hs, 2), "tp": round(tp), "d": round(wdir), "off": round(off, 1),
                          "c": comps, "ws": round(ws), "gu": None if gu is None else round(gu), "wd": round(wd),
-                         "on": "off" if offshore else ("glassy" if ws <= glassy else "on"), "g": g,
+                         "on": "off" if offshore else ("glassy" if ws <= glassy else ("cross" if cross else "on")), "g": g,
                          "hires": bool(wind.get("_hires")) and h is not None})
         if any(rows):
             out["models"][lab] = rows
@@ -646,7 +655,7 @@ def buoy_bias(latest):
                     src["hourly"][k] = [None if x is None else x * f for x in arr]
             src["_bias"] = f
     last = {}
-    for g in ("Hm0", "Tm02", "Th0"):
+    for g in ("Hm0", "Tm02", "Th0", "WINDSHD", "WINDRTG"):
         dd = (b["series"].get(g) or {}).get("data") or []
         if dd:
             last[g] = dd[-1]
@@ -656,6 +665,11 @@ def buoy_bias(latest):
             "last": {"t": (last.get("Hm0") or [None])[0], "hs": round(last["Hm0"][1] / 100, 2) if "Hm0" in last else None,
                      "tm": last.get("Tm02", [None, None])[1], "dir": last.get("Th0", [None, None])[1]},
             "today": {t[11:13]: round(v, 2) for t, v in hourly.items() if t.startswith(today)},
+            "wind_station": (b["series"].get("WINDSHD") or {}).get("station"),
+            "wind": {"kn": round(last["WINDSHD"][1] * 1.944) if "WINDSHD" in last else None,
+                     "dir": last.get("WINDRTG", [None, None])[1], "t": (last.get("WINDSHD") or [None])[0]},
+            "wind_today": {t[11:13]: [round(v * 1.944), dict((b["series"].get("WINDRTG") or {}).get("data") or []).get(t)]
+                           for t, v in (b["series"].get("WINDSHD") or {}).get("data") or [] if t.startswith(today) and t.endswith(":00")},
             "factor": fac, "n_days": len(keep)}
 
 def tide_series(tj):
@@ -717,7 +731,7 @@ def best_time(spot, region, marine, wind, tinfo, day):
         hs, tp, wdir, off = st
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         ok = (in_arcs(wdir, spot["swell"]) and tp >= tp_min and hs_lo <= hs <= hs_hi
-              and (ws <= glassy or offshore) and (gu is None or gu <= D.get("max_gust_kn", 99)))
+              and (ws <= glassy or offshore or is_cross(spot, ws=ws, wd=wd)) and (gu is None or gu <= D.get("max_gust_kn", 99)))
         ti = tinfo.get(t)
         tide_ok = ti is None or lo_t <= ti[0] <= hi_t
         if ti and spot.get("tide_rising") and not ti[1]:

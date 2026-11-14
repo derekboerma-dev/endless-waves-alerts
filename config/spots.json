@@ -70,8 +70,8 @@
      ],
      "wind": [
       [
-       150,
-       60
+       105,
+       45
       ]
      ],
      "hs": [
@@ -108,7 +108,15 @@
       "bottom": "zand",
       "hazards": "muistromen als het groter wordt"
      },
-     "_waarneming": "14 nov 2026 ochtend: heuphoog (±0,7 m) en offshore bij lichte Z-ZZW-wind 7-9 kn (bericht van een surfer ter plaatse). App gaf 0,5 m en 'onshore': windboog verbreed naar ZO-ZZW (pier + schuin aflandig), ondergrens 0,4 m, exposure x1,25."
+     "_waarneming": "14 nov 2026 ochtend: heuphoog (±0,7 m) en offshore bij lichte Z-ZZW-wind 7-9 kn (bericht van een surfer ter plaatse). App gaf 0,5 m en 'onshore': windboog verbreed naar ZO-ZZW (pier + schuin aflandig), ondergrens 0,4 m, exposure x1,25. Gecorrigeerd 14 nov (Derek, kritisch): de kust ligt NNO-ZZW (strand kijkt ±285°), dus offshore = OZO (105° ± 45°). Wind Z-ZZW (167-212°) is zijwind (cross-shore), alleen goed tot 12 kn door de pier; telt niet als offshore en niet in de strenge variant.",
+     "wind_cross": [
+      [
+       190,
+       22.5
+      ]
+     ],
+     "cross_max_kn": 12,
+     "rws_wind": "ijmuiden.buitenhaven"
     }
    ]
   },

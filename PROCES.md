@@ -272,6 +272,12 @@ Keuzes van Derek, in volgorde:
       - werkt alleen op de golfhoogte op open zee, niet op de spotomrekening of de wind.
       - Waarom zo beperkt: eenvoudig te controleren en het model blijft stabiel. De spotomrekening blijft afhankelijk van sessies en waarnemingen.
     - **App:** blok "Gemeten" bij Wijk aan Zee (laatste meting plus correctie) en een rij "Boei" in de uurstrook van vandaag.
+29. **Wind bij Wijk aan Zee kritisch herzien (Derek, 14 nov).** De wind van die ochtend was geen offshore, maar zijwind.
+    - **Kustligging:** de kust loopt NNO–ZZW en het strand kijkt naar ±285°. Offshore is dus OZO (105°). Zuid (180°) staat ±75° van offshore en is dus zijwind, met hooguit een klein aflandig deel. De pier schermt die wind af en maakt hem zwakker, maar draait hem niet.
+    - **Meting:** Rijkswaterstaat IJmuiden buitenhaven (4 km), 14 nov 07–09 u: 177–185°, 4,6–6,5 m/s (9–13 kn). De pier verklaart het schone water, niet "offshore".
+    - **Aangepast:** de offshore-boog terug naar 105° ± 45°. Nieuw: `wind_cross` 190° ± 22,5° tot `cross_max_kn` 12 kn. Dat telt als "wind in orde", maar niet als offshore en niet in de strenge variant. Het label is "cross" (geel in de app). Punt 27 is hiermee deels teruggedraaid.
+    - **Resultaat 14 nov:** goed (niet meer top), wind cross.
+    - **Metingen:** `rws_wind` = `ijmuiden.buitenhaven`. `buoy.py` haalt WINDSHD en WINDRTG op (compartiment LT, ProcesType meting). De app toont de gemeten wind in het blok Gemeten en een rij "Wind gemeten" in de uurstrook van vandaag. De andere stations in de catalogus (Wijk aan Zee, Kennemerstrand e.d.) gaven geen data (204).
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
