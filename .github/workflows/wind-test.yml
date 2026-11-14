@@ -1,0 +1,45 @@
+name: Wind test
+on:
+  workflow_dispatch: {}
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: |
+          python3 - <<'PY'
+          import sys, json, datetime as dt
+          sys.path.insert(0, "scripts")
+          import buoy as B
+          cat = B.post("/METADATASERVICES/OphalenCatalogus", {"CatalogusFilter": {"Compartimenten": True, "Grootheden": True, "Eenheden": True, "Hoedanigheden": True, "Parameters": True}})
+          meta = {m.get("AquoMetadata_MessageID"): m for m in cat.get("AquoMetadataLijst") or []}
+          locs = {l.get("Locatie_MessageID"): l for l in cat.get("LocatieLijst") or []}
+          here = (52.495, 4.585); found = {}
+          for link in cat.get("AquoMetadataLocatieLijst") or []:
+              m = meta.get(link.get("AquoMetaData_MessageID") or link.get("AquoMetadata_MessageID")); l = locs.get(link.get("Locatie_MessageID"))
+              if not m or not l: continue
+              g = (m.get("Grootheid") or {}).get("Code")
+              if g not in ("WINDSHD", "WINDRTG"): continue
+              ll = B.latlon(l)
+              if not ll: continue
+              d = B.km(here, ll)
+              if d < 70: found.setdefault(l.get("Code"), [d, l.get("Naam"), set()])[2].add(g)
+          for c, (d, n, gs) in sorted(found.items(), key=lambda x: x[1][0]):
+              print("STATION", c, n, round(d), sorted(gs))
+          per = {"Begindatumtijd": "2026-11-14T05:00:00.000+01:00", "Einddatumtijd": "2026-11-14T11:00:00.000+01:00"}
+          for c, (d, n, gs) in sorted(found.items(), key=lambda x: x[1][0])[:3]:
+              for g in ("WINDSHD", "WINDRTG"):
+                  if g not in gs: continue
+                  try:
+                      r = B.post("/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", {"Locatie": {"Code": c}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": {"Compartiment": {"Code": "LT"}, "Grootheid": {"Code": g}}}, "Periode": per})
+                  except Exception as e:
+                      try:
+                          r = B.post("/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen", {"Locatie": {"Code": c}, "AquoPlusWaarnemingMetadata": {"AquoMetadata": {"Grootheid": {"Code": g}}}, "Periode": per})
+                      except Exception as e2:
+                          print("FOUT", c, g, e2); continue
+                  pts = sorted((x["Tijdstip"][11:16], x["Meetwaarde"]["Waarde_Numeriek"]) for w in r.get("WaarnemingenLijst") or [] for x in w.get("MetingenLijst") or [])
+                  print("DATA", c, g, [p for p in pts if p[0].endswith("0")][::3])
+          PY
