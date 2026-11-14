@@ -63,6 +63,10 @@ jobs:
       - name: Voorspelling ophalen
         run: python scripts/fetch.py
 
+      - name: Metingen Rijkswaterstaat (boei bij de thuisspot)
+        continue-on-error: true
+        run: python scripts/buoy.py
+
       - name: Sessiescores uit de app ophalen
         env:
           GH_TOKEN: ${{ github.token }}
