@@ -1,39 +1,13 @@
 {
  "events": [
   {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-24",
-   "end": "2026-11-25",
-   "days": 2,
-   "lead_days": 10,
-   "tier": "kans",
-   "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 1,
-   "spots": [
-    "Bud Bud",
-    "La Sauzaie"
-   ],
-   "dates": [
-    "2026-11-24",
-    "2026-11-25"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-14",
-   "last_tier": "kans"
-  },
-  {
    "region": "biarritz",
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
    "mode": "trip",
    "start": "2026-11-19",
-   "end": "2026-11-21",
-   "days": 3,
+   "end": "2026-11-23",
+   "days": 5,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 1,
@@ -47,7 +21,9 @@
    "dates": [
     "2026-11-19",
     "2026-11-20",
-    "2026-11-21"
+    "2026-11-21",
+    "2026-11-22",
+    "2026-11-23"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -60,8 +36,8 @@
    "country": "PT",
    "mode": "trip",
    "start": "2026-11-20",
-   "end": "2026-11-23",
-   "days": 4,
+   "end": "2026-11-22",
+   "days": 3,
    "lead_days": 6,
    "tier": "waarschijnlijk",
    "models_agree_days": 3,
@@ -74,65 +50,12 @@
    "dates": [
     "2026-11-20",
     "2026-11-21",
-    "2026-11-22",
-    "2026-11-23"
+    "2026-11-22"
    ],
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-14",
    "last_tier": "waarschijnlijk"
-  },
-  {
-   "region": "sagres",
-   "region_name": "Sagres",
-   "country": "PT",
-   "mode": "trip",
-   "start": "2026-11-20",
-   "end": "2026-11-23",
-   "days": 4,
-   "lead_days": 6,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 2,
-   "strict_days": 1,
-   "powerful_days": 2,
-   "spots": [
-    "Beliche",
-    "Tonel"
-   ],
-   "dates": [
-    "2026-11-20",
-    "2026-11-21",
-    "2026-11-22",
-    "2026-11-23"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-14",
-   "last_tier": "waarschijnlijk"
-  },
-  {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
-   "start": "2026-11-14",
-   "end": "2026-11-14",
-   "days": 1,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 1,
-   "strict_days": 1,
-   "powerful_days": 0,
-   "spots": [
-    "Wijk aan Zee"
-   ],
-   "dates": [
-    "2026-11-14"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-14",
-   "last_tier": "bevestigd"
   }
  ]
 }
