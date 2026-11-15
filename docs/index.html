@@ -127,6 +127,14 @@ main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;mar
 .chip.warn{background:transparent;border:1px solid var(--warn);color:var(--warn)}
 .brd{font-size:13px;margin-top:8px}.brd b{color:var(--sea)}
 .nogo{font-size:13px;color:var(--mut);margin-top:6px}
+.wstat{display:flex;align-items:center;gap:14px;margin-top:10px;padding:10px 14px;background:var(--hl);border-radius:14px}
+.wmeter{display:flex;flex-direction:column;gap:3px}
+.wmeter i{display:block;width:10px;height:9px;border-radius:3px;background:color-mix(in srgb,var(--mut) 45%,transparent)}
+.wmeter i.on{background:var(--c,var(--g1))}
+.wh .big{font-size:30px;font-weight:800;line-height:1}.wh .big small{font-size:15px;font-weight:700;margin-left:2px}
+.wh .per{font-size:14px;color:var(--mut);margin-top:4px}
+.wr{flex:1;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.wr .arr{display:inline-block;font-weight:800}
 .more{display:none;margin-top:10px;border-top:1px solid var(--line);padding-top:8px;font-size:12px}
 .day.open .more{display:block}
 .more .m{margin-top:6px}.more .m b{display:block;margin-bottom:2px}
@@ -330,9 +338,20 @@ function extras(d){
   if (d.sun) c.push(`<span class="chip">☀ ${d.sun[0]}–${d.sun[1]}</span>`);
   return c.length ? `<div class="extra">${c.join('')}</div>` : '';
 }
-function tideChips(d, s){
-  const t = (d.tides || []).map(x => `${x.k === 'HW' ? 'hoog' : 'laag'} ≈${x.t}`);
-  return t.length ? `<span class="chip">🌊 ${t.join(' · ')}</span>` : '';
+/* golfblok (zoals Surfline-kaart): meter + grote golfhoogte + periode, rechts swell en wind */
+const CDEG = c => { const i = ['N','NNO','NO','ONO','O','OZO','ZO','ZZO','Z','ZZW','ZW','WZW','W','WNW','NW','NNW'].indexOf(String(c || '').toUpperCase().replace(/E/g, 'O').replace(/S/g, 'Z')); return i < 0 ? null : i * 22.5; };
+function waveStat(d){
+  const ms = Object.values(d.models || {}), gr = d.v ?? 0;
+  const hs = d.hs ?? (ms.length ? ms.reduce((a, e) => a + (e.hs ?? 0), 0) / ms.length : null);
+  if (hs == null) return '';
+  const rng = (a, u) => { const v = a.filter(x => x != null); if (!v.length) return ''; const lo = Math.min(...v), hi = Math.max(...v); return (lo === hi ? lo : `${lo}–${hi}`) + u; };
+  const tp = rng(ms.map(e => e.tp), ' s'), ws = rng(ms.map(e => e.ws), ' kn');
+  const sd = [...new Set(ms.map(e => e.dir).filter(Boolean))].join('/'), wd = (ms[0] || {}).wd, deg = CDEG(wd);
+  const bar = [4, 3, 2, 1, 0].map(k => `<i class="${k <= gr ? 'on' : ''}"></i>`).join('');
+  const b = BK(hs);
+  return `<div class="wstat"><div class="wmeter">${bar}</div>
+    <div class="wh"><div class="big">${b ? `${N(b[0])}–${N(b[1])}` : N(hs)}<small>m</small></div><div class="per">${tp}</div></div>
+    <div class="wr">${sd ? `<div>〰 swell ${esc(sd)}</div>` : ''}${wd ? `<div><span class="arr" style="transform:rotate(${deg == null ? 0 : deg + 180}deg)">↑</span> wind ${esc(wd)} ${ws}</div>` : ''}</div></div>`;
 }
 
 
@@ -465,12 +484,14 @@ function dayCard(s, d, i){
     <div class="l1"><b>${LONG(d.date)}</b><span class="lbl">${gr ? GRADE[gr] : 'niets te surfen'}${d.unsure ? ' ?' : ''}</span></div>
     ${p ? `<div class="when"><span class="k">beste tijd</span><span class="t">${esc(p.window)}</span></div>
       <div class="facts"><span class="chip">🏄 ${SURF(p)} · ${p.tp} s · ${esc(p.dir)}</span>${p.hs_off != null ? `<span class="chip">open zee ${N(p.hs_off)} m</span>` : ''}<span class="chip">wind ${esc(p.wd)} ${p.ws} kn</span>
-      ${p.tide ? `<span class="chip ${p.tide_ok ? '' : 'warn'}">${esc(p.tide)}${p.tide_ok ? '' : ' (niet ideaal)'}</span>` : ''}${tideChips(d, s)}</div>
-      ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}${extras(d)}`
-    : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div><div class="facts">${tideChips(d, s)}</div>${extras(d)}`}
+      ${p.tide ? `<span class="chip ${p.tide_ok ? '' : 'warn'}">${esc(p.tide)}${p.tide_ok ? '' : ' (niet ideaal)'}</span>` : ''}</div>
+      ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}`
+    : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div>`}
+    ${waveStat(d)}
     ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
     ${tideChart(d, s)}
     ${d.hourly ? `<button class="hourbtn" data-hour="${i}">Per uur ›</button>` : ''}
+    ${extras(d)}
     <div class="more">${models}</div></div>`;
 }
 
