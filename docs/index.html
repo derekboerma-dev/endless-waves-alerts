@@ -347,11 +347,13 @@ function waveStat(d){
   const rng = (a, u) => { const v = a.filter(x => x != null); if (!v.length) return ''; const lo = Math.min(...v), hi = Math.max(...v); return (lo === hi ? lo : `${lo}–${hi}`) + u; };
   const tp = rng(ms.map(e => e.tp), ' s'), ws = rng(ms.map(e => e.ws), ' kn');
   const sd = [...new Set(ms.map(e => e.dir).filter(Boolean))].join('/'), wd = (ms[0] || {}).wd, deg = CDEG(wd);
+  const sv = ms.map(e => CDEG(e.dir)).filter(x => x != null).map(x => x * Math.PI / 180);
+  const sdeg = sv.length ? Math.round((Math.atan2(sv.reduce((a, x) => a + Math.sin(x), 0), sv.reduce((a, x) => a + Math.cos(x), 0)) * 180 / Math.PI + 360) % 360) : null;
   const bar = [4, 3, 2, 1, 0].map(k => `<i class="${k <= gr ? 'on' : ''}"></i>`).join('');
   const b = BK(hs);
   return `<div class="wstat"><div class="wmeter">${bar}</div>
     <div class="wh"><div class="big">${b ? `${N(b[0])}–${N(b[1])}` : N(hs)}<small>m</small></div><div class="per">${tp}</div></div>
-    <div class="wr">${sd ? `<div>〰 swell ${esc(sd)}</div>` : ''}${wd ? `<div><span class="arr" style="transform:rotate(${deg == null ? 0 : deg + 180}deg)">↑</span> wind ${esc(wd)} ${ws}</div>` : ''}</div></div>`;
+    <div class="wr">${sd ? `<div><span class="arr" style="transform:rotate(${sdeg == null ? 0 : sdeg + 180}deg)">↑</span> swell ${esc(sd)}</div>` : ''}${wd ? `<div><span class="arr" style="transform:rotate(${deg == null ? 0 : deg + 180}deg)">↑</span> wind ${esc(wd)} ${ws}</div>` : ''}</div></div>`;
 }
 
 
