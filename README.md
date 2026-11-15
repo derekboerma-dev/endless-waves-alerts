@@ -116,6 +116,8 @@ Aanbevolen: neem de richtingen eenmalig over uit de Surfline spot guides zodra C
   - Portugal en Marokko: ICON-EU.
   Daarna ECMWF en GFS.
 - **Gekalibreerd op Surfline LOTUS** (9–10 nov): op de dagen 1–6 gemiddeld 0,1–0,3 m verschil per spot.
+- **Volledige rekenketen** (ophalen → hoogte op de spot → graad → melding): zie PROCES.md, §4b.
+- **Tijden:** alles in de lokale kloktijd van de regio (`tz` in de config, `scripts/tzfix.py`).
 - **Verbeterplan** met de volgende stappen: zie PROCES.md, §7a.
 
 ## Getij en beste tijd

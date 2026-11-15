@@ -221,9 +221,9 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 .al-head div.we b{color:var(--sea)}
 .al-head div.now b{background:var(--sea);color:var(--bg);border-radius:6px}
 .al-row{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 12px;margin-bottom:10px;color:var(--ink);font:inherit;cursor:pointer}
-.al-row .t{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.al-row .t .rn{font-weight:800;font-size:16px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.al-row .t .dt{font-weight:800;font-size:15px;white-space:nowrap}
+.al-row .t{display:flex;align-items:center;gap:4px 8px;margin-bottom:8px;flex-wrap:wrap}
+.al-row .t .rn{font-weight:800;font-size:16px;flex:1 1 auto}
+.al-row .t .dt{font-weight:800;font-size:15px;white-space:nowrap;margin-left:auto}
 .al-row .t .badge{font-size:10px}
 .al-bar div{height:30px;border-radius:5px;background:var(--hl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(0,0,0,.65)}
 .al-bar div.in{box-shadow:inset 0 0 0 2px var(--ink)}
@@ -270,7 +270,8 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const FLAG = {NL:'🇳🇱', FR:'🇫🇷', PT:'🇵🇹', MA:'🇲🇦'};
-const GRADE = ['slecht', 'matig', 'redelijk', 'goed', 'top'];
+const GRADE = ['niets', 'matig', 'redelijk', 'goed', 'top'];
+const TODAY = () => { const n = new Date(), p = x => String(x).padStart(2, '0'); return `${n.getFullYear()}-${p(n.getMonth() + 1)}-${p(n.getDate())}`; };  // lokale datum, niet UTC
 const WD = ['zo','ma','di','wo','do','vr','za'];
 const N = x => x == null ? '–' : Number(x).toFixed(1).replace('.', ',');
 const LONG = d => new Date(d + 'T12:00').toLocaleDateString('nl-NL', {weekday:'long', day:'numeric', month:'short'});
@@ -291,7 +292,7 @@ function home(){
   let sel = 'Alle spots'; try { sel = localStorage.getItem('ew-grp') || sel; } catch (_) {}
   if (!opts.includes(sel)) sel = 'Alle spots';
   const days = DATA.spots[0].days;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = TODAY();
   const dayName = (d, i) => { const dt = new Date(d.date + 'T12:00'); return d.date === today ? 'Vandaag' : (i === 1 || (days[i - 1] && days[i - 1].date === today) ? 'Morgen' : WD[dt.getDay()]); };
   const head = `<div class="dayhd sync"><div class="in">${days.map((d, i) => `<div class="c ${d.date === today ? 'now' : ''}">${dayName(d, i)}<b>${new Date(d.date + 'T12:00').getDate()}</b></div>`).join('')}</div></div>`;
   const list = DATA.spots.map((s, k) => [s, k]).filter(([s]) => sel === 'Alle spots' ? true : sel === '★ Favorieten' ? F.includes(s.name) : s.group === sel)
@@ -327,9 +328,13 @@ function home(){
   const sync = [...document.querySelectorAll('.sync')]; let lock = false;
   sync.forEach(el => el.addEventListener('scroll', () => { if (lock) return; lock = true; sync.forEach(o => { if (o !== el) o.scrollLeft = el.scrollLeft; }); requestAnimationFrame(() => lock = false); }, {passive: true}));
   document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('click', () => {
+    HOMEPOS = {y: window.scrollY, x: (sync[0] || {}).scrollLeft || 0};
     location.hash = 's' + el.dataset.k + (el.dataset.i ? '/' + el.dataset.i : '');
   }));
+  // terug van een spot: zelfde plek in de lijst en zelfde dag in beeld
+  if (HOMEPOS) { const p = HOMEPOS; HOMEPOS = null; sync.forEach(o => o.scrollLeft = p.x); window.scrollTo(0, p.y); } else window.scrollTo(0, 0);
 }
+let HOMEPOS = null;
 
 function extras(d){
   const c = [];
@@ -375,6 +380,7 @@ function tideChart(d, s){
   const vals = L.filter(v => v != null), lo = Math.min(...vals), hi = Math.max(...vals);
   const y = v => bot - (v - lo) / Math.max(0.1, hi - lo) * (bot - top);
   const pts = L.map((v, h) => v == null ? null : [x(h), y(v)]).filter(Boolean);
+  if (pts.length < 6) return '';  // laatste dag van de getijhorizon: te weinig punten voor een curve
   const line = smooth(pts), area = line + ` L${pts[pts.length - 1][0]},${bot + 4} L${pts[0][0]},${bot + 4} Z`;
   const sun = (d.sun || []).map(t => +t.slice(0, 2) + +t.slice(3) / 60);
   const night = sun.length ? `<rect x="0" y="0" width="${x(sun[0])}" height="${bot + 4}" fill="var(--ink)" opacity=".06"/><rect x="${x(sun[1])}" y="0" width="${W - x(sun[1])}" height="${bot + 4}" fill="var(--ink)" opacity=".06"/>` : '';
@@ -431,9 +437,9 @@ function hourSheet(s, i0){
         ${R('Golf (m)', r => `<div class="bv">${N(Math.round(r.s * 10) / 10)}</div><div class="bar" style="height:${Math.max(4, r.s / maxS * 56)}px;background:var(--g${r.g})"></div>`)}
         ${R('Periode', r => `${r.tp} s<br>${ARR(r.d)}`, 'sep')}
         ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
-        ${s.buoy && d.date === new Date().toISOString().slice(0, 10) && Object.keys(s.buoy.today || {}).length ? `<tr><th>Boei</th>${hrs.map(h => { const v = s.buoy.today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v != null ? N(v) + ' m' : ''}</div></td>`; }).join('')}</tr>` : ''}
+        ${s.buoy && d.date === TODAY() && Object.keys(s.buoy.today || {}).length ? `<tr><th>Boei</th>${hrs.map(h => { const v = s.buoy.today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v != null ? N(v) + ' m' : ''}</div></td>`; }).join('')}</tr>` : ''}
         ${R('Wind (kn)', r => `<div class="w ${r.on}">${r.ws}${r.gu != null ? `<small>/${r.gu}</small>` : ''}<br>${ARR(r.wd)}</div>`, 'sep')}
-        ${s.buoy && d.date === new Date().toISOString().slice(0, 10) && Object.keys(s.buoy.wind_today || {}).length ? `<tr><th>Wind gemeten</th>${hrs.map(h => { const v = s.buoy.wind_today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v ? `${v[0]}<br>${v[1] != null ? ARR(v[1]) : ''}` : ''}</div></td>`; }).join('')}</tr>` : ''}
+        ${s.buoy && d.date === TODAY() && Object.keys(s.buoy.wind_today || {}).length ? `<tr><th>Wind gemeten</th>${hrs.map(h => { const v = s.buoy.wind_today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v ? `${v[0]}<br>${v[1] != null ? ARR(v[1]) : ''}` : ''}</div></td>`; }).join('')}</tr>` : ''}
       </table></div>
       <div style="padding:0 12px">${tideChart(d, s)}</div>
       <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · geel zijwind (nog goed) · grijs zwak · rood onshore; klein getal = stoten.
@@ -638,7 +644,7 @@ function rateSheet(s){
 function alerts(){
   $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
   const days = DATA.spots[0].days.map(d => d.date), nd = days.length;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = TODAY();
   const short = ds => { const t = new Date(ds + 'T12:00'); return `${WD[t.getDay()]} ${t.getDate()}`; };
   const head = days.map(ds => { const t = new Date(ds + 'T12:00'), w = t.getDay();
     return `<div class="${w === 0 || w === 6 ? 'we' : ''} ${ds === today ? 'now' : ''}">${WD[w][0]}<b>${t.getDate()}</b></div>`; }).join('');
@@ -668,6 +674,7 @@ function alerts(){
   </div>`;
   document.documentElement.style.setProperty('--toph', ($('.top') ? $('.top').offsetHeight : 0) + 'px');
   document.querySelectorAll('[data-go]').forEach(el => el.onclick = () => location.hash = el.dataset.go);
+  window.scrollTo(0, 0);
 }
 function alertCount(){
   const n = (DATA.regions || []).reduce((a, r) => a + (r.runs || []).filter(x => x.qualifies).reduce((b, x) => b + (x.spots || []).length, 0), 0);

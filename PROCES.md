@@ -136,6 +136,95 @@ Het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en win
 
 Bij luchttemperatuur onder 8 °C één stap dikker.
 
+## 4b. Rekenmodel (stand 15 november 2026, na volledige controle)
+
+Dit is de hele rekenketen van ruwe modeldata tot graad en melding. De code staat in `scripts/analyze.py`; de instellingen in `config/spots.json`.
+
+### Stap 1 – Ophalen (`fetch.py`, `buoy.py`)
+
+| Wat | Bron | Bijzonderheden |
+|---|---|---|
+| Golven | Open-Meteo marine, modellen ECMWF WAM en GFS Wave, per uur, 16 dagen | Per regio één punt op zee (30–50 km uit de kust) en per spot een punt 0,3° zeewaarts van de spot. |
+| Wind | Open-Meteo: ECMWF IFS en GFS, per uur, in knopen, plus zonsopkomst en -ondergang | De eerste 48 uur worden vervangen door een fijnmazig model: KNMI HARMONIE (NL), Météo-France AROME (FR), ICON-EU (PT, MA). |
+| Getij | Open-Meteo `sea_level_height_msl` per spot (±9 dagen) | Bevat ook opzet door wind; hoog- en laagwater op het hele uur. |
+| Watertemperatuur | Open-Meteo `sea_surface_temperature` | Voor het wetsuitadvies. |
+| Metingen Wijk aan Zee | Rijkswaterstaat: boei IJgeul 1 (golf), IJmuiden buitenhaven (wind) | Alleen voor de thuisspot. |
+
+**Tijdzones.** Alle tijden worden omgerekend naar de kloktijd van de regio (`tz` per regio, `scripts/tzfix.py`). Dat gebeurt bij het ophalen en nog eens bij het rekenen, zodat ook oude archieven kloppen.
+
+### Stap 2 – Welk golfpunt per spot (`marine_for`)
+
+Het punt bij de spot telt alleen als het echt op zee ligt: mediane golfhoogte minstens 75 % van het regiopunt en een periode boven 0. Anders geldt het regiopunt. Reden: een rastercel die half op land valt, geeft 0 m of gedempte golven.
+
+### Stap 3 – Golf op open zee per uur (`sea_state`)
+
+- **ECMWF** levert alleen het totaal: hoogte, piekperiode en gemiddelde richting.
+- **GFS** levert ook de losse onderdelen: swell, tweede swell en windzee, elk met hoogte, periode en richting.
+- **Periode.** ECMWF levert `wave_peak_period`. GFS levert alleen `wave_period`, en dat ís bij Open-Meteo de piekperiode (gecontroleerd: verhouding tot de ECMWF-piekperiode 0,99–1,02 in alle acht regio's). Er wordt dus niets omgerekend. Alleen als ECMWF op een uur geen piekperiode heeft, geldt gemiddelde periode × 1,2.
+- **Richting** is steeds de richting waar de golven vandaan komen.
+
+### Stap 4 – Hoogte op de spot (`surf_height`, `size_corr`)
+
+Per onderdeel (bij ECMWF: het totaal):
+
+1. **Breken:** Komar & Gaughan, `Hb = 0,39 · g^0,2 · (T · H²)^0,4`. Lange periode breekt groter.
+2. **Richting:** hoe verder de golf van de ideale swellrichting van de spot afwijkt, hoe kleiner: wortel van de cosinus van de afwijking boven 15°. Vanaf 110° afwijking loopt de factor af naar 0 bij 150°: zo'n golf loopt van de kust weg.
+3. **Beschutting en schaal:** × `exposure` van de spot × `surf_scale` (0,52).
+
+Daarna:
+
+4. **Optellen:** de onderdelen via energie (wortel van de som van de kwadraten). Periode en richting zijn die van het grootste onderdeel.
+5. **Grootte-correctie**, één keer op het totaal: `1,2 · (h / 1,2)^1,14`. Grote dagen groeien bij Surfline sneller dan de formule.
+6. **Weergave:** de dichtstbijzijnde Surfline-hoogteklasse (0,3–0,6 · 0,6–0,9 · 0,9–1,2 · 1,2–1,8 enzovoort).
+
+De schaal, de grootte-correctie en `exposure` per spot zijn afgesteld op Surfline (9 en 11 november). Verschil met Surfline over dag 0–6: gemiddeld 0,3 m per spot per dag.
+
+### Stap 5 – Is een uur goed? (`evaluate_spot`, `hourly_for`)
+
+Een uur is goed als alle vier kloppen:
+
+| Voorwaarde | Regel |
+|---|---|
+| Swellrichting | Binnen de swellboog van de spot. |
+| Periode | Minstens 10 s (per spot afwijkend: Bud Bud 11 s, Wijk aan Zee 6 s). |
+| Hoogte op de spot | Binnen het bereik van de spot. |
+| Wind | Offshore (windboog van de spot + 22,5°, hooguit 22 kn), of zwak (hooguit 6 kn), of toegestane zijwind (alleen Wijk aan Zee: Z–ZZW tot 12 kn). Windstoten hooguit 28 kn. |
+
+Graad per uur: 4 voorwaarden goed = **goed**, en **top** als de golf ook krachtig is (op de spot minstens 1,5 m en 12 s; Wijk aan Zee 1,2 m en 8 s). 3 van de 4 met de wind in orde = redelijk; 3 van de 4 met de wind niet in orde = matig; minder = niets.
+
+### Stap 6 – Graad per dag
+
+- **Reisspots:** alleen de ochtend telt (07–11 u, binnen daglicht). **Wijk aan Zee:** alle uren met daglicht.
+- Een dag is **goed** bij minstens 2 goede uren, en **top** als daar een krachtig uur bij zit of als de dag ook volgens de strenge variant goed is (12 s, 3 uren, alleen echte offshore).
+- De graad in de app is het gemiddelde van ECMWF en GFS, naar beneden afgerond. "?" = de modellen verschillen 2 graden of meer.
+- De hoogte op de tegel is het grootste (goede) uur van de ochtend.
+
+### Stap 7 – Beste tijd, dagdelen, getij
+
+- **Beste tijd** (`best_time`): het beste blok van 1–3 aaneengesloten goede daglichturen. Een blok met het juiste getij, offshore wind en lange periode gaat voor. Het getij bepaalt dus de beste tijd, maar niet de graad.
+- **Dagdelen** op het startscherm: gemiddelde uurgraad over 07–10, 11–14 en 15–18 u, met de gemiddelde wind.
+- **Getij** (`tide_series`): uitersten uit de uurwaarden. Twee uitersten die minder dan 8 cm schelen, tellen niet (rimpel).
+
+### Stap 8 – Reeksen en meldingen (`find_runs`)
+
+- Dag 0–7: een dag telt als één model hem goed geeft. Vanaf dag 8: beide modellen, of één model dat ook streng goed is.
+- Een reeks is een aantal goede dagen op rij op minstens één spot van de regio. De drempel per regio staat in §4 "Drempels per regio".
+- Melding bij nieuw, zekerder (kans → waarschijnlijk → bevestigd) of vervallen. `state/alerted.json` onthoudt wat al gemeld is.
+
+### Stap 9 – Zelf bijstellen
+
+- **Boei** (alleen Wijk aan Zee): correctie op de golfhoogte op open zee, mediaan van 14 dagen, vanaf 3 dagen, hooguit ±15 %.
+- **Sessies:** hints per spot vanaf 3 sessies (`calibrate.py`).
+- **Surfline-vergelijking:** handmatig, als Chrome openstaat.
+
+### Bekende beperkingen (bewust zo gelaten)
+
+1. **Geen bodemkaart.** Zandbanken, refractie en lokale schaduw zitten alleen in de vaste factor per spot.
+2. **ECMWF splitst swell en windzee niet.** Bij een mix kan de richting of periode van het totaal een goede swell verbergen. Een derde model (Météo-France) zou dit oplossen.
+3. **Alleen de ochtend telt voor reisspots.** In de data van 15 november was op 20 van de 160 spot-dagen de ochtend niet goed, terwijl één model 's middags wel 2 of meer goede uren gaf. Die dagen zie je in de dagdeel-balkjes en de uurstrook, maar ze geven geen melding.
+4. **Getij telt niet mee in de graad**, alleen in de beste tijd.
+5. **Heel grote dagen** worden onderschat (La Palue 17 nov: Surfline 5 m, app 1,9 m).
+
 ## 5. App (iPhone, web-app op GitHub Pages)
 
 Keuzes van Derek, in volgorde:
@@ -278,6 +367,26 @@ Keuzes van Derek, in volgorde:
     - **Aangepast:** de offshore-boog terug naar 105° ± 45°. Nieuw: `wind_cross` 190° ± 22,5° tot `cross_max_kn` 12 kn. Dat telt als "wind in orde", maar niet als offshore en niet in de strenge variant. Het label is "cross" (geel in de app). Punt 27 is hiermee deels teruggedraaid.
     - **Resultaat 14 nov:** goed (niet meer top), wind cross.
     - **Metingen:** `rws_wind` = `ijmuiden.buitenhaven`. `buoy.py` haalt WINDSHD en WINDRTG op (compartiment LT, ProcesType meting). De app toont de gemeten wind in het blok Gemeten en een rij "Wind gemeten" in de uurstrook van vandaag. De andere stations in de catalogus (Wijk aan Zee, Kennemerstrand e.d.) gaven geen data (204).
+30. **Volledige controle van app en rekenmodel (15 nov).** Gevonden en hersteld:
+    - **Tijdzones liepen uit de pas (grootste fout).** Met `timezone=auto` gaf Open-Meteo voor golfpunten op zee een scheepvaartzone (UTC of UTC−1), terwijl wind en zon in lokale tijd stonden. Golf en wind waren daardoor 1 uur verschoven bij Cap Ferret, Truc Vert, Beliche, Boilers en bij elk regiopunt van Vendée, Biarritz, Peniche, Sagres en Taghazout.
+      - Marokko: de marine-server rekende nog met UTC+1, maar Marokko staat sinds 20 september 2026 vast op GMT. Getij en golven stonden daar 1 uur te laat ten opzichte van wind en zon.
+      - Oplossing: `scripts/tzfix.py` en `tz` per regio; alles gaat naar de lokale kloktijd.
+    - **GFS-periode.** De omrekening × 1,2 was fout: de `wave_period` van GFS is al de piekperiode. Verwijderd.
+    - **Grootte-correctie** werd per golfonderdeel toegepast in plaats van één keer op het totaal. Hersteld.
+    - **Golven die van de kust weglopen** telden nog voor 22 % mee. Ze lopen nu af naar 0.
+    - **Getijvoorkeur** week bij 10 spots af van de spotgids die de app zelf toont (bijvoorbeeld Supertubos "laag tot half", gids "half tot hoog"). Gelijkgetrokken; nieuwe keuze `not-high`.
+    - **Getij-rimpels:** twee labels op een uur afstand (dubbel hoogwater) worden weggefilterd.
+    - **App:**
+      - fout in de getijgrafiek op de laatste dag van de getijhorizon;
+      - "vandaag" werd in UTC bepaald (tussen 00:00 en 01:00 de verkeerde dag);
+      - het startscherm onthoudt nu de scrollpositie als je terugkomt van een spot;
+      - Alerts opent bovenaan en kapt spotnamen niet meer af;
+      - de graad heet overal "niets" (was soms "slecht").
+    - **Gecontroleerd en in orde:** de formule van Komar & Gaughan, richtingen (overal "komt vandaan"), eenheden (knopen, meters), de modelkoppeling per uur, de reekslogica en de meldingen.
+    - **Hoogtes na de herstellingen:** verschil met Surfline (11 nov, dag 0–6) 0,29 m, was 0,29 m. De fouten zaten in timing en periode, niet in de hoogte-afstelling.
+    - **Niet gelukt:** een verse Surfline-vergelijking; Chrome reageerde niet.
+    - **Rondleiding:** filmpje van alle functies gemaakt met Playwright (`video.js`, niet in de repo).
+    - De volledige rekenketen staat in §4b.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

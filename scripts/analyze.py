@@ -25,6 +25,8 @@ import math
 import pathlib
 import sys
 
+import tzfix
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CFG = json.loads((ROOT / "config" / "spots.json").read_text())
 D = CFG["defaults"]
@@ -52,7 +54,7 @@ def compass(deg):
 
 
 
-def surf_height(hs, tp, wdir, spot):
+def surf_height(hs, tp, wdir, spot, size=True):
     """Geschatte golfhoogte op de spot (m, brekerhoogte zoals Surfline die ongeveer toont).
     1. Komar & Gaughan: Hb = 0,39 * g^0,2 * (T * H0^2)^0,4 -> lange periode breekt groter.
     2. Richting: hoe verder de swell van de dichtstbijzijnde swellboog van de spot afwijkt, hoe kleiner
@@ -65,12 +67,19 @@ def surf_height(hs, tp, wdir, spot):
     if wdir is not None and spot.get("swell"):
         d = min(angdiff(wdir, c) for c, _ in spot["swell"])
         f = math.sqrt(max(0.05, math.cos(math.radians(min(max(d - 15, 0), 90)))))
+        if d > 110:  # komt van opzij of van het land: loopt af naar 0 bij 150 graden (golf loopt van de kust weg)
+            f *= max(0.0, (150 - d) / 40)
     else:
         f = 1.0
     h = hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)
-    # grootte-correctie (fit op Surfline 11 nov: grote dagen groeien sneller dan Komar-Gaughan aangeeft)
+    return size_corr(h) if size else h
+
+
+def size_corr(h):
+    """Grootte-correctie (fit op Surfline 11 nov): grote dagen groeien sneller dan Komar-Gaughan aangeeft.
+    Eén keer toepassen op de totale hoogte, niet per golfcomponent."""
     piv, ex = D.get("surf_pivot", 1.2), D.get("surf_size_exp", 1.0)
-    return piv * (h / piv) ** ex if h > 0 else 0.0
+    return piv * (h / piv) ** ex if h and h > 0 else 0.0
 
 
 
@@ -132,7 +141,13 @@ def sea_state(mh, i, spot):
     if tp is not None and tp <= 0:
         tp = None
     if tp is None and g("wave_period"):
-        tp = g("wave_period") * 1.2  # GFS levert geen piekperiode: gemiddelde periode omrekenen (Tp ≈ 1,2 Tm)
+        # GFS (Open-Meteo) levert geen 'wave_peak_period'; zijn 'wave_period' ís de piekperiode
+        # (gecontroleerd 15 nov: verhouding tot de ECMWF-piekperiode 0,99-1,02 in alle regio's). Geen omrekening.
+        # Levert het model wél piekperiodes (ECMWF) maar ontbreekt dit uur, dan is 'wave_period' de gemiddelde
+        # periode en geldt Tp ≈ 1,2 x Tm.
+        if "_peak" not in mh:
+            mh["_peak"] = any(v for v in mh.get("wave_peak_period") or [])
+        tp = g("wave_period") * (1.2 if mh["_peak"] else 1.0)
     if None in (hs, tp, wdir):
         return None
     comps, e = [], 0.0
@@ -147,8 +162,8 @@ def sea_state(mh, i, spot):
     if not any(g(k) is not None for k in ("wind_wave_height",)) and hs * hs > e * 1.1:
         # model zonder windzee-component: rest-energie als korte windzee uit de totale richting
         comps.append((math.sqrt(hs * hs - e), min(tp, 6.0), wdir))
-    parts = [(surf_height(h, p, d, spot), p, d) for h, p, d in comps]
-    total = math.sqrt(sum(x[0] ** 2 for x in parts))
+    parts = [(surf_height(h, p, d, spot, size=False), p, d) for h, p, d in comps]
+    total = size_corr(math.sqrt(sum(x[0] ** 2 for x in parts)))
     dom = max(parts, key=lambda x: x[0])
     return total, dom[1], dom[2], hs
 
@@ -402,7 +417,9 @@ def overlap(a, b):
 # ---------------------------------------------------------------- hoofdprogramma
 def main():
     latest = json.loads((ROOT / "data" / "latest.json").read_text())
-    for _rd in (latest.get("regions") or {}).values():
+    _tz = {r["id"]: r.get("tz") for r in CFG["regions"]}
+    for _rid, _rd in (latest.get("regions") or {}).items():
+        tzfix.localize_region(_rd, _tz.get(_rid))
         merge_hires_wind(_rd)
     try:
         buoy_bias(latest)
@@ -499,8 +516,8 @@ def combined_hs(models):
 
 
 TIDE_PREF = {"low": (0.0, 0.35), "low-mid": (0.0, 0.6), "mid": (0.25, 0.75), "mid-high": (0.4, 1.0),
-             "high": (0.65, 1.0), "all": (0.0, 1.0)}
-TIDE_NL = {"low": "laag", "low-mid": "laag tot half", "mid": "half", "mid-high": "half tot hoog", "high": "hoog", "all": "alle getijden"}
+             "high": (0.65, 1.0), "not-high": (0.0, 0.8), "all": (0.0, 1.0)}
+TIDE_NL = {"low": "laag", "low-mid": "laag tot half", "mid": "half", "mid-high": "half tot hoog", "high": "hoog", "not-high": "laag tot half-hoog", "all": "alle getijden"}
 
 
 
@@ -559,7 +576,7 @@ def hourly_for(spot, region, data, day, tinfo):
             rows.append({"s": round(hs, 2), "tp": round(tp), "d": round(wdir), "off": round(off, 1),
                          "c": comps, "ws": round(ws), "gu": None if gu is None else round(gu), "wd": round(wd),
                          "on": "off" if offshore else ("glassy" if ws <= glassy else ("cross" if cross else "on")), "g": g,
-                         "hires": bool(wind.get("_hires")) and h is not None})
+                         })
         if any(rows):
             out["models"][lab] = rows
     return out
@@ -686,6 +703,15 @@ def tide_series(tj):
             ext.append((i, "HW"))
         elif b <= a and b < c:
             ext.append((i, "LW"))
+    # rimpels wegfilteren: twee opeenvolgende uitersten die minder dan 8 cm schelen (dubbel hoog/laag water,
+    # modelruis) zijn geen echt getij; zonder dit filter krijg je twee labels op een uur afstand.
+    k = 0
+    while k < len(ext) - 1:
+        if abs(pts[ext[k][0]][1] - pts[ext[k + 1][0]][1]) < 0.08:
+            del ext[k:k + 2]
+            k = max(k - 1, 0)
+        else:
+            k += 1
     info, days = {}, {}
     for k in range(len(ext) - 1):
         i0, i1 = ext[k][0], ext[k + 1][0]

@@ -100,7 +100,7 @@ def main():
         data_all = archive_for(r["date"])
         rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note", "height")}
         if reg and data_all and reg["id"] in data_all.get("regions", {}):
-            data = A.merge_hires_wind(data_all["regions"][reg["id"]])
+            data = A.merge_hires_wind(A.tzfix.localize_region(data_all["regions"][reg["id"]], reg.get("tz")))
             rec["predicted"] = predicted_grade(data, reg, spot, r["date"])
             rec["cond"] = conditions(data, reg, spot, r["date"], hours_for(r.get("time")))
         else:

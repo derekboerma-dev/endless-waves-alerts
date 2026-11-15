@@ -15,6 +15,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import tzfix
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = json.loads((ROOT / "config" / "spots.json").read_text())
 
@@ -144,6 +146,7 @@ def main():
                 r["wind"][s["name"]][m] = j
                 if j.get("error"):
                     out["problems"].append(f"{reg['id']} wind {s['name']} {m}: {j.get('reason')}")
+        tzfix.localize_region(r, reg.get("tz"))  # alles naar de lokale kloktijd van de regio
         out["regions"][reg["id"]] = r
 
     data = ROOT / "data"
