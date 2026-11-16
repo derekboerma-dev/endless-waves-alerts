@@ -1,11 +1,58 @@
 {
  "generated": "2026-11-16",
- "fetched_at": "2026-11-16T06:54+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-16T13:21+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-17",
+   "end": "2026-11-17",
+   "days": 1,
+   "lead_days": 1,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-17"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-20",
+   "end": "2026-11-22",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-11-20",
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
- "cancelled": [],
- "all_runs": [
+ "cancelled": [
   {
    "region": "peniche",
    "region_name": "Peniche",
@@ -14,10 +61,10 @@
    "start": "2026-11-20",
    "end": "2026-11-23",
    "days": 4,
-   "lead_days": 4,
+   "lead_days": 5,
    "tier": "waarschijnlijk",
-   "models_agree_days": 3,
-   "strict_days": 1,
+   "models_agree_days": 2,
+   "strict_days": 0,
    "powerful_days": 1,
    "spots": [
     "Lagide",
@@ -30,7 +77,10 @@
     "2026-11-23"
    ],
    "qualifies": true,
-   "below_threshold": []
+   "below_threshold": [],
+   "first_alert": "2026-11-15",
+   "last_tier": "waarschijnlijk",
+   "cancelled": "2026-11-16"
   },
   {
    "region": "sagres",
@@ -40,10 +90,10 @@
    "start": "2026-11-20",
    "end": "2026-11-23",
    "days": 4,
-   "lead_days": 4,
+   "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 2,
-   "strict_days": 1,
+   "strict_days": 0,
    "powerful_days": 1,
    "spots": [
     "Beliche",
@@ -56,7 +106,111 @@
     "2026-11-23"
    ],
    "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-15",
+   "last_tier": "waarschijnlijk",
+   "cancelled": "2026-11-16"
+  }
+ ],
+ "all_runs": [
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-17",
+   "end": "2026-11-17",
+   "days": 1,
+   "lead_days": 1,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-17"
+   ],
+   "qualifies": true,
    "below_threshold": []
+  },
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-21",
+   "end": "2026-11-22",
+   "days": 2,
+   "lead_days": 5,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 1,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": false,
+   "below_threshold": [
+    "begint over 5 dagen (thuisspot: max 3)"
+   ]
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-20",
+   "end": "2026-11-22",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-11-20",
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-20",
+   "end": "2026-11-22",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 1,
+   "powerful_days": 1,
+   "spots": [
+    "Beliche",
+    "Tonel"
+   ],
+   "dates": [
+    "2026-11-20",
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": false,
+   "below_threshold": [
+    "modellen eens op 1 van minimaal 2 dagen"
+   ]
   }
  ],
  "problems": []
