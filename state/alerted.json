@@ -50,6 +50,34 @@
    "below_threshold": [],
    "first_alert": "2026-11-16",
    "last_tier": "waarschijnlijk"
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-28",
+   "end": "2026-12-01",
+   "days": 4,
+   "lead_days": 12,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 4,
+   "powerful_days": 2,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-28",
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-16",
+   "last_tier": "kans"
   }
  ]
 }
