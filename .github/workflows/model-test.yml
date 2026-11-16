@@ -1,0 +1,23 @@
+name: Model test
+on:
+  workflow_dispatch: {}
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python3 - <<'PY'
+          import json, urllib.request, urllib.parse
+          V = "wave_height,wave_direction,wave_period,wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period,wind_wave_height,wind_wave_direction,wind_wave_period,secondary_swell_wave_height,secondary_swell_wave_direction,secondary_swell_wave_period"
+          for m in ["dwd_ewam", "dwd_gwam", "meteofrance_wave", "meteofrance_currents", "ecmwf_wam025", "ecmwf_wam", "era5_ocean"]:
+              q = urllib.parse.urlencode({"latitude": 52.5, "longitude": 4.45, "hourly": V, "models": m, "forecast_days": 3, "timezone": "Europe/Amsterdam", "cell_selection": "sea"})
+              try:
+                  j = json.load(urllib.request.urlopen("https://marine-api.open-meteo.com/v1/marine?" + q, timeout=60))
+              except Exception as e:
+                  print(m, "FOUT", getattr(e, "code", ""), getattr(e, "read", lambda: b"")()[:200]); continue
+              h = j["hourly"]; n = {k: sum(v is not None for v in h[k]) for k in h if k != "time"}
+              print(m, j.get("latitude"), j.get("longitude"), n)
+              for i, t in enumerate(h["time"]):
+                  if t.startswith("2026-11-17T0") and t[11:13] in ("07", "08", "09"):
+                      print("  ", t, {k: h[k][i] for k in h if k != "time" and h[k][i] is not None})
+          PY
