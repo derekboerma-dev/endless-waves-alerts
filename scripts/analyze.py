@@ -67,8 +67,15 @@ def surf_height(hs, tp, wdir, spot, size=True):
     if wdir is not None and spot.get("swell"):
         d = min(angdiff(wdir, c) for c, _ in spot["swell"])
         f = math.sqrt(max(0.05, math.cos(math.radians(min(max(d - 15, 0), 90)))))
-        if d > 110:  # komt van opzij of van het land: loopt af naar 0 bij 150 graden (golf loopt van de kust weg)
-            f *= max(0.0, (150 - d) / 40)
+        # Van het land af: vergelijk met de richting waar het strand naartoe kijkt ('facing', zeewaarts).
+        # Golf van opzij of van achter het strand (meer dan 90 graden van 'facing') bereikt de spot nauwelijks;
+        # vanaf 110 graden niets meer (loopt van de kust weg) -> 0 m -> "Flat" in de app.
+        fa = spot.get("facing", spot["swell"][0][0])
+        a = angdiff(wdir, fa)
+        if a >= 110:
+            return 0.0
+        if a > 90:
+            f *= (110 - a) / 20
     else:
         f = 1.0
     h = hb * f * spot.get("exposure", 1.0) * D.get("surf_scale", 0.85)

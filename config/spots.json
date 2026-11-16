@@ -37,7 +37,8 @@
   "surf_pivot": 1.2,
   "surf_size_exp": 1.14,
   "_tz": "Elke regio heeft 'tz' (lokale kloktijd). Alle tijden van Open-Meteo worden daarheen omgerekend (scripts/tzfix.py).",
-  "_tide": "Getijvoorkeur per spot: low, low-mid, mid, mid-high, high, not-high (laag tot half-hoog), all. Op 15 nov gelijkgetrokken met de Surfline-spotgids waar die bestaat."
+  "_tide": "Getijvoorkeur per spot: low, low-mid, mid, mid-high, high, not-high (laag tot half-hoog), all. Op 15 nov gelijkgetrokken met de Surfline-spotgids waar die bestaat.",
+  "_facing": "Per spot 'facing' = richting (graden) waar het strand naar de zee kijkt. Golven die meer dan 110 graden daarvan afwijken lopen van de kust weg: 0 m (Flat); tussen 90 en 110 graden aflopend."
  },
  "regions": [
   {
@@ -118,7 +119,8 @@
       ]
      ],
      "cross_max_kn": 12,
-     "rws_wind": "ijmuiden.buitenhaven"
+     "rws_wind": "ijmuiden.buitenhaven",
+     "facing": 285
     }
    ],
    "tz": "Europe/Amsterdam"
@@ -163,7 +165,8 @@
       1.0,
       2.1
      ],
-     "hs_max_bron": "wannasurf: werkt vanaf 1,0–1,5 m, houdt tot 2,5 m+"
+     "hs_max_bron": "wannasurf: werkt vanaf 1,0–1,5 m, houdt tot 2,5 m+",
+     "facing": 250
     },
     {
      "name": "La Sauzaie",
@@ -194,7 +197,8 @@
      ],
      "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
      "surfline_id": "584204204e65fad6a770901f",
-     "exposure": 1.19
+     "exposure": 1.19,
+     "facing": 255
     }
    ],
    "alert": {
@@ -244,7 +248,8 @@
       2.1
      ],
      "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 3 m+",
-     "exposure": 0.93
+     "exposure": 0.93,
+     "facing": 270
     },
     {
      "name": "La Palue",
@@ -275,7 +280,8 @@
      ],
      "hs_max_bron": "wannasurf: vanaf < 1 m, tot 3 m+",
      "surfline_id": "584204204e65fad6a7709009",
-     "exposure": 0.77
+     "exposure": 0.77,
+     "facing": 265
     }
    ],
    "alert": {
@@ -326,7 +332,8 @@
      ],
      "hs_max_bron": "wannasurf: vanaf 1,0–1,5 m, tot 2,5 m+",
      "surfline_id": "584204204e65fad6a7708fe7",
-     "exposure": 1.28
+     "exposure": 1.28,
+     "facing": 275
     },
     {
      "name": "Le Truc Vert",
@@ -357,7 +364,8 @@
      ],
      "hs_max_bron": "wannasurf: vanaf 1,5–2 m, tot 2,5 m+",
      "surfline_id": "584204204e65fad6a7708fe5",
-     "exposure": 0.97
+     "exposure": 0.97,
+     "facing": 275
     }
    ],
    "alert": {
@@ -419,7 +427,8 @@
       "level": "gevorderd",
       "bottom": "zand",
       "hazards": "wipe-outs, stroming, shorebreak"
-     }
+     },
+     "facing": 285
     },
     {
      "name": "Les Cavaliers (Anglet)",
@@ -461,7 +470,8 @@
       "level": "gemiddeld–gevorderd",
       "bottom": "zand",
       "hazards": "muistromen"
-     }
+     },
+     "facing": 295
     },
     {
      "name": "Lafitenia",
@@ -503,7 +513,8 @@
       "level": "gemiddeld–gevorderd",
       "bottom": "rots en zand",
       "hazards": "lange peddel, drukte"
-     }
+     },
+     "facing": 320
     }
    ],
    "alert": {
@@ -566,7 +577,8 @@
       "level": "gemiddeld; gevorderd op grote dagen",
       "bottom": "zand",
       "hazards": "drukte, bodem raken op grotere dagen"
-     }
+     },
+     "facing": 240
     },
     {
      "name": "Lagide",
@@ -608,7 +620,8 @@
       "level": "gemiddeld–gevorderd (vanwege drukte)",
       "bottom": "vlak rif",
       "hazards": "ondiep bij laagwater, zee-egels, drukte"
-     }
+     },
+     "facing": 340
     }
    ],
    "alert": {
@@ -678,7 +691,8 @@
       "level": "gemiddeld–pro",
       "bottom": "zand met losse rotsen binnen",
       "hazards": "muistromen, verschuivende pieken, rotsplekken"
-     }
+     },
+     "facing": 250
     },
     {
      "name": "Beliche",
@@ -720,7 +734,8 @@
       "level": "alle niveaus; hoofdpiek voor ervaren surfers",
       "bottom": "zand",
       "hazards": "afbrokkelende kliffen; de hoofdwedge kan zwaar zijn"
-     }
+     },
+     "facing": 240
     }
    ],
    "tz": "Europe/Lisbon"
@@ -774,7 +789,8 @@
       "level": "gemiddeld–gevorderd",
       "bottom": "rotsige point",
       "hazards": "rotsen"
-     }
+     },
+     "facing": 250
     },
     {
      "name": "Killer Point",
@@ -816,7 +832,8 @@
       "level": "gemiddeld–expert",
       "bottom": "rotsige point met zand",
       "hazards": "rotsen, stroming, drukte, haaien"
-     }
+     },
+     "facing": 260
     },
     {
      "name": "Boilers",
@@ -858,7 +875,8 @@
       "level": "gemiddeld–gevorderd",
       "bottom": "rif/point",
       "hazards": "in- en uitstappen over rotsen met zee-egels"
-     }
+     },
+     "facing": 280
     }
    ],
    "alert": {

@@ -168,7 +168,10 @@ Het punt bij de spot telt alleen als het echt op zee ligt: mediane golfhoogte mi
 Per onderdeel (bij ECMWF: het totaal):
 
 1. **Breken:** Komar & Gaughan, `Hb = 0,39 · g^0,2 · (T · H²)^0,4`. Lange periode breekt groter.
-2. **Richting:** hoe verder de golf van de ideale swellrichting van de spot afwijkt, hoe kleiner: wortel van de cosinus van de afwijking boven 15°. Vanaf 110° afwijking loopt de factor af naar 0 bij 150°: zo'n golf loopt van de kust weg.
+2. **Richting:**
+   - Hoe verder de golf van de ideale swellrichting van de spot afwijkt, hoe kleiner: wortel van de cosinus van de afwijking boven 15°.
+   - **Van het land af** (sinds 16 nov): elke spot heeft een `facing`, de richting waar het strand naar de zee kijkt (Wijk aan Zee 285°, Supertubos 240°, Lagide 340° enzovoort). Wijkt de golfrichting meer dan 110° af van `facing`, dan loopt de golf van de kust weg en wordt de hoogte 0 m ("Flat"). Tussen 90° en 110° loopt de hoogte af.
+   - Voorbeeld 26 nov, Wijk aan Zee: windzee uit het ONO (67°), 142° van `facing`, dus Flat. Eerder vergeleek de app met de swellboog (315°) en gaf 0,2 m.
 3. **Beschutting en schaal:** × `exposure` van de spot × `surf_scale` (0,52).
 
 Daarna:
