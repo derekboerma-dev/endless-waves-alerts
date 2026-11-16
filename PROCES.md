@@ -52,8 +52,8 @@ Centraal logboek van alle keuzes, zodat een volgend gesprek hier verder kan. Bij
 
 ### Werking
 1. **`scripts/fetch.py`** (dagelijks 07:40 UTC en na elke push op config/scripts) haalt van Open-Meteo, voor 16 dagen:
-   - golven, apart voor ECMWF (`ecmwf_wam025`, ±15 dagen) en GFS (`ncep_gfswave025`, 16 dagen);
-   - wind (`ecmwf_ifs025`, `gfs_seamless`), met windstoten, zonsopkomst en zonsondergang;
+   - golven, apart voor ECMWF (`ecmwf_wam025`, ±15 dagen), GFS (`ncep_gfswave025`, 16 dagen) en sinds 16 nov DWD EWAM (`dwd_ewam`, ±5 km, ±3 dagen);
+   - wind (`ecmwf_ifs025`, `gfs_seamless`, `icon_seamless`), met windstoten, zonsopkomst en zonsondergang;
    - getij per spot (`sea_level_height_msl`, ±9 dagen).
 2. **`scripts/analyze.py`** doet het volgende:
    - toetst per spot en per dag (Endless Waves-definitie, alleen daglicht);
@@ -67,7 +67,7 @@ Centraal logboek van alle keuzes, zodat een volgend gesprek hier verder kan. Bij
 ### Zekerheid
 - **Bevestigd:** begint over ≤ 3 dagen.
 - **Waarschijnlijk:** begint over 4–7 dagen.
-- **Kans:** begint over 8 dagen of later. Vanaf dag 8 telt een dag alleen als beide modellen het eens zijn. Heeft er maar één model data, dan moet die dag ook volgens de strenge variant goed zijn.
+- **Kans:** begint over 8 dagen of later. Vanaf dag 8 telt een dag alleen als alle modellen met data het eens zijn. Heeft er maar één model data, dan moet die dag ook volgens de strenge variant goed zijn.
 
 ### Drempels per regio
 Lager voor dichtbij en goedkoop, hoger voor ver en duur (keuze van Derek).
@@ -136,7 +136,7 @@ Het blok van 1–3 daglichturen waarin swellrichting, periode, golfhoogte en win
 
 Bij luchttemperatuur onder 8 °C één stap dikker.
 
-## 4b. Rekenmodel (stand 15 november 2026, na volledige controle)
+## 4b. Rekenmodel (stand 16 november 2026)
 
 Dit is de hele rekenketen van ruwe modeldata tot graad en melding. De code staat in `scripts/analyze.py`; de instellingen in `config/spots.json`.
 
@@ -144,11 +144,11 @@ Dit is de hele rekenketen van ruwe modeldata tot graad en melding. De code staat
 
 | Wat | Bron | Bijzonderheden |
 |---|---|---|
-| Golven | Open-Meteo marine, modellen ECMWF WAM en GFS Wave, per uur, 16 dagen | Per regio één punt op zee (30–50 km uit de kust) en per spot een punt 0,3° zeewaarts van de spot. |
-| Wind | Open-Meteo: ECMWF IFS en GFS, per uur, in knopen, plus zonsopkomst en -ondergang | De eerste 48 uur worden vervangen door een fijnmazig model: KNMI HARMONIE (NL), Météo-France AROME (FR), ICON-EU (PT, MA). |
+| Golven | Open-Meteo marine: ECMWF WAM, GFS Wave (16 dagen) en DWD EWAM (±5 km, ±3 dagen), per uur | Per regio één punt op zee (30–50 km uit de kust) en per spot een punt 0,3° zeewaarts van de spot. Plus de swell/windzee-verdeling voor ECMWF: EWAM, na dag 3 aangevuld met Météo-France MFWAM. Spots worden met 6 tegelijk opgehaald. |
+| Wind | Open-Meteo: ECMWF IFS, GFS en DWD ICON, per uur, in knopen, plus zonsopkomst en -ondergang | De eerste 48 uur worden vervangen door een fijnmazig model: KNMI HARMONIE (NL), Météo-France AROME (FR), ICON-EU (PT, MA). |
 | Getij | Open-Meteo `sea_level_height_msl` per spot (±9 dagen) | Bevat ook opzet door wind; hoog- en laagwater op het hele uur. |
 | Watertemperatuur | Open-Meteo `sea_surface_temperature` | Voor het wetsuitadvies. |
-| Metingen Wijk aan Zee | Rijkswaterstaat: boei IJgeul 1 (golf), IJmuiden buitenhaven (wind) | Alleen voor de thuisspot. |
+| Metingen Wijk aan Zee | Rijkswaterstaat: boei IJgeul 1 (golf), IJmuiden buitenhaven (wind) | Alleen voor de thuisspot. Elke run 10 dagen terug; uurwaarden bewaard in `state/obs.json` (120 dagen). |
 
 **Tijdzones.** Alle tijden worden omgerekend naar de kloktijd van de regio (`tz` per regio, `scripts/tzfix.py`). Dat gebeurt bij het ophalen en nog eens bij het rekenen, zodat ook oude archieven kloppen.
 
@@ -199,7 +199,9 @@ Graad per uur: 4 voorwaarden goed = **goed**, en **top** als de golf ook krachti
 
 - **Reisspots:** alleen de ochtend telt (07–11 u, binnen daglicht). **Wijk aan Zee:** alle uren met daglicht. Daglicht loopt sinds 16 nov van eerste tot laatste licht: zonsopkomst − 30 min tot zonsondergang + 30 min (`first_light_min`).
 - Een dag is **goed** bij minstens 2 goede uren, en **top** als daar een krachtig uur bij zit of als de dag ook volgens de strenge variant goed is (12 s, 3 uren, alleen echte offshore).
-- De graad in de app is het gemiddelde van ECMWF en GFS, naar beneden afgerond. "?" = de modellen verschillen 2 graden of meer.
+- Drie modelketens: **ECMWF** (WAM + IFS), **GFS** (Wave + GFS) en **EWAM** (DWD EWAM + ICON, alleen dag 0–3).
+- De graad in de app is het **gewogen** gemiddelde van de modellen, naar beneden afgerond (`combine`). Gewichten komen uit de modelscore (stap 9), alleen voor Wijk aan Zee; elders gelijk. "?" = de modellen verschillen 2 graden of meer.
+- De app toont per dag "goed volgens x van y modellen".
 - De hoogte op de tegel is het grootste (goede) uur van de ochtend.
 
 ### Stap 7 – Beste tijd, dagdelen, getij
@@ -210,13 +212,17 @@ Graad per uur: 4 voorwaarden goed = **goed**, en **top** als de golf ook krachti
 
 ### Stap 8 – Reeksen en meldingen (`find_runs`)
 
-- Dag 0–7: een dag telt als één model hem goed geeft. Vanaf dag 8: beide modellen, of één model dat ook streng goed is.
+- Dag 0–7: een dag telt als minstens de helft van het (gewogen) modelgewicht hem goed geeft. Met twee modellen is dat één van de twee (zoals vóór 16 nov); met drie modellen (dag 0–3) twee van de drie. Vanaf dag 8: alle modellen, of één model dat ook streng goed is.
 - Een reeks is een aantal goede dagen op rij op minstens één spot van de regio. De drempel per regio staat in §4 "Drempels per regio".
 - Melding bij nieuw, zekerder (kans → waarschijnlijk → bevestigd) of vervallen. `state/alerted.json` onthoudt wat al gemeld is.
 
 ### Stap 9 – Zelf bijstellen
 
 - **Boei** (alleen Wijk aan Zee): correctie op de golfhoogte op open zee, mediaan van 14 dagen, vanaf 3 dagen, hooguit ±15 %.
+- **Modelscore** (`verify.py`, alleen Wijk aan Zee): elke bewaarde voorspelling (`data/archive/`) tegenover de metingen, per model en looptijd (vandaag, morgen, dag 2–3, 4–6, 7+), alleen 06–21 u.
+  - Gemeten: afwijking van de golfhoogte op zee (boei) en of de windsoort klopte (offshore / zwak / zijwind / onshore, IJmuiden). In de eerste 48 uur telt de HARMONIE-wind, want daarmee rekent de app dan.
+  - Gewicht = gemiddelde fout / eigen fout (0,5–1,5), vanaf 36 uur vergelijking, en pas na 224 uur (±14 dagen) volledig: `1 + (ruw − 1) × uren/224`.
+  - In de app: blok "Modelscore" op de spotpagina van Wijk aan Zee.
 - **Sessies:** hints per spot vanaf 3 sessies (`calibrate.py`).
 - **Surfline-vergelijking:** handmatig, als Chrome openstaat.
 
@@ -402,6 +408,24 @@ Keuzes van Derek, in volgorde:
     - **Woensdag 18 nov:** Point Break "kansrijk, afnemende wind"; de app geeft wind uit het W (7–8 kn bij ECMWF, 17–23 kn bij GFS) = aanlandig, dus "niets". Ook dat na afloop toetsen.
     - Verschil met Surfline (dag 0–6) blijft 0,29 m: de reisspots worden niet geraakt.
 
+32. **Modelscore en derde model (Derek, 16 nov).** Vraag: "Kloppen de modellen, en moeten ECMWF en GFS niet samengevoegd worden?"
+    - **Antwoord:** de invoer niet middelen. 8 kn aflandig en 20 kn aanlandig middelen tot een wind die geen model voorspelt, en richtingen middelen gaat helemaal mis. Wel elk model apart laten rekenen en de uitkomst wegen op gemeten trefzekerheid.
+    - **Gebouwd:**
+      - `verify.py` en `state/obs.json` (zie §4b stap 9).
+      - DWD EWAM + ICON als derde keten voor dag 0–3.
+      - Gewogen dagoordeel: telt bij ≥ 50 % van het gewicht.
+      - De swell/windzee-verdeling voor ECMWF loopt nu ook na dag 3 door via Météo-France. Daarvóór viel ECMWF na dag 3 terug op alleen het totaal, met dezelfde fout als op 17 nov.
+      - Spots worden tegelijk opgehaald: de run blijft ±9 min ondanks ±60 extra aanvragen.
+    - **Eerste modelscore** (10 dagen boei, 8 runs, alleen één weertype):
+      - Golf op zee: GFS dag 2–6 ±25–27 %, ECMWF ±31–34 %.
+      - Windsoort goed: GFS 65–76 %, ECMWF 54–60 %. ECMWF zat vaker naast in aflandig tegenover aanlandig.
+      - Gewichten nu 0,9–1,15; ze tellen pas volledig na ±14 dagen.
+    - **Gevolg dinsdag 17 nov:** alle drie de modellen zien dezelfde ochtend: aflandig OZO 12–16 kn, swell 0,5–1,0 m 7 s NNW. Op de spot na het eerste licht:
+      - ECMWF 0,27–0,42 m, EWAM 0,23–0,38 m: onder de ondergrens van 0,4 m.
+      - GFS 0,40–0,48 m.
+      - Dus 1 van 3 modellen goed, de dag telt niet meer en de melding is vervallen. Bewust niet aangepast om Point Break te volgen. De hoogte op de spot bij korte swell blijft de grote onzekerheid (punt 31); dinsdag toetsen met boei en waarneming.
+    - De melding voor Crozon (20 nov) verviel door de nieuwe modelrun, niet door deze wijziging (EWAM reikt niet tot 20 nov).
+
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
 ## 5b. Leren van sessies
@@ -448,7 +472,9 @@ Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen doo
 | 3 | Golfpunt per spot | **gebouwd 10 nov** | Golfdata van de dichtstbijzijnde zeecel bij elke spot, met het regiopunt als reserve. |
 | 4 | Vaker vergelijken met Surfline | 1e keer 11 nov (data/surfline/2026-11-11.json) | Als Chrome met Surfline openstaat: Surfline-dagwaarden opslaan (`data/surfline/<datum>.json`) en per spot een factor fitten die afhangt van periode en richting, niet één vaste factor. Na 3–4 keer stabiel. Werkwijze: zie punt 20 in de beslissingen (iframes op surfline.com, regel "LOTUS Model" gevolgd door 16 dagwaarden). |
 | 5 | Sessiescores als meting | doorlopend | Derek vult na elke sessie graad en "hoe hoog was het" in. Vanaf 3 sessies per spot geeft de kalibratie hints; vanaf ±10 automatisch bijstellen. |
-| 6 | Trefzekerheid meten | open, vanaf ±1 dec | Uit `data/archive/` meten hoe vaak meldingen op dag 1–3, 4–7 en 8+ uitkwamen; daarna de drempels per termijn bijstellen. |
+| 6 | Trefzekerheid meten | **deels gebouwd 16 nov** (modelscore tegen boei en wind, punt 32) | Nog open (±1 dec): hoe vaak *meldingen* uitkwamen op dag 1–3, 4–7 en 8+; daarna de drempels per termijn bijstellen. |
+| 7 | Ensembles voor dag 4–10 | open | ECMWF- en GFS-ensembles via Open-Meteo: kans uit tientallen varianten in plaats van één run. |
+| 8 | Getij in de graad | open | Voor spots waar het getij echt uitmaakt (Supertubos, Lafitenia, Bud Bud). |
 
 ## 8. Werkwijze met Claude
 

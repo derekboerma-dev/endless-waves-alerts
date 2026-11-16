@@ -6,8 +6,10 @@ Dagelijkse controle van de surfvoorspelling voor Wijk aan Zee, Vendée (Bud Bud)
 
 ```
 GitHub Action (dagelijks 07:40 UTC = 08:40 NL-wintertijd)
-  1. scripts/fetch.py    golf- en windvoorspelling van Open-Meteo, ECMWF en GFS apart,
-                         16 dagen, inclusief zonsopkomst en -ondergang
+  1. scripts/fetch.py    golf- en windvoorspelling van Open-Meteo: ECMWF, GFS en DWD EWAM/ICON
+                         apart (EWAM ±3 dagen), 16 dagen, inclusief zonsopkomst en -ondergang
+     scripts/buoy.py     metingen Rijkswaterstaat bij Wijk aan Zee (boei + wind)
+     scripts/verify.py   modelscore: oude voorspellingen tegenover de metingen -> gewichten
   2. scripts/analyze.py  toetst aan de spotcriteria, zoekt reeksen, past de drempels
                          per regio toe en onthoudt wat al gemeld is
   3. commit              data/ (voorspelling + archief), out/ (meldingen, verslag),
@@ -53,15 +55,15 @@ Dit is een eerste schatting; stel bij na ervaring.
 | matig | twee voorwaarden niet |
 | slecht | drie of meer niet |
 
-Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richting op open zee, maal een beschuttingsfactor per spot), van het grootste uur, gemiddeld over beide modellen. Alle hoogtegrenzen gaan hierover, ook 'krachtig'. De graad is het gemiddelde van de modellen, naar beneden afgerond. Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
+Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richting op open zee, maal een beschuttingsfactor per spot), van het grootste uur, gemiddeld over de modellen. Alle hoogtegrenzen gaan hierover, ook 'krachtig'. De graad is het gewogen gemiddelde van de modellen, naar beneden afgerond (gewichten uit de modelscore, alleen Wijk aan Zee). Een open balk betekent onzeker: de modellen verschillen 2 of meer graden, of de dag telt op deze termijn niet mee.
 
 ## Zekerheid en termijn
 
 | Begint over | Label | Regel |
 |---|---|---|
-| ≤ 3 dagen | bevestigd | één model goed is genoeg |
-| 4–7 dagen | waarschijnlijk | één model goed is genoeg |
-| 8+ dagen | kans | **beide modellen** moeten het eens zijn; heeft er maar één nog data, dan moet die dag ook volgens de strenge variant goed zijn |
+| ≤ 3 dagen | bevestigd | minstens de helft van het modelgewicht zegt goed (2 modellen: één is genoeg; 3 modellen: twee) |
+| 4–7 dagen | waarschijnlijk | idem (dan nog 2 modellen: één is genoeg) |
+| 8+ dagen | kans | **alle modellen** moeten het eens zijn; heeft er maar één nog data, dan moet die dag ook volgens de strenge variant goed zijn |
 
 ## Drempels per regio (`config/spots.json`, blok `alert`)
 
@@ -71,8 +73,8 @@ Golfhoogte = geschatte hoogte op de spot (brekerhoogte uit Hs, periode en richti
 | Vendée, Crozon | 2 goede dagen op rij |
 | Cap Ferret | 3 dagen op rij, waarvan minstens 1 streng |
 | Biarritz-omgeving | 3 dagen op rij, waarvan minstens 1 streng of krachtig |
-| Peniche, Sagres | 3 dagen op rij, waarvan op minstens 2 dagen beide modellen het eens zijn |
-| Taghazout | 4 dagen op rij, minstens 2 krachtige dagen, op minstens 2 dagen beide modellen eens |
+| Peniche, Sagres | 3 dagen op rij, waarvan op minstens 2 dagen alle modellen het eens zijn |
+| Taghazout | 4 dagen op rij, minstens 2 krachtige dagen, op minstens 2 dagen alle modellen eens |
 
 Je kunt dit altijd aanpassen: wijzig de getallen in `config/spots.json` op GitHub (potloodje → Commit). De volgende run gebruikt ze. Reeksen onder de drempel staan wel in de app, gemarkeerd als "onder drempel", maar geven geen melding.
 
