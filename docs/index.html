@@ -399,7 +399,10 @@ function tideChart(d, s){
 
 const BUCKETS = [[0, .3], [.3, .6], [.6, .9], [.6, 1.1], [.9, 1.2], [.9, 1.4], [1.2, 1.5], [1.2, 1.8], [1.5, 2.1], [1.8, 2.4], [2.4, 3], [2.4, 3.7], [3, 4.5], [3.7, 4.9], [4.5, 6.1], [6.1, 7.6], [7.6, 9.1]];
 const BK = h => h == null ? null : BUCKETS.reduce((b, x) => Math.abs((x[0] + x[1]) / 2 - h) < Math.abs((b[0] + b[1]) / 2 - h) ? x : b);
-const RNG = (h, unit = 'm') => { const b = BK(h); return b ? `${N(b[0])}–${N(b[1])}${unit}` : '–'; };
+// Flat: golven die van de kust weglopen (of vrijwel niets aankomt) krijgen op de spot < 0,15 m -> geen meters tonen
+const FLAT = h => h != null && h < 0.15;
+const HV = h => FLAT(h) ? 'Flat' : N(h);
+const RNG = (h, unit = 'm') => { if (FLAT(h)) return 'Flat'; const b = BK(h); return b ? `${N(b[0])}–${N(b[1])}${unit}` : '–'; };
 const SURF = e => e && e.hs != null ? RNG(e.hs, ' m') : '';
 
 /* uurstrook: per uur golf, periode, swell, wind en getij voor één dag (eerste 7 dagen) */
@@ -434,7 +437,7 @@ function hourSheet(s, i0){
       ${labs.length > 1 ? `<div class="seg" style="margin-top:10px">${labs.map(l => `<button data-m="${l}" class="${l === model ? 'on' : ''}">${l}</button>`).join('')}</div>` : ''}
       <div class="hgrid"><table>
         <tr class="hr"><th></th>${hrs.map(h => `<td class="${dark(h) ? 'dark' : ''}">${h}u${diff[hrs.indexOf(h)] ? '<br>⚠︎' : ''}</td>`).join('')}</tr>
-        ${R('Golf (m)', r => `<div class="bv">${N(Math.round(r.s * 10) / 10)}</div><div class="bar" style="height:${Math.max(4, r.s / maxS * 56)}px;background:var(--g${r.g})"></div>`)}
+        ${R('Golf (m)', r => `<div class="bv">${FLAT(r.s) ? 'Flat' : N(Math.round(r.s * 10) / 10)}</div><div class="bar" style="height:${Math.max(4, r.s / maxS * 56)}px;background:var(--g${r.g})"></div>`)}
         ${R('Periode', r => `${r.tp} s<br>${ARR(r.d)}`, 'sep')}
         ${R('Op zee', r => `<div class="cmp">${r.c.length ? r.c.map(c => `${N(c[0])} m ${c[1]} s`).join('<br>') : N(r.off) + ' m'}</div>`)}
         ${s.buoy && d.date === TODAY() && Object.keys(s.buoy.today || {}).length ? `<tr><th>Boei</th>${hrs.map(h => { const v = s.buoy.today[String(h).padStart(2, '0')]; return `<td><div class="cmp" style="color:var(--sea);font-weight:700">${v != null ? N(v) + ' m' : ''}</div></td>`; }).join('')}</tr>` : ''}
@@ -507,11 +510,11 @@ function dayCard(s, d, i){
 function waveCard(s, sel){
   let bi = 0; s.days.forEach((d, i) => { if ((d.v ?? -1) > (s.days[bi].v ?? -1)) bi = i; });
   const b = s.days[bi], bv = b.v ?? 0;
-  const bestLbl = bv ? `${GRADE[bv]} · ${N(b.hs)} m` : 'niets in zicht';
+  const bestLbl = bv ? `${GRADE[bv]} · ${FLAT(b.hs) ? 'flat' : N(b.hs) + ' m'}` : 'niets in zicht';
   const when = bv ? `${new Date(b.date + 'T12:00').toLocaleDateString('nl-NL', {weekday:'short', day:'numeric'})}${b.plan ? ' · ' + b.plan.window : ''}` : '16 dagen';
   const maxH = Math.max(2.5, ...s.days.map(d => Math.min(d.hs || 0, 4)));
   const bars = s.days.map((d, i) => `<button class="${d.v == null ? '' : 'g' + d.v} ${sel === i ? 'sel' : ''}" data-i="${i}" aria-label="${esc(d.date)}">
-      <span>${d.hs != null ? N(d.hs) : ''}</span><i class="${d.unsure ? 'unsure' : ''}" style="height:${Math.max(4, Math.min(d.hs || 0, 4) / maxH * 40)}px"></i></button>`).join('');
+      <span>${d.hs != null ? HV(d.hs) : ''}</span><i class="${d.unsure ? 'unsure' : ''}" style="height:${Math.max(4, Math.min(d.hs || 0, 4) / maxH * 40)}px"></i></button>`).join('');
   const dates = s.days.map((d, i) => `<span class="${i ? '' : 't'}">${new Date(d.date + 'T12:00').getDate()}</span>`).join('');
   return `<div class="wave">
     <div class="top2"><div class="meta">${FLAG[s.country] || ''} ${esc(s.group)}${s.run ? ` · <span class="badge bg-${s.run.tier}">${s.run.tier}</span>` : ''}${s.days[0].sst != null ? `<br>water ${N(s.days[0].sst)}° · ${esc(s.days[0].wetsuit)}` : ''}</div>
@@ -659,7 +662,7 @@ function alerts(){
   rows.sort((a, b) => (b.r.qualifies - a.r.qualifies) || a.r.start.localeCompare(b.r.start) || (b.top - a.top));
   const row = ({reg, r, s, k, set, first}) => {
     const cells = s.days.map(d => set.has(d.date) && d.v != null
-      ? `<div class="in" style="background:var(--g${d.v})">${d.hs != null ? N(d.hs) : ''}</div>` : '<div></div>').join('');
+      ? `<div class="in" style="background:var(--g${d.v})">${d.hs != null ? HV(d.hs) : ''}</div>` : '<div></div>').join('');
     const dt = r.start === r.end ? short(r.start) : `${short(r.start)}–${short(r.end)}`;
     return `<button class="al-row ${r.qualifies ? '' : 'dim'}" data-go="s${k}/${first}">
       <div class="t"><span>${FLAG[reg.country] || ''}</span><span class="rn">${esc(s.name)}</span>

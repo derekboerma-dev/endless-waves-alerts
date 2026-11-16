@@ -175,7 +175,7 @@ Daarna:
 
 4. **Optellen:** de onderdelen via energie (wortel van de som van de kwadraten). Periode en richting zijn die van het grootste onderdeel.
 5. **Grootte-correctie**, één keer op het totaal: `1,2 · (h / 1,2)^1,14`. Grote dagen groeien bij Surfline sneller dan de formule.
-6. **Weergave:** de dichtstbijzijnde Surfline-hoogteklasse (0,3–0,6 · 0,6–0,9 · 0,9–1,2 · 1,2–1,8 enzovoort).
+6. **Weergave:** de dichtstbijzijnde Surfline-hoogteklasse (0,3–0,6 · 0,6–0,9 · 0,9–1,2 · 1,2–1,8 enzovoort). Onder 0,15 m op de spot staat er **Flat** in plaats van meters. Dat gebeurt vooral als de golven van de kust af lopen (16 nov, Derek).
 
 De schaal, de grootte-correctie en `exposure` per spot zijn afgesteld op Surfline (9 en 11 november). Verschil met Surfline over dag 0–6: gemiddeld 0,3 m per spot per dag.
 
