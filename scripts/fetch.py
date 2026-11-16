@@ -26,6 +26,10 @@ WIND_URL = "https://api.open-meteo.com/v1/forecast"
 # Twee onafhankelijke modelketens: overeenstemming = extra zekerheid.
 MARINE_MODELS = ["ecmwf_wam025", "ncep_gfswave025"]
 WIND_MODELS = ["ecmwf_ifs025", "gfs_seamless"]
+PART_MODELS = ["dwd_ewam", "meteofrance_wave"]
+PART_VARS = ["wave_height", "swell_wave_height", "swell_wave_direction", "swell_wave_period", "swell_wave_peak_period",
+             "secondary_swell_wave_height", "secondary_swell_wave_direction", "secondary_swell_wave_period",
+             "wind_wave_height", "wind_wave_direction", "wind_wave_period"]
 MARINE_VARS = ["wave_height", "wave_direction", "wave_peak_period", "wave_period",
                "swell_wave_height", "swell_wave_direction", "swell_wave_peak_period", "swell_wave_period"]
 # Losse componenten (windzee en tweede swell). Niet elk model levert alles; dan valt de aanvraag terug op MARINE_VARS.
@@ -108,6 +112,15 @@ def main():
                 j = fetch_marine(s["lat"] + dl * f, s["lon"] + do * f, m, {"cell_selection": "sea"})
                 if has_values(j, "wave_height"):
                     r["marine_spot"][s["name"]][m] = j
+            # Verdeling swell/windzee voor ECMWF (dat model levert alleen het totaal): DWD EWAM (Europa, ±5 km)
+            # of anders Météo-France MFWAM. Zie analyze.marine_for.
+            for m in PART_MODELS:
+                j = get(MARINE_URL, {"latitude": s["lat"] + dl * f, "longitude": s["lon"] + do * f, "hourly": ",".join(PART_VARS),
+                                     "models": m, "forecast_days": 16, "timezone": "auto", "cell_selection": "sea"})
+                if has_values(j, "swell_wave_height"):
+                    j["model"] = m
+                    r.setdefault("marine_part", {})[s["name"]] = j
+                    break
             # Fijnmazige wind voor de korte termijn.
             for m in reg.get("hires_wind") or HIRES_WIND.get(country, []):
                 j = get(WIND_URL, {"latitude": s["lat"], "longitude": s["lon"],

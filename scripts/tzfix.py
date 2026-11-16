@@ -53,7 +53,7 @@ def localize_region(r, tzname):
         for per in (r.get(group) or {}).values():
             for j in (per or {}).values():
                 localize(j, tzname)
-    for group in ("tide", "sst", "wind_hires"):
+    for group in ("tide", "sst", "wind_hires", "marine_part"):
         for j in (r.get(group) or {}).values():
             localize(j, tzname)
     return r

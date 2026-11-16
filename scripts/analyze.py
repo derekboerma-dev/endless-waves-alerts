@@ -106,8 +106,59 @@ def marine_for(data, spot, model):
     hs_s, hs_r = _med(m, "wave_height"), _med(reg, "wave_height")
     per = _med(m, "wave_peak_period") or _med(m, "wave_period")
     if not hs_s or not per or (hs_r and hs_s < 0.75 * hs_r):
-        return reg
-    return m
+        m = reg
+    return with_partitions(data, spot, model, m)
+
+
+_PART_CACHE = {}
+
+
+def with_partitions(data, spot, model, m):
+    """ECMWF levert bij Open-Meteo alleen de totale golf. Staat er tegelijk aflandige windzee en een swell van
+    zee, dan wijst de gemiddelde richting naar het land en lijkt de spot vlak (gezien 17 nov, Wijk aan Zee).
+    Oplossing: neem de verdeling (swell / tweede swell / windzee met eigen richting en periode) over van een
+    model dat die wel levert (DWD EWAM, anders Météo-France), en schaal die zodat de totale energie gelijk
+    blijft aan ECMWF. ECMWF bepaalt dus de hoogte, het andere model alleen de verdeling."""
+    if not m or m.get("error") or (m.get("hourly") or {}).get("swell_wave_height") and any(
+            v is not None for v in m["hourly"]["swell_wave_height"]):
+        return m
+    donor = (data.get("marine_part") or {}).get(spot["name"])
+    if not donor or donor.get("error"):
+        return m
+    key = (id(m), id(donor))
+    if key in _PART_CACHE:
+        return _PART_CACHE[key]
+    h, dh = m["hourly"], donor["hourly"]
+    di = {t: i for i, t in enumerate(dh.get("time") or [])}
+    comps = [("swell_wave_height", ("swell_wave_peak_period", "swell_wave_period"), "swell_wave_direction", 1.0),
+             ("secondary_swell_wave_height", ("secondary_swell_wave_period",), "secondary_swell_wave_direction", 1.0),
+             ("wind_wave_height", ("wind_wave_period",), "wind_wave_direction", 1.2)]  # gem. -> piekperiode
+    out = {k: list(v) for k, v in h.items()}
+    for kh, kps, kd, pf in comps:
+        out[kh], out[kd] = [None] * len(h["time"]), [None] * len(h["time"])
+        out[kps[-1] if kh != "swell_wave_height" else "swell_wave_peak_period"] = [None] * len(h["time"])
+    for i, t in enumerate(h["time"]):
+        j, H = di.get(t), h["wave_height"][i]
+        if j is None or not H:
+            continue
+        parts = []
+        for kh, kps, kd, pf in comps:
+            v, d = (dh.get(kh) or [None] * (j + 1))[j], (dh.get(kd) or [None] * (j + 1))[j]
+            p = next(((dh.get(k) or [None] * (j + 1))[j] for k in kps if (dh.get(k) or [None] * (j + 1))[j]), None)
+            if v and d is not None and p:
+                parts.append((kh, kps, kd, v, d, p * pf))
+        tot = math.sqrt(sum(x[3] ** 2 for x in parts)) if parts else 0
+        if tot <= 0:
+            continue
+        k = H / tot
+        for kh, kps, kd, v, d, p in parts:
+            out[kh][i], out[kd][i] = round(v * k, 2), d
+            out[kps[-1] if kh != "swell_wave_height" else "swell_wave_peak_period"][i] = round(p, 1)
+    n = dict(m)
+    n["hourly"] = out
+    n["_partitions_from"] = donor.get("model")
+    _PART_CACHE[key] = n
+    return n
 
 
 def merge_hires_wind(data, hours=None):
@@ -174,6 +225,13 @@ def sea_state(mh, i, spot):
     dom = max(parts, key=lambda x: x[0])
     return total, dom[1], dom[2], hs
 
+
+
+def gust_max(offshore):
+    """Maximale windstoot. Bij aflandige wind mogen de stoten hoger zijn: die komen van het land (duinen,
+    bebouwing) en maken het water niet onrustig; alleen de take-off wordt lastiger. (17 nov: OZO 4-5 bft met
+    stoten tot 31 kn werd afgekeurd, terwijl een Nederlandse surfvoorspeller het een topochtend noemde.)"""
+    return D.get("max_gust_offshore_kn", 35) if offshore else D.get("max_gust_kn", 28)
 
 def is_cross(spot, wd, ws):
     """Zijwind (cross-shore) die op deze spot nog prima is, bijv. door beschutting van een pier.
@@ -244,7 +302,8 @@ def daylight(wind):
     d = (wind or {}).get("daily") or {}
     for day, sr, ss in zip(d.get("time", []), d.get("sunrise", []), d.get("sunset", [])):
         if sr and ss:
-            out[day] = (int(sr[11:13]) + int(sr[14:16]) / 60, int(ss[11:13]) + int(ss[14:16]) / 60)
+            fl = D.get("first_light_min", 30) / 60  # surfen kan al bij het eerste licht, tot het laatste licht
+            out[day] = (int(sr[11:13]) + int(sr[14:16]) / 60 - fl, int(ss[11:13]) + int(ss[14:16]) / 60 + fl)
     return out
 
 
@@ -288,7 +347,7 @@ def evaluate_spot(spot, region, marine, wind, strict):
         swell_ok = dir_ok and tp_ok and hs_ok
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         cross = not strict and is_cross(spot, wd, ws)
-        wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= D.get("max_gust_kn", 99))
+        wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= gust_max(offshore))
         ok = swell_ok and wind_ok
         pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)  # 0-4 voorwaarden gehaald
         rec["rows"].append({"h": hr, "hs": hs, "off": off, "tp": tp, "dir": wdir, "ws": ws, "wd": wd, "gu": gu, "ok": ok, "pts": pts})
@@ -567,7 +626,7 @@ def hourly_for(spot, region, data, day, tinfo):
             dir_ok, tp_ok, hs_ok = in_arcs(wdir, spot["swell"]), tp >= tp_min, hs_lo <= hs <= hs_hi
             offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
             cross = is_cross(spot, wd, ws)
-            wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= D.get("max_gust_kn", 99))
+            wind_ok = (ws <= glassy or offshore or cross) and (gu is None or gu <= gust_max(offshore))
             pts = int(dir_ok) + int(tp_ok) + int(hs_ok) + int(wind_ok)
             if pts == 4:
                 g = 4 if (hs >= powerful["hs_min"] and tp >= powerful["tp_min"]) else 3
@@ -764,7 +823,7 @@ def best_time(spot, region, marine, wind, tinfo, day):
         hs, tp, wdir, off = st
         offshore = in_arcs(wd, spot["wind"], D["wind_margin_deg"]) and ws <= D.get("max_offshore_kn", 99)
         ok = (in_arcs(wdir, spot["swell"]) and tp >= tp_min and hs_lo <= hs <= hs_hi
-              and (ws <= glassy or offshore or is_cross(spot, ws=ws, wd=wd)) and (gu is None or gu <= D.get("max_gust_kn", 99)))
+              and (ws <= glassy or offshore or is_cross(spot, ws=ws, wd=wd)) and (gu is None or gu <= gust_max(offshore)))
         ti = tinfo.get(t)
         tide_ok = ti is None or lo_t <= ti[0] <= hi_t
         if ti and spot.get("tide_rising") and not ti[1]:

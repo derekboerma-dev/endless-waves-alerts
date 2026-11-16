@@ -38,7 +38,9 @@
   "surf_size_exp": 1.14,
   "_tz": "Elke regio heeft 'tz' (lokale kloktijd). Alle tijden van Open-Meteo worden daarheen omgerekend (scripts/tzfix.py).",
   "_tide": "Getijvoorkeur per spot: low, low-mid, mid, mid-high, high, not-high (laag tot half-hoog), all. Op 15 nov gelijkgetrokken met de Surfline-spotgids waar die bestaat.",
-  "_facing": "Per spot 'facing' = richting (graden) waar het strand naar de zee kijkt. Golven die meer dan 110 graden daarvan afwijken lopen van de kust weg: 0 m (Flat); tussen 90 en 110 graden aflopend."
+  "_facing": "Per spot 'facing' = richting (graden) waar het strand naar de zee kijkt. Golven die meer dan 110 graden daarvan afwijken lopen van de kust weg: 0 m (Flat); tussen 90 en 110 graden aflopend.",
+  "max_gust_offshore_kn": 35,
+  "first_light_min": 30
  },
  "regions": [
   {
