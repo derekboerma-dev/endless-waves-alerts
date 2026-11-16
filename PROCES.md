@@ -158,7 +158,7 @@ Het punt bij de spot telt alleen als het echt op zee ligt: mediane golfhoogte mi
 
 ### Stap 3 – Golf op open zee per uur (`sea_state`)
 
-- **ECMWF** levert alleen het totaal: hoogte, piekperiode en gemiddelde richting.
+- **ECMWF** levert alleen het totaal: hoogte, piekperiode en gemiddelde richting. Sinds 16 nov krijgt ECMWF de verdeling over swell, tweede swell en windzee van **DWD EWAM** (Europa, ±5 km; anders Météo-France MFWAM). Die verdeling wordt zo geschaald dat de totale energie gelijk blijft aan ECMWF (`with_partitions`).
 - **GFS** levert ook de losse onderdelen: swell, tweede swell en windzee, elk met hoogte, periode en richting.
 - **Periode.** ECMWF levert `wave_peak_period`. GFS levert alleen `wave_period`, en dat ís bij Open-Meteo de piekperiode (gecontroleerd: verhouding tot de ECMWF-piekperiode 0,99–1,02 in alle acht regio's). Er wordt dus niets omgerekend. Alleen als ECMWF op een uur geen piekperiode heeft, geldt gemiddelde periode × 1,2.
 - **Richting** is steeds de richting waar de golven vandaan komen.
@@ -191,13 +191,13 @@ Een uur is goed als alle vier kloppen:
 | Swellrichting | Binnen de swellboog van de spot. |
 | Periode | Minstens 10 s (per spot afwijkend: Bud Bud 11 s, Wijk aan Zee 6 s). |
 | Hoogte op de spot | Binnen het bereik van de spot. |
-| Wind | Offshore (windboog van de spot + 22,5°, hooguit 22 kn), of zwak (hooguit 6 kn), of toegestane zijwind (alleen Wijk aan Zee: Z–ZZW tot 12 kn). Windstoten hooguit 28 kn. |
+| Wind | Offshore (windboog van de spot + 22,5°, hooguit 22 kn), of zwak (hooguit 6 kn), of toegestane zijwind (alleen Wijk aan Zee: Z–ZZW tot 12 kn). Windstoten hooguit 28 kn; bij offshore hooguit 35 kn (`max_gust_offshore_kn`). |
 
 Graad per uur: 4 voorwaarden goed = **goed**, en **top** als de golf ook krachtig is (op de spot minstens 1,5 m en 12 s; Wijk aan Zee 1,2 m en 8 s). 3 van de 4 met de wind in orde = redelijk; 3 van de 4 met de wind niet in orde = matig; minder = niets.
 
 ### Stap 6 – Graad per dag
 
-- **Reisspots:** alleen de ochtend telt (07–11 u, binnen daglicht). **Wijk aan Zee:** alle uren met daglicht.
+- **Reisspots:** alleen de ochtend telt (07–11 u, binnen daglicht). **Wijk aan Zee:** alle uren met daglicht. Daglicht loopt sinds 16 nov van eerste tot laatste licht: zonsopkomst − 30 min tot zonsondergang + 30 min (`first_light_min`).
 - Een dag is **goed** bij minstens 2 goede uren, en **top** als daar een krachtig uur bij zit of als de dag ook volgens de strenge variant goed is (12 s, 3 uren, alleen echte offshore).
 - De graad in de app is het gemiddelde van ECMWF en GFS, naar beneden afgerond. "?" = de modellen verschillen 2 graden of meer.
 - De hoogte op de tegel is het grootste (goede) uur van de ochtend.
@@ -223,7 +223,7 @@ Graad per uur: 4 voorwaarden goed = **goed**, en **top** als de golf ook krachti
 ### Bekende beperkingen (bewust zo gelaten)
 
 1. **Geen bodemkaart.** Zandbanken, refractie en lokale schaduw zitten alleen in de vaste factor per spot.
-2. **ECMWF splitst swell en windzee niet.** Bij een mix kan de richting of periode van het totaal een goede swell verbergen. Een derde model (Météo-France) zou dit oplossen.
+2. ~~ECMWF splitst swell en windzee niet~~: opgelost op 16 nov met de verdeling van DWD EWAM (punt 31).
 3. **Alleen de ochtend telt voor reisspots.** In de data van 15 november was op 20 van de 160 spot-dagen de ochtend niet goed, terwijl één model 's middags wel 2 of meer goede uren gaf. Die dagen zie je in de dagdeel-balkjes en de uurstrook, maar ze geven geen melding.
 4. **Getij telt niet mee in de graad**, alleen in de beste tijd.
 5. **Heel grote dagen** worden onderschat (La Palue 17 nov: Surfline 5 m, app 1,9 m).
@@ -390,6 +390,17 @@ Keuzes van Derek, in volgorde:
     - **Niet gelukt:** een verse Surfline-vergelijking; Chrome reageerde niet.
     - **Rondleiding:** filmpje van alle functies gemaakt met Playwright (`video.js`, niet in de repo).
     - De volledige rekenketen staat in §4b.
+
+31. **Vergelijking met een Nederlandse surfvoorspeller (Point Break, 16 nov).** Point Break meldde voor dinsdag 17 nov in Wijk aan Zee een surfalert: 07:45–09:00, heup- tot meterhoog, hol, stevige offshore OZO (4–5 bft). De app gaf "niets".
+    - **Oorzaak 1, de grootste:** ECMWF levert alleen de totale golf. Een aflandige windzee uit het OZO (1,1–1,4 m, 4 s) en een swell uit het NNW (0,7 m, 7 s) middelden tot een richting "van het land". De nieuwe Flat-regel (punt 30, strandrichting) maakte daar 0,0 m van. De swell werd dus weggegooid.
+      - Getest via GitHub: DWD EWAM, DWD GWAM en Météo-France leveren bij Open-Meteo wél swell en windzee apart; ECMWF (beide varianten) niet. Alle drie zagen dezelfde NNW-swell van 0,5–0,9 m, 7 s.
+      - Oplossing: ECMWF krijgt de verdeling van DWD EWAM, geschaald op de ECMWF-energie. Alle 17 spots hebben nu EWAM-data.
+    - **Oorzaak 2:** stoten van 28–31 kn bij aflandige wind werden afgekeurd (grens 28 kn). Aflandige stoten komen van het land en maken het water niet onrustig, dus de grens bij offshore is nu 35 kn.
+    - **Oorzaak 3:** de app telde pas vanaf zonsopkomst (08:06); Point Break begint bij het eerste licht (07:45). Daglicht loopt nu van eerste tot laatste licht (±30 min).
+    - **Resultaat dinsdag 17 nov:** GFS goed (08–14 u), ECMWF 's ochtends goed tot redelijk, dag "redelijk ?", alert bevestigd. Hoogte op de spot 0,3–0,45 m, dus knie tot dij.
+    - **Bewust niet overgenomen:** "heup tot meterhoog". Alle modellen geven 0,5–0,9 m swell van 7 s op zee. Met de afstelling op de waarneming van 14 nov (heuphoog bij 1,1–1,45 m op de boei) komt dat uit op dij-hoog. Aflandige wind maakt golven wel holler en voelbaar groter. Na dinsdag vergelijken met de boei en een sessie- of kennisbericht.
+    - **Woensdag 18 nov:** Point Break "kansrijk, afnemende wind"; de app geeft wind uit het W (7–8 kn bij ECMWF, 17–23 kn bij GFS) = aanlandig, dus "niets". Ook dat na afloop toetsen.
+    - Verschil met Surfline (dag 0–6) blijft 0,29 m: de reisspots worden niet geraakt.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
