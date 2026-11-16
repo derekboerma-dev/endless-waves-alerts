@@ -30,7 +30,51 @@ import tzfix
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CFG = json.loads((ROOT / "config" / "spots.json").read_text())
 D = CFG["defaults"]
-PAIRS = [("ecmwf_wam025", "ecmwf_ifs025", "ECMWF"), ("ncep_gfswave025", "gfs_seamless", "GFS")]
+# Modelketens (golf + wind). EWAM (DWD, ±5 km, Europa) rekent maar ±3 dagen vooruit; daarna alleen ECMWF en GFS.
+PAIRS = [("ecmwf_wam025", "ecmwf_ifs025", "ECMWF"), ("ncep_gfswave025", "gfs_seamless", "GFS"),
+         ("dwd_ewam", "icon_seamless", "EWAM")]
+LABELS = [p[2] for p in PAIRS]
+
+
+def _load_verify():
+    p = ROOT / "state" / "verify.json"
+    try:
+        return json.loads(p.read_text())
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+VERIFY = _load_verify()
+
+
+def weight(reg, lab, lead):
+    """Gewicht van een model op deze looptijd (uit verify.py, gemeten bij de thuisspot). Alleen voor de thuisspot:
+    de boei ligt daar; voor reisspots weten we niet welk model beter is, dus gelijke gewichten."""
+    if not reg or reg["alert"].get("mode") != "home":
+        return 1.0
+    b = "0-1" if lead <= 0 else "1-2" if lead == 1 else "2-4" if lead <= 3 else "4-7" if lead <= 6 else "7+"
+    return ((VERIFY.get("weights") or {}).get(b) or {}).get(lab, 1.0)
+
+
+def combine(scores, goods, lead, reg, strict=None):
+    """Eén dagoordeel uit de modellen. scores/goods: {model: graad 0-4 / goed?}.
+    v = gewogen gemiddelde graad (naar beneden afgerond); p = gewogen aandeel modellen dat 'goed' zegt.
+    Telt mee (dag 0-7): p >= 0,5. Met twee gelijke modellen is dat 'één van de twee' (zoals vóór 16 nov);
+    met drie modellen 'twee van de drie'. Vanaf dag 8: alle modellen goed; heeft maar één model nog data,
+    dan ook de strenge variant."""
+    if not scores:
+        return None, 0.0, False
+    w = {m: weight(reg, m, lead) for m in scores}
+    tw = sum(w.values())
+    v = int(sum(w[m] * scores[m] for m in scores) / tw + 1e-9)
+    p = sum(w[m] for m in scores if goods.get(m)) / tw
+    if lead < D.get("long_range_from_day", 8):
+        counts = p >= 0.5 - 1e-9
+    elif len(scores) >= 2:
+        counts = all(goods.get(m) for m in scores)
+    else:
+        counts = all(goods.get(m) and (strict or {}).get(m) for m in scores)
+    return v, round(p, 2), counts
 TIERS = ["kans", "waarschijnlijk", "bevestigd"]
 DAYS_NL = ["ma", "di", "wo", "do", "vr", "za", "zo"]
 MONTHS_NL = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
@@ -411,18 +455,16 @@ def analyse_region(reg, data):
     return res
 
 
-def day_counts(models, lead):
-    """Telt deze dag mee in een reeks? Strenger vanaf long_range_from_day."""
+def day_counts(models, lead, reg=None):
+    """Telt deze dag mee in een reeks? Zie combine(); strenger vanaf long_range_from_day."""
     if not models:
         return False, "geen data"
     goods = [m for m, v in models.items() if v["good"]]
-    if lead < D.get("long_range_from_day", 8):
-        return bool(goods), "beide" if len(goods) == 2 else ("één model" if goods else "")
-    if len(models) == 2:
-        return len(goods) == 2, "beide" if len(goods) == 2 else ("alleen " + goods[0] if goods else "")
-    only = next(iter(models.values()))
-    ok = only["good"] and only["strict"]
-    return ok, ("alleen " + next(iter(models)) + " (streng)") if ok else ""
+    _, p, ok = combine({m: v.get("score", 0) for m, v in models.items()}, {m: v["good"] for m, v in models.items()},
+                       lead, reg, {m: v["strict"] for m, v in models.items()})
+    if len(models) == 1 and ok:
+        return ok, "alleen " + next(iter(models)) + " (streng)"
+    return ok, (f"{len(goods)} van {len(models)} modellen" if goods else "")
 
 
 def find_runs(reg, days, today):
@@ -432,7 +474,7 @@ def find_runs(reg, days, today):
         d = dt.date.fromisoformat(ds)
         if d < today:
             continue
-        ok, _ = day_counts(days[ds], (d - today).days)
+        ok, _ = day_counts(days[ds], (d - today).days, reg)
         if ok and (prev is None or (d - prev).days == 1) and cur:
             cur.append(ds)
         elif ok:
@@ -452,7 +494,7 @@ def find_runs(reg, days, today):
             continue
         lead = (dt.date.fromisoformat(r[0]) - today).days
         md = [days[ds] for ds in r]
-        agree = sum(1 for m in md if len(m) == 2 and all(v["good"] for v in m.values()))
+        agree = sum(1 for m in md if len(m) >= 2 and all(v["good"] for v in m.values()))
         strict = sum(1 for m in md if any(v["strict"] for v in m.values()))
         powerful = sum(1 for m in md if any(v["powerful"] for v in m.values()))
         sp_or_pw = sum(1 for m in md if any(v["strict"] or v["powerful"] for v in m.values()))
@@ -566,13 +608,14 @@ def ntfy_text(a):
     return title + "\n" + "\n".join(lines)
 
 
-def combined_score(models):
-    """Eén graad per dag voor het startscherm: gemiddelde van de modellen, naar beneden afgerond.
+def combined_score(models, lead=0, reg=None):
+    """Eén graad per dag voor het startscherm: gewogen gemiddelde van de modellen, naar beneden afgerond.
     disagree = modellen verschillen 2 of meer graden."""
-    sc = [v.get("score", 0) for v in models.values()]
+    sc = {m: v.get("score", 0) for m, v in models.items()}
     if not sc:
         return None
-    return {"v": int(sum(sc) / len(sc)), "disagree": max(sc) - min(sc) >= 2, "n": len(sc)}
+    v, p, _ = combine(sc, {m: v["good"] for m, v in models.items()}, lead, reg)
+    return {"v": v, "p": p, "disagree": max(sc.values()) - min(sc.values()) >= 2, "n": len(sc)}
 
 
 def combined_hs(models):
@@ -717,7 +760,7 @@ def buoy_bias(latest):
     keep = sorted(st["days"])[-30:]
     st["days"] = {k: st["days"][k] for k in keep}
     fac = {}
-    for lab in ("ECMWF", "GFS"):
+    for lab in LABELS:
         rs = sorted(st["days"][k][lab] for k in keep[-14:] if lab in st["days"][k])
         if len(rs) >= 3:
             fac[lab] = round(min(1.15, max(0.85, rs[len(rs) // 2])), 3)
@@ -753,7 +796,7 @@ def buoy_bias(latest):
                      "dir": last.get("WINDRTG", [None, None])[1], "t": (last.get("WINDSHD") or [None])[0]},
             "wind_today": {t[11:13]: [round(v * 1.944), dict((b["series"].get("WINDRTG") or {}).get("data") or []).get(t)]
                            for t, v in (b["series"].get("WINDSHD") or {}).get("data") or [] if t.startswith(today) and t.endswith(":00")},
-            "factor": fac, "n_days": len(keep)}
+            "factor": fac, "n_days": len(keep), "verify": VERIFY or None}
 
 def tide_series(tj):
     """Uurwaarden zeespiegel -> {tijd: (fractie 0=laag..1=hoog, opkomend)} en per dag de hoog- en laagwatertijden."""
@@ -896,17 +939,9 @@ def spot_cards(alerts, per_region, today, latest):
                 models = days.get(ds, {})
                 per = {lab: v["detail"][s["name"]] for lab, v in models.items() if s["name"] in v["detail"]}
                 strict = {lab: (v.get("strict_spots") or {}).get(s["name"], False) for lab, v in models.items()}
-                sc = []
-                for lab, e in per.items():
-                    sc.append(4 if (e["good"] and (e["powerful"] or strict.get(lab))) else e["score"])
-                goods = [lab for lab, e in per.items() if e["good"]]
-                if k < D.get("long_range_from_day", 8):
-                    counts = bool(goods)
-                elif len(per) == 2:
-                    counts = len(goods) == 2
-                else:
-                    counts = bool(goods) and all(strict.get(g) for g in goods)
-                v = int(sum(sc) / len(sc)) if sc else None
+                scd = {lab: 4 if (e["good"] and (e["powerful"] or strict.get(lab))) else e["score"] for lab, e in per.items()}
+                sc = list(scd.values())
+                v, pgood, counts = combine(scd, {lab: e["good"] for lab, e in per.items()}, k, reg, strict)
                 plan = None
                 for mm, wm, lab in PAIRS:  # ECMWF eerst, anders GFS
                     plan = best_time(s, reg, marine_for(data, s, mm),
@@ -925,7 +960,8 @@ def spot_cards(alerts, per_region, today, latest):
                     air = air if air is not None else day_max(wjs.get(wm), "temperature_2m", ds, light)
                 sdays.append({"sst": sst, "air": air, "wetsuit": wetsuit_for(sst, air),
                               "sun": [f"{int(light[0]):02d}:{int(round(light[0] % 1 * 60)):02d}",
-                                      f"{int(light[1]):02d}:{int(round(light[1] % 1 * 60)):02d}"] if light else None,"date": ds, "lead": k, "v": v, "disagree": bool(sc) and max(sc) - min(sc) >= 2,
+                                      f"{int(light[1]):02d}:{int(round(light[1] % 1 * 60)):02d}"] if light else None,"date": ds, "lead": k, "v": v, "p": pgood if per else None,
+                              "n_models": len(per), "n_good": sum(1 for e in per.values() if e["good"]), "disagree": bool(sc) and max(sc) - min(sc) >= 2,
                               "unsure": bool(sc) and (max(sc) - min(sc) >= 2 or (v is not None and v >= 3 and not counts)),
                               "hs": round(sum(hs) / len(hs), 1) if hs else None,
                               "surf": surf_range(sum(hs) / len(hs)) if hs else None, "counts": counts,
@@ -953,15 +989,15 @@ def app_data(alerts, per_region, today, latest=None):
         for k in range(16):
             ds = (today + dt.timedelta(days=k)).isoformat()
             models = days.get(ds, {})
-            counts, why = day_counts(models, k)
+            counts, why = day_counts(models, k, reg)
             best = None
-            for lab in ("ECMWF", "GFS"):
+            for lab in LABELS:
                 b = (models.get(lab) or {}).get("best")
                 if b and (best is None or (b["good"] and not best["good"])):
                     best = {**b, "model": lab}
             out_days.append({
                 "date": ds, "label": nl_date(ds), "lead": k, "counts": counts, "why": why,
-                "score": combined_score(models), "hs": combined_hs(models),
+                "score": combined_score(models, k, reg), "hs": combined_hs(models),
                 "models": {lab: {"good": v["good"], "strict": v["strict"], "powerful": v["powerful"], "score": v.get("score", 0),
                                  "spots": v["spots"], "detail": v["detail"]} for lab, v in models.items()},
                 "best": best,

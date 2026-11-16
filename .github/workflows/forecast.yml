@@ -67,6 +67,10 @@ jobs:
         continue-on-error: true
         run: python scripts/buoy.py
 
+      - name: Modelscore (voorspelling tegenover meting)
+        continue-on-error: true
+        run: python scripts/verify.py
+
       - name: Sessiescores uit de app ophalen
         env:
           GH_TOKEN: ${{ github.token }}

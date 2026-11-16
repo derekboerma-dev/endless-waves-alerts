@@ -1,0 +1,155 @@
+{
+ "updated": "2026-11-16T15:48+00:00",
+ "spot": "Wijk aan Zee",
+ "obs_hours": 76,
+ "obs_from": "2026-11-13T12:00",
+ "runs": 8,
+ "buckets": [
+  "0-1",
+  "1-2",
+  "2-4",
+  "4-7",
+  "7+"
+ ],
+ "models": {
+  "ECMWF": {
+   "4-7": {
+    "n": 120,
+    "n_wind": 114,
+    "hs_err": 0.355,
+    "hs_ratio": 0.903,
+    "ws_err": 6.8,
+    "wd_err": 23,
+    "wind_ok": 0.491
+   },
+   "7+": {
+    "n": 10,
+    "n_wind": 9,
+    "hs_err": 0.163,
+    "hs_ratio": 1.117,
+    "ws_err": 10.5,
+    "wd_err": 29,
+    "wind_ok": 1.0
+   },
+   "2-4": {
+    "n": 104,
+    "n_wind": 96,
+    "hs_err": 0.389,
+    "hs_ratio": 0.903,
+    "ws_err": 4.9,
+    "wd_err": 17,
+    "wind_ok": 0.469
+   },
+   "1-2": {
+    "n": 52,
+    "n_wind": 48,
+    "hs_err": 0.199,
+    "hs_ratio": 0.92,
+    "ws_err": 3.7,
+    "wd_err": 11,
+    "wind_ok": 0.667
+   },
+   "0-1": {
+    "n": 6,
+    "n_wind": 5,
+    "hs_err": 0.055,
+    "hs_ratio": 0.995,
+    "ws_err": 1.8,
+    "wd_err": 13,
+    "wind_ok": 1.0
+   }
+  },
+  "GFS": {
+   "4-7": {
+    "n": 120,
+    "n_wind": 114,
+    "hs_err": 0.289,
+    "hs_ratio": 1.058,
+    "ws_err": 4.8,
+    "wd_err": 43,
+    "wind_ok": 0.614
+   },
+   "7+": {
+    "n": 10,
+    "n_wind": 9,
+    "hs_err": 0.209,
+    "hs_ratio": 1.229,
+    "ws_err": 2.0,
+    "wd_err": 116,
+    "wind_ok": 0.222
+   },
+   "2-4": {
+    "n": 104,
+    "n_wind": 96,
+    "hs_err": 0.322,
+    "hs_ratio": 0.965,
+    "ws_err": 3.2,
+    "wd_err": 20,
+    "wind_ok": 0.677
+   },
+   "1-2": {
+    "n": 52,
+    "n_wind": 48,
+    "hs_err": 0.215,
+    "hs_ratio": 1.029,
+    "ws_err": 3.7,
+    "wd_err": 11,
+    "wind_ok": 0.667
+   },
+   "0-1": {
+    "n": 6,
+    "n_wind": 5,
+    "hs_err": 0.097,
+    "hs_ratio": 1.151,
+    "ws_err": 1.8,
+    "wd_err": 13,
+    "wind_ok": 1.0
+   }
+  },
+  "EWAM": {
+   "1-2": {
+    "n": 0,
+    "n_wind": 48,
+    "hs_err": null,
+    "hs_ratio": null,
+    "ws_err": 3.7,
+    "wd_err": 11,
+    "wind_ok": 0.667
+   },
+   "2-4": {
+    "n": 0,
+    "n_wind": 29,
+    "hs_err": null,
+    "hs_ratio": null,
+    "ws_err": 3.6,
+    "wd_err": 14,
+    "wind_ok": 0.552
+   },
+   "0-1": {
+    "n": 1,
+    "n_wind": 5,
+    "hs_err": 0.11,
+    "hs_ratio": 0.901,
+    "ws_err": 1.8,
+    "wd_err": 13,
+    "wind_ok": 1.0
+   }
+  }
+ },
+ "weights": {
+  "1-2": {
+   "ECMWF": 1.0,
+   "GFS": 1.0
+  },
+  "2-4": {
+   "ECMWF": 0.94,
+   "GFS": 1.09
+  },
+  "4-7": {
+   "ECMWF": 0.94,
+   "GFS": 1.07
+  }
+ },
+ "min_hours": 36,
+ "full_hours": 224
+}

@@ -4,8 +4,9 @@
 API: Rijkswaterstaat WaterWebservices DD-API 2.0 (geen sleutel nodig).
   catalogus:  POST {BASE}/METADATASERVICES/OphalenCatalogus
   metingen:   POST {BASE}/ONLINEWAARNEMINGENSERVICES/OphalenWaarnemingen
-Zoekt per grootheid de dichtstbijzijnde locatie bij de thuisspot (max 40 km) en haalt de laatste 36 uur op.
-Uitvoer: data/buoy/latest.json (en data/buoy/<datum>.json als archief).
+Zoekt per grootheid de dichtstbijzijnde locatie bij de thuisspot (max 40 km) en haalt de laatste 10 dagen op.
+Uitvoer: data/buoy/latest.json (laatste 36 uur, voor de app), data/buoy/<datum>.json (archief) en
+         state/obs.json (uurwaarden, 120 dagen bewaard: basis voor de modelscore in verify.py).
 Grootheden: Hm0 (significante golfhoogte, cm), Tm02 (gem. periode, s), Th0 (golfrichting, °),
             WINDSHD (windsnelheid, m/s), WINDRTG (windrichting, °).
 """
@@ -88,7 +89,7 @@ def main():
     for g, (d, l, m) in best.items():
         print(f"{g}: {l.get('Code')} {l.get('Naam')} ({d:.0f} km) eenheid {(m.get('Eenheid') or {}).get('Code')}")
     now = dt.datetime.now(dt.timezone.utc)
-    per = {"Begindatumtijd": (now - dt.timedelta(hours=36)).strftime("%Y-%m-%dT%H:%M:%S.000+00:00"),
+    per = {"Begindatumtijd": (now - dt.timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%S.000+00:00"),
            "Einddatumtijd": now.strftime("%Y-%m-%dT%H:%M:%S.000+00:00")}
     out = {"fetched_at": now.isoformat(timespec="minutes"), "spot": spot["name"], "series": {}}
     for g, (d, l, m) in best.items():
@@ -134,10 +135,48 @@ def main():
     if not out["series"]:
         print("geen metingen gevonden")
         sys.exit(0)
+    store_obs(out)
+    cut = (now + dt.timedelta(hours=1) - dt.timedelta(hours=36)).strftime("%Y-%m-%dT%H:%M")  # ±lokale tijd
+    short = {**out, "series": {g: {**v, "data": [x for x in v["data"] if x[0] >= cut]} for g, v in out["series"].items()}}
     p = ROOT / "data" / "buoy"
     p.mkdir(parents=True, exist_ok=True)
-    (p / "latest.json").write_text(json.dumps(out, ensure_ascii=False))
-    (p / f"{now.date().isoformat()}.json").write_text(json.dumps(out, ensure_ascii=False))
+    (p / "latest.json").write_text(json.dumps(short, ensure_ascii=False))
+    (p / f"{now.date().isoformat()}.json").write_text(json.dumps(short, ensure_ascii=False))
+
+
+def store_obs(out):
+    """Uurwaarden (gemiddelde van de metingen binnen het klokuur ±30 min) samenvoegen in state/obs.json.
+    Tijden zijn lokale Nederlandse tijd, net als de voorspellingen na tzfix. Golf in m, periode in s,
+    wind in kn; richtingen als vectorgemiddelde."""
+    p = ROOT / "state" / "obs.json"
+    st = json.loads(p.read_text()) if p.exists() else {"hours": {}}
+    conv = {"Hm0": ("hs", lambda v: v / 100, False), "Tm02": ("tm", float, False), "Th0": ("dir", float, True),
+            "WINDSHD": ("ws", lambda v: v * 1.944, False), "WINDRTG": ("wd", float, True)}
+    acc = {}
+    for g, (k, f, circ) in conv.items():
+        for t, v in (out["series"].get(g) or {}).get("data") or []:
+            if v is None:
+                continue
+            base = dt.datetime.strptime(t[:16], "%Y-%m-%dT%H:%M") + dt.timedelta(minutes=30)
+            hk = base.strftime("%Y-%m-%dT%H:00")
+            acc.setdefault(hk, {}).setdefault(k, []).append(f(v))
+    for hk, vals in acc.items():
+        rec = st["hours"].setdefault(hk, {})
+        for k, xs in vals.items():
+            if conv_circ(k):
+                sx, cy = sum(math.sin(math.radians(x)) for x in xs), sum(math.cos(math.radians(x)) for x in xs)
+                rec[k] = round(math.degrees(math.atan2(sx, cy)) % 360)
+            else:
+                rec[k] = round(sum(xs) / len(xs), 2)
+    keep = sorted(st["hours"])[-120 * 24:]
+    st["hours"] = {k: st["hours"][k] for k in keep}
+    p.parent.mkdir(exist_ok=True)
+    p.write_text(json.dumps(st, separators=(",", ":")))
+    print(f"obs: {len(acc)} uren bijgewerkt, {len(keep)} in totaal")
+
+
+def conv_circ(k):
+    return k in ("dir", "wd")
 
 
 if __name__ == "__main__":

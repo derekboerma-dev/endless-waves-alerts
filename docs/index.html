@@ -142,6 +142,11 @@ main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;mar
 .empty{color:var(--mut);text-align:center;padding:22px;margin:0 12px;background:var(--card);border:1px solid var(--line);border-radius:14px}
 details{margin:14px 12px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:13px;color:var(--mut)}
 summary{cursor:pointer;color:var(--ink);font-weight:600}
+.mvote{font-size:13px;color:var(--mut);margin:6px 0 0}
+.stab{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}
+.stab th,.stab td{padding:5px 4px;text-align:center;border-bottom:1px solid var(--line);vertical-align:top}
+.stab th:first-child{text-align:left;font-weight:600}
+.stab small{color:var(--mut);font-size:11px}
 .toggle{display:flex;justify-content:flex-end;margin:10px 12px 0}
 .toggle button{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;font-size:12px;padding:5px 12px;cursor:pointer}
 .top .icon{appearance:none;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:0 2px;cursor:pointer}
@@ -427,8 +432,8 @@ function hourSheet(s, i0){
     const lv = H.tide.map(t => t[1]).filter(v => v != null), lo = Math.min(...lv), hi = Math.max(...lv);
     const W = 46 * hrs.length, Ht = 40;
     const pts = H.tide.map((t, k) => t[1] == null ? null : `${k * 46 + 23},${(Ht - 4 - (t[1] - lo) / Math.max(0.1, hi - lo) * (Ht - 8)).toFixed(1)}`).filter(Boolean).join(' ');
-    const other = labs.find(l => l !== model);
-    const diff = other ? H.models[other].map((r, k) => r && rows[k] ? Math.abs(r.g - rows[k].g) >= 2 || Math.abs(r.s - rows[k].s) >= 0.5 : false) : [];
+    const others = labs.filter(l => l !== model);
+    const diff = rows.map((x, k) => x ? others.some(o => { const r = H.models[o][k]; return r && (Math.abs(r.g - x.g) >= 2 || Math.abs(r.s - x.s) >= 0.5); }) : false);
     bg.innerHTML = `<div class="sheet hsheet">
       <div class="hh"><button class="nav" id="hp" ${pos ? '' : 'disabled'} aria-label="vorige dag">‹</button>
         <h3>${esc(s.name)} · ${LONG(d.date)}</h3>
@@ -446,7 +451,7 @@ function hourSheet(s, i0){
       </table></div>
       <div style="padding:0 12px">${tideChart(d, s)}</div>
       <div class="hleg">Kleur golf = graad per uur (${GRADE.slice(1).join(' · ')}). Pijl = richting waarheen golf/wind gaat. Wind: groen offshore · geel zijwind (nog goed) · grijs zwak · rood onshore; klein getal = stoten.
-        Op zee = swellcomponenten (30–50 km uit de kust). ⚠︎ = ECMWF en GFS verschillen sterk.</div>
+        Op zee = swellcomponenten (30–50 km uit de kust). ⚠︎ = dit model verschilt sterk van een ander model. EWAM (DWD, fijnmazig) rekent ±3 dagen vooruit.</div>
     </div>`;
     bg.querySelector('#hx').onclick = close;
     bg.querySelector('#hp').onclick = () => { pos--; paint(); };
@@ -499,7 +504,8 @@ function dayCard(s, d, i){
       ${p.board ? `<div class="brd">Plank: <b>${esc(p.board)}</b></div>` : ''}`
     : `<div class="nogo">Geen uur waarin swell, periode, hoogte en wind samen kloppen.</div>`}
     ${waveStat(d)}
-    ${d.disagree ? '<div class="nogo">ECMWF en GFS verschillen sterk: onzeker.</div>' : ''}
+    ${d.n_models > 1 ? `<div class="mvote">Goed volgens <b>${d.n_good} van ${d.n_models}</b> modellen${d.p != null && d.n_good && Math.abs(d.p - d.n_good / d.n_models) > 0.04 ? ` · gewogen ${Math.round(d.p * 100)}%` : ''}</div>` : ''}
+    ${d.disagree ? '<div class="nogo">De modellen verschillen sterk: onzeker.</div>' : ''}
     ${tideChart(d, s)}
     ${d.hourly ? `<button class="hourbtn" data-hour="${i}">Per uur ›</button>` : ''}
     ${extras(d)}
@@ -585,7 +591,24 @@ function buoyBlock(s){
   return `<div class="sess buoy"><h3>Gemeten</h3>
     <div class="chips"><span class="chip">🛟 ${N(b.last.hs)} m</span><span class="chip">${b.last.tm != null ? N(b.last.tm) + ' s gem.' : ''}</span>${b.last.dir != null ? `<span class="chip">uit ${COMPASS(b.last.dir)}</span>` : ''}<span class="chip">${t}</span></div>
     ${b.wind && b.wind.kn != null ? `<div class="chips"><span class="chip">💨 ${b.wind.kn} kn uit ${COMPASS(b.wind.dir)} (${Math.round(b.wind.dir)}°)</span><span class="chip">${(b.wind.t || '').slice(11, 16)}</span></div>` : ''}
-    <p class="hint">Golf: boei ${esc(b.station || '')} (${N(b.km)} km uit de kust), op open zee. Wind: Rijkswaterstaat ${esc(b.wind_station || '')}. Offshore is hier oost-zuidoost; zuid is zijwind. Modelcorrectie: ${corr}.</p></div>`;
+    <p class="hint">Golf: boei ${esc(b.station || '')} (${N(b.km)} km uit de kust), op open zee. Wind: Rijkswaterstaat ${esc(b.wind_station || '')}. Offshore is hier oost-zuidoost; zuid is zijwind. Modelcorrectie: ${corr}.</p></div>${scoreBlock(b.verify)}`;
+}
+/* modelscore: voorspelling tegenover meting bij de thuisspot (scripts/verify.py) */
+function scoreBlock(v){
+  if (!v || !v.models) return '';
+  const BL = {'0-1': 'vandaag', '1-2': 'morgen', '2-4': 'dag 2–3', '4-7': 'dag 4–6', '7+': 'dag 7+'};
+  const labs = Object.keys(v.models).sort();
+  const pc = x => x == null ? '–' : Math.round(x * 100) + '%';
+  const rows = v.buckets.filter(b => labs.some(l => (v.models[l][b] || {}).n >= 6)).map(b => {
+    const cells = labs.map(l => { const e = v.models[l][b]; if (!e || !e.n) return '<td>–</td>';
+      const w = ((v.weights || {})[b] || {})[l];
+      return `<td><b>${pc(e.wind_ok)}</b><br><small>golf ±${pc(e.hs_err)}</small>${w != null && w !== 1 ? `<br><small>gewicht ${N(w)}</small>` : ''}</td>`; }).join('');
+    const n = Math.max(...labs.map(l => (v.models[l][b] || {}).n || 0));
+    return `<tr><th>${BL[b] || b}<br><small>${n} u</small></th>${cells}</tr>`; }).join('');
+  if (!rows) return '';
+  return `<div class="sess score"><h3>Modelscore</h3>
+    <table class="stab"><tr><th></th>${labs.map(l => `<th>${l}</th>`).join('')}</tr>${rows}</table>
+    <p class="hint">Vet = uren waarin de windsoort klopte (offshore, zwak, zijwind of onshore). Golf ± = gemiddelde afwijking van de golfhoogte op zee t.o.v. de boei. Meer gewicht = telt zwaarder in het dagoordeel; pas na ±14 dagen metingen volledig. Sinds ${esc((v.obs_from || '').slice(0, 10))}.</p></div>`;
 }
 const COMPASS = d => ['N','NNO','NO','ONO','O','OZO','ZO','ZZO','Z','ZZW','ZW','WZW','W','WNW','NW','NNW'][Math.round(((d % 360) + 360) % 360 / 22.5) % 16];
 function sessionsBlock(s){
