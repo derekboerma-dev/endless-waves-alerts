@@ -7,19 +7,20 @@
    "brand": "Channel Islands",
    "length": "5'11",
    "len_in": 71,
-   "width": null,
-   "thick": null,
-   "volume": null,
+   "width": "20",
+   "thick": "2 9/16",
+   "volume": "32,6 L",
    "tail": "swallow",
    "fins": "Thruster · FCS II",
    "origin": "Gekocht op Bali",
-   "note": "Meest gebruikte plank; soms te weinig volume, vooral in NL.",
+   "note": "Maten 5'11 × 20 × 2 9/16, 32,6 L (standaardmaat CI, serienummer 769089). Meest gebruikte plank; in NL soms te weinig drijfvermogen in zwakke golven.",
    "use": "1,0–1,8 m schoon, langere periode · standaard voor performance en barrels",
    "range": [
     1.0,
     1.8
    ],
-   "short": "CI Happy Everyday 5'11"
+   "short": "CI Happy Everyday 5'11",
+   "w_in": 20
   },
   {
    "id": "onfire",
