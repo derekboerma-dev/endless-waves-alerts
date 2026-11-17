@@ -1,9 +1,9 @@
 {
- "updated": "2026-11-16T15:59+00:00",
+ "updated": "2026-11-17T06:17+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 241,
+ "obs_hours": 255,
  "obs_from": "2026-11-06T17:00",
- "runs": 8,
+ "runs": 9,
  "buckets": [
   "0-1",
   "1-2",
@@ -14,140 +14,140 @@
  "models": {
   "ECMWF": {
    "0-1": {
-    "n": 20,
-    "n_wind": 19,
-    "hs_err": 0.142,
-    "hs_ratio": 0.904,
-    "ws_err": 3.2,
-    "wd_err": 21,
-    "wind_ok": 0.789
+    "n": 24,
+    "n_wind": 23,
+    "hs_err": 0.121,
+    "hs_ratio": 0.924,
+    "ws_err": 3.6,
+    "wd_err": 18,
+    "wind_ok": 0.826
    },
    "1-2": {
-    "n": 100,
-    "n_wind": 100,
-    "hs_err": 0.272,
-    "hs_ratio": 0.918,
+    "n": 106,
+    "n_wind": 106,
+    "hs_err": 0.268,
+    "hs_ratio": 0.92,
     "ws_err": 4.2,
     "wd_err": 12,
-    "wind_ok": 0.84
+    "wind_ok": 0.849
    },
    "2-4": {
-    "n": 168,
-    "n_wind": 152,
-    "hs_err": 0.306,
-    "hs_ratio": 0.932,
+    "n": 180,
+    "n_wind": 164,
+    "hs_err": 0.304,
+    "hs_ratio": 0.928,
     "ws_err": 5.7,
-    "wd_err": 17,
-    "wind_ok": 0.599
+    "wd_err": 16,
+    "wind_ok": 0.628
    },
    "4-7": {
-    "n": 132,
-    "n_wind": 127,
-    "hs_err": 0.335,
-    "hs_ratio": 0.903,
-    "ws_err": 7.3,
-    "wd_err": 23,
-    "wind_ok": 0.543
+    "n": 150,
+    "n_wind": 145,
+    "hs_err": 0.35,
+    "hs_ratio": 0.881,
+    "ws_err": 7.5,
+    "wd_err": 26,
+    "wind_ok": 0.586
    },
    "7+": {
-    "n": 12,
-    "n_wind": 12,
-    "hs_err": 0.182,
+    "n": 20,
+    "n_wind": 20,
+    "hs_err": 0.286,
     "hs_ratio": 1.138,
-    "ws_err": 12.3,
-    "wd_err": 28,
-    "wind_ok": 0.75
+    "ws_err": 12.1,
+    "wd_err": 44,
+    "wind_ok": 0.65
    }
   },
   "GFS": {
    "0-1": {
-    "n": 20,
-    "n_wind": 19,
-    "hs_err": 0.14,
-    "hs_ratio": 0.904,
-    "ws_err": 3.1,
-    "wd_err": 21,
-    "wind_ok": 0.789
-   },
-   "1-2": {
-    "n": 100,
-    "n_wind": 100,
-    "hs_err": 0.206,
-    "hs_ratio": 1.0,
-    "ws_err": 3.9,
-    "wd_err": 12,
-    "wind_ok": 0.84
-   },
-   "2-4": {
-    "n": 168,
-    "n_wind": 152,
-    "hs_err": 0.252,
-    "hs_ratio": 0.955,
+    "n": 24,
+    "n_wind": 23,
+    "hs_err": 0.135,
+    "hs_ratio": 0.953,
     "ws_err": 3.5,
     "wd_err": 18,
-    "wind_ok": 0.763
+    "wind_ok": 0.826
+   },
+   "1-2": {
+    "n": 106,
+    "n_wind": 106,
+    "hs_err": 0.201,
+    "hs_ratio": 1.007,
+    "ws_err": 3.8,
+    "wd_err": 12,
+    "wind_ok": 0.849
+   },
+   "2-4": {
+    "n": 180,
+    "n_wind": 164,
+    "hs_err": 0.249,
+    "hs_ratio": 0.963,
+    "ws_err": 3.6,
+    "wd_err": 18,
+    "wind_ok": 0.78
    },
    "4-7": {
-    "n": 132,
-    "n_wind": 127,
-    "hs_err": 0.273,
-    "hs_ratio": 1.057,
-    "ws_err": 5.0,
-    "wd_err": 44,
-    "wind_ok": 0.654
+    "n": 150,
+    "n_wind": 145,
+    "hs_err": 0.287,
+    "hs_ratio": 1.041,
+    "ws_err": 5.2,
+    "wd_err": 45,
+    "wind_ok": 0.655
    },
    "7+": {
-    "n": 12,
-    "n_wind": 12,
-    "hs_err": 0.207,
-    "hs_ratio": 1.241,
-    "ws_err": 2.6,
-    "wd_err": 116,
-    "wind_ok": 0.167
+    "n": 20,
+    "n_wind": 20,
+    "hs_err": 0.424,
+    "hs_ratio": 1.206,
+    "ws_err": 3.6,
+    "wd_err": 109,
+    "wind_ok": 0.1
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 0,
-    "n_wind": 84,
-    "hs_err": null,
-    "hs_ratio": null,
-    "ws_err": 4.2,
+    "n": 2,
+    "n_wind": 90,
+    "hs_err": 0.323,
+    "hs_ratio": 0.795,
+    "ws_err": 4.1,
     "wd_err": 12,
-    "wind_ok": 0.81
+    "wind_ok": 0.822
    },
    "2-4": {
     "n": 0,
-    "n_wind": 49,
+    "n_wind": 55,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 4.0,
+    "ws_err": 3.9,
     "wd_err": 11,
-    "wind_ok": 0.735
+    "wind_ok": 0.764
    },
    "0-1": {
-    "n": 1,
-    "n_wind": 18,
-    "hs_err": 0.02,
-    "hs_ratio": 0.981,
-    "ws_err": 3.1,
-    "wd_err": 21,
-    "wind_ok": 0.778
+    "n": 5,
+    "n_wind": 22,
+    "hs_err": 0.041,
+    "hs_ratio": 1.033,
+    "ws_err": 3.6,
+    "wd_err": 18,
+    "wind_ok": 0.818
    }
   }
  },
  "weights": {
   "1-2": {
-   "ECMWF": 0.97,
-   "GFS": 1.04
+   "ECMWF": 0.96,
+   "GFS": 1.05
   },
   "2-4": {
-   "ECMWF": 0.9,
-   "GFS": 1.15
+   "ECMWF": 0.89,
+   "GFS": 1.16
   },
   "4-7": {
    "ECMWF": 0.94,
-   "GFS": 1.08
+   "GFS": 1.07
   }
  },
  "min_hours": 36,
