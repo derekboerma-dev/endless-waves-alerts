@@ -1,1 +1,32 @@
-{}
+{
+ "Wijk aan Zee": {
+  "height_ratio": 0.75,
+  "n": 1,
+  "n_compared": 1,
+  "mean_diff": 0,
+  "hints": [],
+  "sessions": [
+   {
+    "date": "2026-11-17",
+    "time": "ochtend",
+    "score": 1,
+    "board": "Lost 7'2",
+    "note": "Het was clean maar golven waren klein (knie tot heup hoogte). Te klein voor mij",
+    "height": 0.3,
+    "predicted": 1,
+    "cond": {
+     "model": "ECMWF",
+     "hs": 0.4,
+     "hs_off": 1.5,
+     "tp": 7,
+     "dir": "NNW",
+     "ws": 15,
+     "wd": "O",
+     "tide": "opkomend, half tij",
+     "hs_ok": false
+    },
+    "diff": 0
+   }
+  ]
+ }
+}
