@@ -1,8 +1,32 @@
 {
  "generated": "2026-11-18",
- "fetched_at": "2026-11-18T13:19+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-18T21:54+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-21",
+   "end": "2026-11-22",
+   "days": 2,
+   "lead_days": 3,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
@@ -11,10 +35,33 @@
    "region_name": "Wijk aan Zee",
    "country": "NL",
    "mode": "home",
-   "start": "2026-11-22",
-   "end": "2026-11-23",
+   "start": "2026-11-21",
+   "end": "2026-11-22",
    "days": 2,
-   "lead_days": 4,
+   "lead_days": 3,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Wijk aan Zee"
+   ],
+   "dates": [
+    "2026-11-21",
+    "2026-11-22"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "wijkaanzee",
+   "region_name": "Wijk aan Zee",
+   "country": "NL",
+   "mode": "home",
+   "start": "2026-11-24",
+   "end": "2026-11-24",
+   "days": 1,
+   "lead_days": 6,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
    "strict_days": 0,
@@ -23,12 +70,11 @@
     "Wijk aan Zee"
    ],
    "dates": [
-    "2026-11-22",
-    "2026-11-23"
+    "2026-11-24"
    ],
    "qualifies": false,
    "below_threshold": [
-    "begint over 4 dagen (thuisspot: max 3)"
+    "begint over 6 dagen (thuisspot: max 3)"
    ]
   }
  ],
