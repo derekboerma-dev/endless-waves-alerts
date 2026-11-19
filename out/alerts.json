@@ -1,8 +1,36 @@
 {
  "generated": "2026-11-19",
- "fetched_at": "2026-11-19T06:14+00:00",
+ "fetched_at": "2026-11-19T13:00+00:00",
  "notify": true,
  "new": [
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-29",
+   "end": "2026-12-01",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 2,
+   "powerful_days": 3,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
+ "upgraded": [],
+ "cancelled": [
   {
    "region": "biarritz",
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
@@ -27,21 +55,22 @@
     "2026-11-25"
    ],
    "qualifies": true,
-   "below_threshold": []
+   "below_threshold": [],
+   "first_alert": "2026-11-19",
+   "last_tier": "waarschijnlijk",
+   "cancelled": "2026-11-19"
   }
  ],
- "upgraded": [],
- "cancelled": [],
  "all_runs": [
   {
    "region": "wijkaanzee",
    "region_name": "Wijk aan Zee",
    "country": "NL",
    "mode": "home",
-   "start": "2026-11-22",
+   "start": "2026-11-21",
    "end": "2026-11-22",
-   "days": 1,
-   "lead_days": 3,
+   "days": 2,
+   "lead_days": 2,
    "tier": "bevestigd",
    "models_agree_days": 0,
    "strict_days": 1,
@@ -50,6 +79,7 @@
     "Wijk aan Zee"
    ],
    "dates": [
+    "2026-11-21",
     "2026-11-22"
    ],
    "qualifies": true,
@@ -66,7 +96,7 @@
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
-   "strict_days": 0,
+   "strict_days": 1,
    "powerful_days": 0,
    "spots": [
     "Wijk aan Zee"
@@ -80,6 +110,33 @@
    ]
   },
   {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-25",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": false,
+   "below_threshold": [
+    "0 strenge dagen (minimaal 1)"
+   ]
+  },
+  {
    "region": "biarritz",
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
@@ -89,9 +146,9 @@
    "days": 3,
    "lead_days": 4,
    "tier": "waarschijnlijk",
-   "models_agree_days": 1,
+   "models_agree_days": 0,
    "strict_days": 0,
-   "powerful_days": 1,
+   "powerful_days": 0,
    "spots": [
     "La Gravière (Hossegor)",
     "Lafitenia",
@@ -102,8 +159,62 @@
     "2026-11-24",
     "2026-11-25"
    ],
+   "qualifies": false,
+   "below_threshold": [
+    "0 strenge of krachtige dagen (minimaal 1)"
+   ]
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-29",
+   "end": "2026-12-01",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 2,
+   "powerful_days": 3,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01"
+   ],
    "qualifies": true,
    "below_threshold": []
+  },
+  {
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-25",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "Beliche",
+    "Tonel"
+   ],
+   "dates": [
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": false,
+   "below_threshold": [
+    "modellen eens op 1 van minimaal 2 dagen"
+   ]
   }
  ],
  "problems": []
