@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-19T13:09+00:00",
+ "updated": "2026-11-19T13:27+00:00",
  "spot": "Wijk aan Zee",
  "obs_hours": 310,
  "obs_from": "2026-11-06T17:00",
@@ -24,39 +24,39 @@
    },
    "1-2": {
     "n": 145,
-    "n_wind": 144,
+    "n_wind": 145,
     "hs_err": 0.292,
     "hs_ratio": 0.937,
-    "ws_err": 4.5,
+    "ws_err": 4.4,
     "wd_err": 12,
-    "wind_ok": 0.847
+    "wind_ok": 0.848
    },
    "2-4": {
     "n": 258,
-    "n_wind": 240,
+    "n_wind": 242,
     "hs_err": 0.345,
     "hs_ratio": 0.957,
-    "ws_err": 6.6,
+    "ws_err": 6.5,
     "wd_err": 23,
-    "wind_ok": 0.604
+    "wind_ok": 0.607
    },
    "4-7": {
     "n": 267,
-    "n_wind": 259,
+    "n_wind": 262,
     "hs_err": 0.431,
     "hs_ratio": 0.934,
-    "ws_err": 9.1,
+    "ws_err": 9.0,
     "wd_err": 49,
-    "wind_ok": 0.502
+    "wind_ok": 0.5
    },
    "7+": {
     "n": 132,
-    "n_wind": 128,
+    "n_wind": 132,
     "hs_err": 0.483,
     "hs_ratio": 0.99,
     "ws_err": 8.4,
-    "wd_err": 57,
-    "wind_ok": 0.617
+    "wd_err": 58,
+    "wind_ok": 0.606
    }
   },
   "GFS": {
@@ -71,25 +71,25 @@
    },
    "1-2": {
     "n": 145,
-    "n_wind": 144,
-    "hs_err": 0.241,
+    "n_wind": 145,
+    "hs_err": 0.242,
     "hs_ratio": 1.006,
     "ws_err": 4.2,
     "wd_err": 12,
-    "wind_ok": 0.847
+    "wind_ok": 0.848
    },
    "2-4": {
     "n": 258,
-    "n_wind": 240,
+    "n_wind": 242,
     "hs_err": 0.319,
     "hs_ratio": 0.942,
     "ws_err": 4.6,
     "wd_err": 24,
-    "wind_ok": 0.758
+    "wind_ok": 0.76
    },
    "4-7": {
     "n": 267,
-    "n_wind": 259,
+    "n_wind": 262,
     "hs_err": 0.481,
     "hs_ratio": 0.975,
     "ws_err": 6.1,
@@ -98,32 +98,32 @@
    },
    "7+": {
     "n": 132,
-    "n_wind": 128,
+    "n_wind": 132,
     "hs_err": 0.621,
     "hs_ratio": 1.011,
     "ws_err": 6.0,
     "wd_err": 73,
-    "wind_ok": 0.523
+    "wind_ok": 0.53
    }
   },
   "EWAM": {
    "1-2": {
     "n": 41,
-    "n_wind": 128,
+    "n_wind": 129,
     "hs_err": 0.259,
     "hs_ratio": 1.038,
-    "ws_err": 4.5,
+    "ws_err": 4.4,
     "wd_err": 12,
-    "wind_ok": 0.828
+    "wind_ok": 0.829
    },
    "2-4": {
     "n": 27,
-    "n_wind": 101,
+    "n_wind": 103,
     "hs_err": 0.277,
     "hs_ratio": 1.415,
     "ws_err": 5.0,
-    "wd_err": 22,
-    "wind_ok": 0.713
+    "wd_err": 23,
+    "wind_ok": 0.709
    },
    "0-1": {
     "n": 12,
@@ -151,7 +151,7 @@
    "GFS": 1.06
   },
   "7+": {
-   "ECMWF": 1.08,
+   "ECMWF": 1.07,
    "GFS": 0.94
   }
  },
