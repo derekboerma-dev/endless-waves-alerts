@@ -1,27 +1,30 @@
 {
- "generated": "2026-11-18",
- "fetched_at": "2026-11-18T21:54+00:00",
+ "generated": "2026-11-19",
+ "fetched_at": "2026-11-19T06:14+00:00",
  "notify": true,
  "new": [
   {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
-   "start": "2026-11-21",
-   "end": "2026-11-22",
-   "days": 2,
-   "lead_days": 3,
-   "tier": "bevestigd",
-   "models_agree_days": 0,
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-25",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
    "strict_days": 0,
-   "powerful_days": 0,
+   "powerful_days": 1,
    "spots": [
-    "Wijk aan Zee"
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
    ],
    "dates": [
-    "2026-11-21",
-    "2026-11-22"
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
    ],
    "qualifies": true,
    "below_threshold": []
@@ -35,19 +38,18 @@
    "region_name": "Wijk aan Zee",
    "country": "NL",
    "mode": "home",
-   "start": "2026-11-21",
+   "start": "2026-11-22",
    "end": "2026-11-22",
-   "days": 2,
+   "days": 1,
    "lead_days": 3,
    "tier": "bevestigd",
    "models_agree_days": 0,
-   "strict_days": 0,
+   "strict_days": 1,
    "powerful_days": 0,
    "spots": [
     "Wijk aan Zee"
    ],
    "dates": [
-    "2026-11-21",
     "2026-11-22"
    ],
    "qualifies": true,
@@ -61,7 +63,7 @@
    "start": "2026-11-24",
    "end": "2026-11-24",
    "days": 1,
-   "lead_days": 6,
+   "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
    "strict_days": 0,
@@ -74,8 +76,34 @@
    ],
    "qualifies": false,
    "below_threshold": [
-    "begint over 6 dagen (thuisspot: max 3)"
+    "begint over 5 dagen (thuisspot: max 3)"
    ]
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-25",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": true,
+   "below_threshold": []
   }
  ],
  "problems": []

@@ -5,9 +5,9 @@
    "region_name": "Wijk aan Zee",
    "country": "NL",
    "mode": "home",
-   "start": "2026-11-21",
+   "start": "2026-11-22",
    "end": "2026-11-22",
-   "days": 2,
+   "days": 1,
    "lead_days": 3,
    "tier": "bevestigd",
    "models_agree_days": 0,
@@ -17,13 +17,40 @@
     "Wijk aan Zee"
    ],
    "dates": [
-    "2026-11-21",
     "2026-11-22"
    ],
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-18",
    "last_tier": "bevestigd"
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-25",
+   "days": 3,
+   "lead_days": 4,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 1,
+   "strict_days": 0,
+   "powerful_days": 1,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-19",
+   "last_tier": "waarschijnlijk"
   }
  ]
 }
