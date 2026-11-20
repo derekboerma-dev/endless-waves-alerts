@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-20T13:27+00:00",
+ "updated": "2026-11-20T20:23+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 334,
+ "obs_hours": 341,
  "obs_from": "2026-11-06T17:00",
  "runs": 12,
  "buckets": [
@@ -23,40 +23,40 @@
     "wind_ok": 0.865
    },
    "1-2": {
-    "n": 161,
-    "n_wind": 161,
-    "hs_err": 0.305,
-    "hs_ratio": 0.923,
+    "n": 168,
+    "n_wind": 168,
+    "hs_err": 0.313,
+    "hs_ratio": 0.918,
     "ws_err": 4.5,
-    "wd_err": 15,
-    "wind_ok": 0.839
+    "wd_err": 17,
+    "wind_ok": 0.833
    },
    "2-4": {
-    "n": 290,
-    "n_wind": 274,
-    "hs_err": 0.355,
-    "hs_ratio": 0.928,
-    "ws_err": 6.4,
-    "wd_err": 24,
-    "wind_ok": 0.609
+    "n": 304,
+    "n_wind": 288,
+    "hs_err": 0.361,
+    "hs_ratio": 0.911,
+    "ws_err": 6.3,
+    "wd_err": 25,
+    "wind_ok": 0.59
    },
    "4-7": {
-    "n": 315,
-    "n_wind": 310,
-    "hs_err": 0.454,
-    "hs_ratio": 0.915,
-    "ws_err": 8.5,
-    "wd_err": 54,
-    "wind_ok": 0.474
+    "n": 336,
+    "n_wind": 331,
+    "hs_err": 0.48,
+    "hs_ratio": 0.903,
+    "ws_err": 8.2,
+    "wd_err": 53,
+    "wind_ok": 0.45
    },
    "7+": {
-    "n": 205,
-    "n_wind": 205,
-    "hs_err": 0.851,
-    "hs_ratio": 0.729,
-    "ws_err": 6.9,
-    "wd_err": 77,
-    "wind_ok": 0.478
+    "n": 240,
+    "n_wind": 240,
+    "hs_err": 1.023,
+    "hs_ratio": 0.671,
+    "ws_err": 6.4,
+    "wd_err": 81,
+    "wind_ok": 0.496
    }
   },
   "GFS": {
@@ -70,60 +70,60 @@
     "wind_ok": 0.865
    },
    "1-2": {
-    "n": 161,
-    "n_wind": 161,
-    "hs_err": 0.262,
-    "hs_ratio": 0.991,
+    "n": 168,
+    "n_wind": 168,
+    "hs_err": 0.264,
+    "hs_ratio": 0.981,
     "ws_err": 4.3,
-    "wd_err": 16,
-    "wind_ok": 0.839
+    "wd_err": 17,
+    "wind_ok": 0.833
    },
    "2-4": {
-    "n": 290,
-    "n_wind": 274,
-    "hs_err": 0.34,
+    "n": 304,
+    "n_wind": 288,
+    "hs_err": 0.334,
     "hs_ratio": 0.906,
     "ws_err": 4.6,
-    "wd_err": 26,
-    "wind_ok": 0.73
+    "wd_err": 28,
+    "wind_ok": 0.705
    },
    "4-7": {
-    "n": 315,
-    "n_wind": 310,
-    "hs_err": 0.499,
-    "hs_ratio": 0.889,
-    "ws_err": 5.8,
-    "wd_err": 51,
-    "wind_ok": 0.616
+    "n": 336,
+    "n_wind": 331,
+    "hs_err": 0.541,
+    "hs_ratio": 0.864,
+    "ws_err": 5.7,
+    "wd_err": 53,
+    "wind_ok": 0.607
    },
    "7+": {
-    "n": 205,
-    "n_wind": 205,
-    "hs_err": 1.034,
-    "hs_ratio": 0.627,
-    "ws_err": 6.2,
-    "wd_err": 87,
-    "wind_ok": 0.454
+    "n": 240,
+    "n_wind": 240,
+    "hs_err": 1.132,
+    "hs_ratio": 0.538,
+    "ws_err": 5.9,
+    "wd_err": 88,
+    "wind_ok": 0.492
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 57,
-    "n_wind": 145,
-    "hs_err": 0.229,
-    "hs_ratio": 1.107,
-    "ws_err": 4.6,
-    "wd_err": 16,
-    "wind_ok": 0.821
+    "n": 64,
+    "n_wind": 152,
+    "hs_err": 0.221,
+    "hs_ratio": 1.118,
+    "ws_err": 4.5,
+    "wd_err": 17,
+    "wind_ok": 0.816
    },
    "2-4": {
-    "n": 45,
-    "n_wind": 135,
-    "hs_err": 0.22,
-    "hs_ratio": 1.024,
+    "n": 52,
+    "n_wind": 149,
+    "hs_err": 0.211,
+    "hs_ratio": 1.076,
     "ws_err": 5.3,
     "wd_err": 27,
-    "wind_ok": 0.711
+    "wind_ok": 0.664
    },
    "0-1": {
     "n": 19,
@@ -136,12 +136,12 @@
    },
    "4-7": {
     "n": 0,
-    "n_wind": 9,
+    "n_wind": 16,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 6.4,
-    "wd_err": 83,
-    "wind_ok": 0.556
+    "ws_err": 6.0,
+    "wd_err": 72,
+    "wind_ok": 0.312
    }
   }
  },
@@ -151,13 +151,13 @@
    "GFS": 0.99
   },
   "1-2": {
-   "ECMWF": 0.95,
-   "GFS": 1.02,
+   "ECMWF": 0.94,
+   "GFS": 1.01,
    "EWAM": 1.02
   },
   "2-4": {
-   "ECMWF": 0.83,
-   "GFS": 1.02,
+   "ECMWF": 0.84,
+   "GFS": 1.03,
    "EWAM": 1.04
   },
   "4-7": {
@@ -165,8 +165,8 @@
    "GFS": 1.05
   },
   "7+": {
-   "ECMWF": 1.07,
-   "GFS": 0.94
+   "ECMWF": 1.04,
+   "GFS": 0.97
   }
  },
  "min_hours": 36,
