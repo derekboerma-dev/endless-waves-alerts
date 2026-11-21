@@ -1,8 +1,5 @@
-Surf: 5 meldingen – Cap Ferret, Crozon, Peniche, Zuidwest-Frankrijk
-+ Crozon (Lostmarc'h): ma 23 nov – di 24 nov (2 d, bevestigd, over 2 d)
-+ Crozon (Lostmarc'h): vr 27 nov – za 28 nov (2 d, waarschijnlijk, over 6 d)
-+ Cap Ferret: di 1 dec – do 3 dec (3 d, kans, over 10 d)
-+ Peniche: za 21 nov – wo 25 nov (5 d, bevestigd, over 0 d)
-↑ Zuidwest-Frankrijk (Hossegor – Guéthary): za 28 nov – wo 2 dec (5 d, waarschijnlijk, over 7 d) (was kans)
-× vervallen: Wijk aan Zee za 21 nov
-× vervallen: Sagres zo 22 nov
+Surf: Vendée (Bud Bud) (waarschijnlijk)
++ Vendée (Bud Bud): do 26 nov – za 28 nov (3 d, waarschijnlijk, over 5 d)
+× vervallen: Zuidwest-Frankrijk (Hossegor – Guéthary) za 28 nov
+× vervallen: Crozon (Lostmarc'h) ma 23 nov
+× vervallen: Cap Ferret di 1 dec
