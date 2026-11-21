@@ -1,51 +1,74 @@
 {
- "generated": "2026-11-20",
- "fetched_at": "2026-11-20T20:13+00:00",
+ "generated": "2026-11-21",
+ "fetched_at": "2026-11-21T06:14+00:00",
  "notify": true,
  "new": [
   {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
-   "start": "2026-11-21",
-   "end": "2026-11-21",
-   "days": 1,
-   "lead_days": 1,
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-24",
+   "days": 2,
+   "lead_days": 2,
    "tier": "bevestigd",
-   "models_agree_days": 1,
+   "models_agree_days": 0,
    "strict_days": 0,
    "powerful_days": 0,
    "spots": [
-    "Wijk aan Zee"
+    "La Palue",
+    "Lostmarc'h"
    ],
    "dates": [
-    "2026-11-21"
+    "2026-11-23",
+    "2026-11-24"
    ],
    "qualifies": true,
    "below_threshold": []
   },
   {
-   "region": "biarritz",
-   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-29",
-   "end": "2026-12-03",
-   "days": 5,
-   "lead_days": 9,
-   "tier": "kans",
-   "models_agree_days": 5,
-   "strict_days": 4,
-   "powerful_days": 4,
+   "start": "2026-11-27",
+   "end": "2026-11-28",
+   "days": 2,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
    "spots": [
-    "La Gravière (Hossegor)",
-    "Lafitenia",
-    "Les Cavaliers (Anglet)"
+    "La Palue",
+    "Lostmarc'h"
    ],
    "dates": [
-    "2026-11-29",
-    "2026-11-30",
+    "2026-11-27",
+    "2026-11-28"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-01",
+   "end": "2026-12-03",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 1,
+   "powerful_days": 2,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
     "2026-12-01",
     "2026-12-02",
     "2026-12-03"
@@ -54,66 +77,70 @@
    "below_threshold": []
   },
   {
-   "region": "sagres",
-   "region_name": "Sagres",
+   "region": "peniche",
+   "region_name": "Peniche",
    "country": "PT",
    "mode": "trip",
-   "start": "2026-11-22",
-   "end": "2026-11-24",
-   "days": 3,
-   "lead_days": 2,
+   "start": "2026-11-21",
+   "end": "2026-11-25",
+   "days": 5,
+   "lead_days": 0,
    "tier": "bevestigd",
    "models_agree_days": 2,
    "strict_days": 0,
    "powerful_days": 0,
    "spots": [
-    "Beliche",
-    "Tonel"
+    "Lagide",
+    "Supertubos"
    ],
    "dates": [
+    "2026-11-21",
     "2026-11-22",
     "2026-11-23",
-    "2026-11-24"
+    "2026-11-24",
+    "2026-11-25"
    ],
    "qualifies": true,
    "below_threshold": []
   }
  ],
- "upgraded": [],
+ "upgraded": [
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-28",
+   "end": "2026-12-02",
+   "days": 5,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 4,
+   "strict_days": 3,
+   "powerful_days": 4,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-28",
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "previous_tier": "kans"
+  }
+ ],
  "cancelled": [
   {
    "region": "wijkaanzee",
    "region_name": "Wijk aan Zee",
    "country": "NL",
    "mode": "home",
-   "start": "2026-11-22",
-   "end": "2026-11-23",
-   "days": 2,
-   "lead_days": 3,
-   "tier": "bevestigd",
-   "models_agree_days": 0,
-   "strict_days": 0,
-   "powerful_days": 0,
-   "spots": [
-    "Wijk aan Zee"
-   ],
-   "dates": [
-    "2026-11-22",
-    "2026-11-23"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-18",
-   "last_tier": "bevestigd",
-   "cancelled": "2026-11-20"
-  }
- ],
- "all_runs": [
-  {
-   "region": "wijkaanzee",
-   "region_name": "Wijk aan Zee",
-   "country": "NL",
-   "mode": "home",
    "start": "2026-11-21",
    "end": "2026-11-21",
    "days": 1,
@@ -129,35 +156,10 @@
     "2026-11-21"
    ],
    "qualifies": true,
-   "below_threshold": []
-  },
-  {
-   "region": "biarritz",
-   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-29",
-   "end": "2026-12-03",
-   "days": 5,
-   "lead_days": 9,
-   "tier": "kans",
-   "models_agree_days": 5,
-   "strict_days": 4,
-   "powerful_days": 4,
-   "spots": [
-    "La Gravière (Hossegor)",
-    "Lafitenia",
-    "Les Cavaliers (Anglet)"
-   ],
-   "dates": [
-    "2026-11-29",
-    "2026-11-30",
-    "2026-12-01",
-    "2026-12-02",
-    "2026-12-03"
-   ],
-   "qualifies": true,
-   "below_threshold": []
+   "below_threshold": [],
+   "first_alert": "2026-11-20",
+   "last_tier": "bevestigd",
+   "cancelled": "2026-11-21"
   },
   {
    "region": "sagres",
@@ -182,7 +184,168 @@
     "2026-11-24"
    ],
    "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-20",
+   "last_tier": "bevestigd",
+   "cancelled": "2026-11-21"
+  }
+ ],
+ "all_runs": [
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-23",
+   "end": "2026-11-24",
+   "days": 2,
+   "lead_days": 2,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-11-23",
+    "2026-11-24"
+   ],
+   "qualifies": true,
    "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-27",
+   "end": "2026-11-28",
+   "days": 2,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-11-27",
+    "2026-11-28"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-01",
+   "end": "2026-12-03",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 1,
+   "powerful_days": 2,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-28",
+   "end": "2026-12-02",
+   "days": 5,
+   "lead_days": 7,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 4,
+   "strict_days": 3,
+   "powerful_days": 4,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-11-28",
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-21",
+   "end": "2026-11-25",
+   "days": 5,
+   "lead_days": 0,
+   "tier": "bevestigd",
+   "models_agree_days": 2,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "Lagide",
+    "Supertubos"
+   ],
+   "dates": [
+    "2026-11-21",
+    "2026-11-22",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "sagres",
+   "region_name": "Sagres",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-11-22",
+   "end": "2026-11-25",
+   "days": 4,
+   "lead_days": 1,
+   "tier": "bevestigd",
+   "models_agree_days": 1,
+   "strict_days": 1,
+   "powerful_days": 1,
+   "spots": [
+    "Beliche",
+    "Tonel"
+   ],
+   "dates": [
+    "2026-11-22",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25"
+   ],
+   "qualifies": false,
+   "below_threshold": [
+    "modellen eens op 1 van minimaal 2 dagen"
+   ]
   }
  ],
  "problems": []
