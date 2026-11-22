@@ -5,9 +5,9 @@
    "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-27",
-   "end": "2026-11-28",
-   "days": 2,
+   "start": "2026-11-26",
+   "end": "2026-11-29",
+   "days": 4,
    "lead_days": 6,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
@@ -18,8 +18,10 @@
     "Lostmarc'h"
    ],
    "dates": [
+    "2026-11-26",
     "2026-11-27",
-    "2026-11-28"
+    "2026-11-28",
+    "2026-11-29"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -60,8 +62,8 @@
    "country": "FR",
    "mode": "trip",
    "start": "2026-11-26",
-   "end": "2026-11-28",
-   "days": 3,
+   "end": "2026-11-29",
+   "days": 4,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
@@ -74,12 +76,39 @@
    "dates": [
     "2026-11-26",
     "2026-11-27",
-    "2026-11-28"
+    "2026-11-28",
+    "2026-11-29"
    ],
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-21",
    "last_tier": "waarschijnlijk"
+  },
+  {
+   "region": "peniche",
+   "region_name": "Peniche",
+   "country": "PT",
+   "mode": "trip",
+   "start": "2026-12-01",
+   "end": "2026-12-03",
+   "days": 3,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 2,
+   "spots": [
+    "Lagide"
+   ],
+   "dates": [
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-22",
+   "last_tier": "kans"
   }
  ]
 }
