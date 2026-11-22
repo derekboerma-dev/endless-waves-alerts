@@ -1,8 +1,60 @@
 {
  "generated": "2026-11-22",
- "fetched_at": "2026-11-22T19:36+00:00",
- "notify": false,
- "new": [],
+ "fetched_at": "2026-11-22T21:07+00:00",
+ "notify": true,
+ "new": [
+  {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-02",
+   "end": "2026-12-04",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 2,
+   "powerful_days": 3,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-02",
+   "end": "2026-12-04",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  }
+ ],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
@@ -69,7 +121,7 @@
    "tier": "kans",
    "models_agree_days": 2,
    "strict_days": 1,
-   "powerful_days": 1,
+   "powerful_days": 0,
    "spots": [
     "La Palue",
     "Lostmarc'h"
@@ -109,6 +161,31 @@
    ]
   },
   {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-02",
+   "end": "2026-12-04",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 2,
+   "powerful_days": 3,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
    "region": "biarritz",
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
@@ -132,6 +209,32 @@
     "2026-11-28",
     "2026-11-29",
     "2026-11-30"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "biarritz",
+   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-02",
+   "end": "2026-12-04",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 3,
+   "spots": [
+    "La Gravière (Hossegor)",
+    "Lafitenia",
+    "Les Cavaliers (Anglet)"
+   ],
+   "dates": [
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04"
    ],
    "qualifies": true,
    "below_threshold": []
@@ -186,33 +289,6 @@
    "qualifies": false,
    "below_threshold": [
     "modellen eens op 0 van minimaal 2 dagen"
-   ]
-  },
-  {
-   "region": "sagres",
-   "region_name": "Sagres",
-   "country": "PT",
-   "mode": "trip",
-   "start": "2026-11-22",
-   "end": "2026-11-24",
-   "days": 3,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 1,
-   "strict_days": 0,
-   "powerful_days": 0,
-   "spots": [
-    "Beliche",
-    "Tonel"
-   ],
-   "dates": [
-    "2026-11-22",
-    "2026-11-23",
-    "2026-11-24"
-   ],
-   "qualifies": false,
-   "below_threshold": [
-    "modellen eens op 1 van minimaal 2 dagen"
    ]
   }
  ],

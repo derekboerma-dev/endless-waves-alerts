@@ -1,11 +1,32 @@
 {
  "Wijk aan Zee": {
   "height_ratio": 0.75,
-  "n": 1,
-  "n_compared": 1,
+  "n": 2,
+  "n_compared": 2,
   "mean_diff": 0,
   "hints": [],
   "sessions": [
+   {
+    "date": "2026-11-22",
+    "time": "middag",
+    "score": 1,
+    "board": "Lost 7'2",
+    "note": "Het was clean en mooie lijnen van golven. Wel waren de golven te klein en niet waard om te gaan",
+    "height": 0.3,
+    "predicted": 1,
+    "cond": {
+     "model": "ECMWF",
+     "hs": 0.4,
+     "hs_off": 0.8,
+     "tp": 6,
+     "dir": "NNW",
+     "ws": 5,
+     "wd": "ONO",
+     "tide": "hoog water",
+     "hs_ok": false
+    },
+    "diff": 0
+   },
    {
     "date": "2026-11-17",
     "time": "ochtend",
