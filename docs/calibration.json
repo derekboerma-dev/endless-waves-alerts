@@ -13,6 +13,7 @@
     "board": "Lost 7'2",
     "note": "Het was clean en mooie lijnen van golven. Wel waren de golven te klein en niet waard om te gaan",
     "height": 0.3,
+    "tags": null,
     "predicted": 1,
     "cond": {
      "model": "ECMWF",
@@ -25,6 +26,13 @@
      "tide": "hoog water",
      "hs_ok": false
     },
+    "obs": {
+     "hs": 0.72,
+     "tm": 5.41,
+     "dir": "N",
+     "ws": 8,
+     "wd": "O"
+    },
     "diff": 0
    },
    {
@@ -34,6 +42,7 @@
     "board": "Lost 7'2",
     "note": "Het was clean maar golven waren klein (knie tot heup hoogte). Te klein voor mij",
     "height": 0.3,
+    "tags": null,
     "predicted": 1,
     "cond": {
      "model": "ECMWF",
@@ -45,6 +54,13 @@
      "wd": "O",
      "tide": "opkomend, half tij",
      "hs_ok": false
+    },
+    "obs": {
+     "hs": 0.69,
+     "tm": 4.95,
+     "dir": "O",
+     "ws": 21,
+     "wd": "O"
     },
     "diff": 0
    }

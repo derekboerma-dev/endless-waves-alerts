@@ -1,60 +1,8 @@
 {
  "generated": "2026-11-22",
- "fetched_at": "2026-11-22T21:07+00:00",
- "notify": true,
- "new": [
-  {
-   "region": "capferret",
-   "region_name": "Cap Ferret",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-04",
-   "days": 3,
-   "lead_days": 10,
-   "tier": "kans",
-   "models_agree_days": 3,
-   "strict_days": 2,
-   "powerful_days": 3,
-   "spots": [
-    "Cap Ferret",
-    "Le Truc Vert"
-   ],
-   "dates": [
-    "2026-12-02",
-    "2026-12-03",
-    "2026-12-04"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  },
-  {
-   "region": "biarritz",
-   "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-04",
-   "days": 3,
-   "lead_days": 10,
-   "tier": "kans",
-   "models_agree_days": 3,
-   "strict_days": 3,
-   "powerful_days": 3,
-   "spots": [
-    "La Gravière (Hossegor)",
-    "Lafitenia",
-    "Les Cavaliers (Anglet)"
-   ],
-   "dates": [
-    "2026-12-02",
-    "2026-12-03",
-    "2026-12-04"
-   ],
-   "qualifies": true,
-   "below_threshold": []
-  }
- ],
+ "fetched_at": "2026-11-22T21:16+00:00",
+ "notify": false,
+ "new": [],
  "upgraded": [],
  "cancelled": [],
  "all_runs": [
