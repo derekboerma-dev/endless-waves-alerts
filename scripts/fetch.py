@@ -205,6 +205,7 @@ def main():
         # spots tegelijk ophalen (6 tegelijk); na elkaar duurde het ±11 minuten
         with ThreadPoolExecutor(max_workers=6) as ex:
             list(ex.map(lambda s: fetch_spot(reg, r, s, out, country), reg["spots"]))
+        print(f"{dt.datetime.now(dt.timezone.utc):%H:%M:%S} {reg['id']}: {len(reg['spots'])} spots klaar", flush=True)
         tzfix.localize_region(r, reg.get("tz"))  # alles naar de lokale kloktijd van de regio
         out["regions"][reg["id"]] = r
 
