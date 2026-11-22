@@ -45,7 +45,7 @@
  "regions": [
   {
    "id": "wijkaanzee",
-   "name": "Wijk aan Zee",
+   "name": "Wijk aan Zee & Zandvoort",
    "country": "NL",
    "wave_point": [
     52.5,
@@ -123,6 +123,56 @@
      "cross_max_kn": 12,
      "rws_wind": "ijmuiden.buitenhaven",
      "facing": 285
+    },
+    {
+     "name": "Zandvoort",
+     "src": "EIGEN (zelfde Noordzee-afstelling als Wijk aan Zee; waarneming 22 nov 2026)",
+     "lat": 52.372,
+     "lon": 4.523,
+     "swell": [
+      [
+       315,
+       45
+      ]
+     ],
+     "wind": [
+      [
+       100,
+       45
+      ]
+     ],
+     "hs": [
+      0.4,
+      2.0
+     ],
+     "tp_min": 6,
+     "glassy_kn": 6,
+     "powerful": {
+      "hs_min": 1.2,
+      "tp_min": 8
+     },
+     "strict": {
+      "tp_min": 8,
+      "min_good_hours": 3,
+      "glassy_kn": 0
+     },
+     "tide": "all",
+     "group": "Nederland",
+     "exposure": 0.8,
+     "facing": 280,
+     "rws_wind": "ijmuiden.buitenhaven",
+     "guide": {
+      "about": "Lang open strand met beachbreaks op wisselende zandbanken, ±10 km ten zuiden van de pieren van IJmuiden. Geen pier als beschutting: bij zuidwestenwind sneller rommelig dan Wijk aan Zee. Met de trein vanaf Amsterdam bereikbaar.",
+      "swell": "NW tot N (soms ZW-windswell)",
+      "wind": "O tot ZO",
+      "tide": "alle (nog te leren uit sessies)",
+      "size": "knie tot hoofdhoogte",
+      "season": "sep–apr",
+      "level": "beginner–gemiddeld",
+      "bottom": "zand",
+      "hazards": "muistromen langs de zandbanken"
+     },
+     "_waarneming": "22 nov 2026 rond 14:30-15:00 (Derek, foto's): maximaal kniehoog, clean met lijnen, te klein om de moeite waard te zijn. Boei IJgeul 1: Hm0 0,70-0,76 m, Tm02 5,2-5,5 s uit NNW (345-355°); wind IJmuiden 8-10 kn uit O (70-80°), offshore. App gaf voor Wijk aan Zee 0,32-0,39 m op de spot (knie), graad matig: klopt. Daarom dezelfde exposure (0,8) als Wijk."
     }
    ],
    "tz": "Europe/Amsterdam"
