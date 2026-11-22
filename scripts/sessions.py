@@ -4,7 +4,9 @@
 Een issue heeft de titel 'Sessie: <spot> <datum>' en een body met regels:
   Spot: <naam>
   Datum: JJJJ-MM-DD
-  Tijd: ochtend | middag | avond | UU:MM (optioneel)
+  Tijd: UU:MM-UU:MM | UU:MM (sinds 22 nov; oud: ochtend | middag | avond)
+  Condities: <optioneel, kommalijst: Blown out, Bumpy, Textured, Glassy, Soft/Mushy, Consistent, Playful,
+             Barreling, Close out, Fast, Peeling, Peaky>
   Score: <0-4> (<label>)
   Plank: <optioneel>
   Hoogte: <optioneel, golfhoogte op de spot in m>
@@ -18,7 +20,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FIELDS = {"spot": "spot", "datum": "date", "tijd": "time", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast", "hoogte": "height"}
+FIELDS = {"spot": "spot", "datum": "date", "tijd": "time", "score": "score", "plank": "board", "opmerking": "note", "voorspeld": "forecast", "hoogte": "height", "condities": "tags"}
 
 
 def parse(issue):
@@ -30,6 +32,8 @@ def parse(issue):
     if "score" in rec:
         m = re.match(r"(\d)", rec["score"])
         rec["score"] = int(m.group(1)) if m else None
+    if "tags" in rec:
+        rec["tags"] = [t.strip() for t in rec["tags"].split(",") if t.strip()]
     if "height" in rec:
         m = re.match(r"([\d.,]+)", rec["height"])
         rec["height"] = float(m.group(1).replace(",", ".")) if m else None

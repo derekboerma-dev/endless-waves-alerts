@@ -13,6 +13,7 @@ Uitvoer: docs/calibration.json (voor de app) en out/kalibratie.md (leesbaar, ook
 """
 import gzip
 import json
+import re
 import pathlib
 import statistics
 
@@ -24,13 +25,39 @@ SLOTS = {"ochtend": range(7, 11), "middag": range(11, 16), "avond": range(16, 20
 
 
 def hours_for(t):
+    """Uren van de sessie. Nieuw (22 nov): 'UU:MM-UU:MM' = elk klokuur dat in het water viel.
+    Alleen een begintijd = dat uur en het volgende. Oud: ochtend / middag / avond."""
     t = (t or "").strip().lower()
     if t in SLOTS:
         return list(SLOTS[t])
+    m = re.match(r"(\d{1,2}):?(\d{2})?\s*[-–]\s*(\d{1,2}):?(\d{2})?", t)
+    if m:
+        h0, h1, m1 = int(m.group(1)), int(m.group(3)), int(m.group(4) or 0)
+        end = h1 if m1 == 0 and h1 > h0 else h1 + 1
+        return list(range(h0, max(end, h0 + 1)))
     if len(t) >= 2 and t[:2].isdigit():
         h = int(t[:2])
         return [h, h + 1]
     return list(range(7, 19))
+
+
+def measured(spot, day, hours):
+    """Gemeten golf en wind (Rijkswaterstaat, state/obs.json) op de sessie-uren; alleen voor spots met rws_wind."""
+    p = ROOT / "state" / "obs.json"
+    if not spot.get("rws_wind") or not p.exists():
+        return None
+    obs = json.loads(p.read_text()).get("hours") or {}
+    rows = [obs[k] for k in (f"{day}T{h:02d}:00" for h in hours) if k in obs]
+    if not rows:
+        return None
+
+    def avg(k):
+        v = [r[k] for r in rows if r.get(k) is not None]
+        return round(statistics.mean(v), 2) if v else None
+    mid = rows[len(rows) // 2]
+    return {"hs": avg("hs"), "tm": avg("tm"), "dir": A.compass(mid["dir"]) if mid.get("dir") is not None else None,
+            "ws": round(avg("ws")) if avg("ws") is not None else None,
+            "wd": A.compass(mid["wd"]) if mid.get("wd") is not None else None}
 
 
 def archive_for(day):
@@ -98,11 +125,13 @@ def main():
     for r in sessions:
         reg, spot = find_spot(r["spot"])
         data_all = archive_for(r["date"])
-        rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note", "height")}
+        rec = {k: r.get(k) for k in ("date", "time", "score", "board", "note", "height", "tags")}
         if reg and data_all and reg["id"] in data_all.get("regions", {}):
             data = A.merge_hires_wind(A.tzfix.localize_region(data_all["regions"][reg["id"]], reg.get("tz")))
             rec["predicted"] = predicted_grade(data, reg, spot, r["date"])
             rec["cond"] = conditions(data, reg, spot, r["date"], hours_for(r.get("time")))
+        if spot:
+            rec["obs"] = measured(spot, r["date"], hours_for(r.get("time")))
         else:
             rec["predicted"], rec["cond"] = None, None
             rec["missing"] = "geen voorspelling uit het archief voor deze dag"
@@ -154,14 +183,16 @@ def main():
         md = "–" if o["mean_diff"] is None else f"{o['mean_diff']:+.1f}"
         lines += [f"## {name}", f"Sessies: {o['n']} · vergeleken: {o['n_compared']} · gemiddeld verschil: {md}", ""]
         lines += [f"- {h}" for h in o["hints"]] or ["- Nog te weinig sessies voor conclusies."]
-        lines += ["", "| Datum | Tijd | Jij | Voorspeld | Golf (spot, schatting) | Echt (m) | Wind | Getij | Plank | Opmerking |", "|---|---|---|---|---|---|---|---|---|---|"]
+        lines += ["", "| Datum | Tijd | Jij | Voorspeld | Golf (spot, schatting) | Echt (m) | Gemeten (boei, wind) | Wind | Getij | Condities | Plank | Opmerking |", "|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for x in o["sessions"]:
             c = x.get("cond") or {}
             pred = GRADE[x["predicted"]] if x.get("predicted") is not None else "?"
             golf = f"{c.get('hs')} m {c.get('tp')} s {c.get('dir')}" if c else "?"
             wind = f"{c.get('wd')} {c.get('ws')} kn" if c else "?"
-            lines.append(f"| {x['date']} | {x.get('time') or ''} | {GRADE[x['score']]} | {pred} | {golf} | {x.get('height') or ''} | {wind} | "
-                         f"{c.get('tide') or ''} | {x.get('board') or ''} | {x.get('note') or ''} |")
+            o2 = x.get("obs") or {}
+            meas = f"{o2.get('hs')} m {o2.get('tm')} s {o2.get('dir')} · {o2.get('wd')} {o2.get('ws')} kn" if o2 else ""
+            lines.append(f"| {x['date']} | {x.get('time') or ''} | {GRADE[x['score']]} | {pred} | {golf} | {x.get('height') or ''} | {meas} | {wind} | "
+                         f"{c.get('tide') or ''} | {', '.join(x.get('tags') or [])} | {x.get('board') or ''} | {x.get('note') or ''} |")
         lines.append("")
     (ROOT / "out").mkdir(exist_ok=True)
     (ROOT / "out" / "kalibratie.md").write_text("\n".join(lines))

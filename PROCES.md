@@ -441,11 +441,18 @@ Keuzes van Derek, in volgorde:
     - Regio heet nu "Wijk aan Zee & Zandvoort" (thuismodus: alerts per spot, 1 goede sessie is genoeg).
     - Open: Surfline-ID van Zandvoort (nu kaartlink), en welk getij het best werkt.
 
+34. **Sessiebeoordeling uitgebreid (Derek, 22 nov).** Tijd van–tot in plaats van ochtend/middag/avond, en meerkeuze-condities (zie §5b). Doel: de sessie preciezer naast voorspelling en metingen leggen.
+    - Getij Zandvoort blijft "alle"; het punt blijft het strand bij het centrum (keuze Derek).
+    - **Sessie 17 nov, Wijk aan Zee (Derek):** clean, knie tot heup, te klein, graad matig, Lost 7'2. De app gaf matig, 0,3–0,6 m. Dat klopt; Point Break gaf heup tot meter (punt 31).
+    - **Sessie 22 nov:** ingevuld onder Wijk aan Zee, maar was Zandvoort (stond nog niet in de app). Verplaatst naar Zandvoort, tijd 14:50–15:00 volgens de foto's.
+
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
 ## 5b. Leren van sessies
 
-- Het beoordelingsscherm vraagt ook het **tijdstip**: ochtend (07–11), middag (11–16), avond (16–20) of een begintijd.
+- Het beoordelingsscherm vraagt ook het **tijdstip**: sinds 22 nov de tijd in het water, van–tot (bijv. 14:30–15:45). De analyse gebruikt dan precies die klokuren. Oude sessies met ochtend (07–11), middag (11–16) of avond (16–20) blijven werken.
+- **Condities** (sinds 22 nov, meer keuzes mogelijk): Blown out, Bumpy, Textured, Glassy, Soft/Mushy, Consistent, Playful, Barreling, Close out, Fast, Peeling, Peaky. Staan in `docs/sessions.json` als `tags`.
+- Bij spots met metingen (Wijk aan Zee, Zandvoort) zet de kalibratie ook de **gemeten** golf en wind van die uren bij de sessie (`state/obs.json`): boei-hoogte, periode, richting en wind van IJmuiden. Zichtbaar onder "Jouw sessies" en in `out/kalibratie.md`.
 - **`scripts/calibrate.py`** draait elke run. Per sessie:
   - pakt het de voorspelling van die dag uit het archief (dag 0);
   - rekent de graad opnieuw uit met dezelfde regels als de app;
