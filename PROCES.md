@@ -74,7 +74,7 @@ Lager voor dichtbij en goedkoop, hoger voor ver en duur (keuze van Derek).
 
 | Regio | Melden bij |
 |---|---|
-| Wijk aan Zee (thuisspot) | 1 goede sessie, maximaal 3 dagen vooruit, hele daglichtperiode |
+| Wijk aan Zee en Zandvoort (thuisspots) | 1 goede sessie, maximaal 3 dagen vooruit, hele daglichtperiode |
 | Vendée (Bud Bud), Crozon (Lostmarc'h) | ≥ 2 dagen op rij |
 | Cap Ferret | ≥ 3 dagen, waarvan ≥ 1 streng |
 | Zuidwest-Frankrijk (Hossegor–Guéthary) | ≥ 3 dagen, waarvan ≥ 1 streng of krachtig |
@@ -86,6 +86,7 @@ Lager voor dichtbij en goedkoop, hoger voor ver en duur (keuze van Derek).
 | Groep | Spot | Hs (m) | Getij | Bron richting |
 |---|---|---|---|---|
 | Nederland | Wijk aan Zee | 0,8–2,0 | half | eigen schatting (Tp ≥ 6 s) |
+| Nederland | Zandvoort | 0,4–2,0 (op de spot) | alle (nog te leren) | eigen schatting, afgesteld op waarneming 22 nov |
 | Frankrijk | Bud Bud | 1,0–2,1 | half, liefst opkomend | eigen regels (Bud Bud-skill) |
 | Frankrijk | La Sauzaie | 1,0–2,5 | half | surf-forecast |
 | Frankrijk | Lostmarc'h, La Palue | 1,0–2,1 | half | surf-forecast |
@@ -425,6 +426,20 @@ Keuzes van Derek, in volgorde:
       - GFS 0,40–0,48 m.
       - Dus 1 van 3 modellen goed, de dag telt niet meer en de melding is vervallen. Bewust niet aangepast om Point Break te volgen. De hoogte op de spot bij korte swell blijft de grote onzekerheid (punt 31); dinsdag toetsen met boei en waarneming.
     - De melding voor Crozon (20 nov) verviel door de nieuwe modelrun, niet door deze wijziging (EWAM reikt niet tot 20 nov).
+
+33. **Zandvoort toegevoegd (Derek, 22 nov).**
+    - **Waarneming van Derek, 22 nov rond 14:30–15:00 (foto's):** maximaal kniehoog, clean met lijnen, te klein om de moeite waard te zijn.
+      - Gemeten: boei IJgeul 1 0,70–0,76 m bij 5,2–5,5 s uit het NNW; wind IJmuiden 8–10 kn uit het O (offshore).
+      - De app gaf voor Wijk aan Zee 0,32–0,39 m op de spot (knie) en de graad "matig", omdat 0,4 m de ondergrens is. Dat klopt met de waarneming.
+      - Dit is het eerste meetpunt dat de afstelling bij korte NNW-swell bevestigt (vergelijk punt 31: Point Break "heup tot meter" bij vergelijkbare swell, de app "knie tot dij").
+    - **Instellingen Zandvoort:**
+      - Strand kijkt naar ±280°. Swell NW–N (315° ± 45°). Offshore = O tot ZO (100° ± 45°).
+      - Hoogte op de spot 0,4–2,0 m. Exposure 0,8, gelijk aan Wijk aan Zee: de waarneming past bij die factor.
+      - Getij: alle, nog te leren uit sessies.
+      - **Geen** toegestane zijwind uit het Z–ZZW: de pier die dat bij Wijk aan Zee mogelijk maakt, ligt 10 km noordelijker.
+      - Zelfde boei en windmeter als Wijk aan Zee. De boeicorrectie geldt voor de hele regio. De modelscore blijft op Wijk aan Zee gebaseerd.
+    - Regio heet nu "Wijk aan Zee & Zandvoort" (thuismodus: alerts per spot, 1 goede sessie is genoeg).
+    - Open: Surfline-ID van Zandvoort (nu kaartlink), en welk getij het best werkt.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
