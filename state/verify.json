@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-22T13:23+00:00",
+ "updated": "2026-11-22T19:43+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 382,
+ "obs_hours": 388,
  "obs_from": "2026-11-06T17:00",
  "runs": 14,
  "buckets": [
@@ -23,107 +23,107 @@
     "wind_ok": 0.864
    },
    "1-2": {
-    "n": 193,
-    "n_wind": 193,
-    "hs_err": 0.293,
-    "hs_ratio": 0.9,
-    "ws_err": 4.2,
+    "n": 199,
+    "n_wind": 199,
+    "hs_err": 0.296,
+    "hs_ratio": 0.892,
+    "ws_err": 4.4,
     "wd_err": 16,
-    "wind_ok": 0.824
+    "wind_ok": 0.829
    },
    "2-4": {
-    "n": 354,
-    "n_wind": 338,
-    "hs_err": 0.34,
-    "hs_ratio": 0.883,
-    "ws_err": 6.0,
+    "n": 366,
+    "n_wind": 350,
+    "hs_err": 0.345,
+    "hs_ratio": 0.87,
+    "ws_err": 6.1,
     "wd_err": 24,
-    "wind_ok": 0.577
+    "wind_ok": 0.589
    },
    "4-7": {
-    "n": 411,
-    "n_wind": 406,
-    "hs_err": 0.436,
-    "hs_ratio": 0.877,
-    "ws_err": 7.5,
-    "wd_err": 47,
-    "wind_ok": 0.463
+    "n": 429,
+    "n_wind": 424,
+    "hs_err": 0.425,
+    "hs_ratio": 0.875,
+    "ws_err": 7.6,
+    "wd_err": 45,
+    "wind_ok": 0.486
    },
    "7+": {
-    "n": 399,
-    "n_wind": 399,
-    "hs_err": 0.776,
-    "hs_ratio": 0.734,
-    "ws_err": 5.2,
+    "n": 441,
+    "n_wind": 441,
+    "hs_err": 0.762,
+    "hs_ratio": 0.729,
+    "ws_err": 5.3,
     "wd_err": 81,
-    "wind_ok": 0.449
+    "wind_ok": 0.46
    }
   },
   "GFS": {
    "0-1": {
     "n": 45,
     "n_wind": 44,
-    "hs_err": 0.125,
+    "hs_err": 0.124,
     "hs_ratio": 1.0,
     "ws_err": 3.3,
     "wd_err": 18,
     "wind_ok": 0.864
    },
    "1-2": {
-    "n": 193,
-    "n_wind": 193,
-    "hs_err": 0.236,
-    "hs_ratio": 0.973,
-    "ws_err": 4.1,
+    "n": 199,
+    "n_wind": 199,
+    "hs_err": 0.234,
+    "hs_ratio": 0.966,
+    "ws_err": 4.2,
     "wd_err": 17,
-    "wind_ok": 0.824
+    "wind_ok": 0.829
    },
    "2-4": {
-    "n": 354,
-    "n_wind": 338,
-    "hs_err": 0.326,
-    "hs_ratio": 0.875,
-    "ws_err": 4.2,
-    "wd_err": 28,
-    "wind_ok": 0.731
+    "n": 366,
+    "n_wind": 350,
+    "hs_err": 0.33,
+    "hs_ratio": 0.862,
+    "ws_err": 4.3,
+    "wd_err": 27,
+    "wind_ok": 0.737
    },
    "4-7": {
-    "n": 411,
-    "n_wind": 406,
-    "hs_err": 0.544,
-    "hs_ratio": 0.818,
-    "ws_err": 5.5,
-    "wd_err": 48,
+    "n": 429,
+    "n_wind": 424,
+    "hs_err": 0.533,
+    "hs_ratio": 0.813,
+    "ws_err": 5.6,
+    "wd_err": 47,
     "wind_ok": 0.658
    },
    "7+": {
-    "n": 399,
-    "n_wind": 399,
-    "hs_err": 0.993,
-    "hs_ratio": 0.631,
-    "ws_err": 6.5,
-    "wd_err": 92,
-    "wind_ok": 0.459
+    "n": 441,
+    "n_wind": 441,
+    "hs_err": 1.032,
+    "hs_ratio": 0.599,
+    "ws_err": 6.4,
+    "wd_err": 96,
+    "wind_ok": 0.431
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 89,
-    "n_wind": 177,
+    "n": 95,
+    "n_wind": 183,
     "hs_err": 0.188,
-    "hs_ratio": 1.118,
-    "ws_err": 4.2,
+    "hs_ratio": 1.091,
+    "ws_err": 4.4,
     "wd_err": 17,
-    "wind_ok": 0.808
+    "wind_ok": 0.814
    },
    "2-4": {
-    "n": 93,
-    "n_wind": 199,
-    "hs_err": 0.181,
-    "hs_ratio": 1.13,
-    "ws_err": 5.0,
-    "wd_err": 25,
-    "wind_ok": 0.618
+    "n": 99,
+    "n_wind": 211,
+    "hs_err": 0.183,
+    "hs_ratio": 1.118,
+    "ws_err": 5.3,
+    "wd_err": 26,
+    "wind_ok": 0.607
    },
    "0-1": {
     "n": 26,
@@ -136,12 +136,12 @@
    },
    "4-7": {
     "n": 0,
-    "n_wind": 75,
+    "n_wind": 93,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 3.4,
-    "wd_err": 59,
-    "wind_ok": 0.493
+    "ws_err": 4.2,
+    "wd_err": 52,
+    "wind_ok": 0.591
    }
   }
  },
@@ -151,22 +151,22 @@
    "GFS": 1.0
   },
   "1-2": {
-   "ECMWF": 0.91,
+   "ECMWF": 0.9,
    "GFS": 1.02,
-   "EWAM": 1.04
+   "EWAM": 1.05
   },
   "2-4": {
-   "ECMWF": 0.84,
+   "ECMWF": 0.85,
    "GFS": 1.08,
-   "EWAM": 1.06
+   "EWAM": 1.05
   },
   "4-7": {
-   "ECMWF": 0.96,
-   "GFS": 1.05
+   "ECMWF": 0.97,
+   "GFS": 1.04
   },
   "7+": {
-   "ECMWF": 1.08,
-   "GFS": 0.93
+   "ECMWF": 1.11,
+   "GFS": 0.91
   }
  },
  "min_hours": 36,

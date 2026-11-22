@@ -87,9 +87,9 @@
    "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-05",
-   "days": 4,
+   "start": "2026-12-03",
+   "end": "2026-12-04",
+   "days": 2,
    "lead_days": 10,
    "tier": "kans",
    "models_agree_days": 4,
@@ -100,10 +100,8 @@
     "Lostmarc'h"
    ],
    "dates": [
-    "2026-12-02",
     "2026-12-03",
-    "2026-12-04",
-    "2026-12-05"
+    "2026-12-04"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -115,9 +113,9 @@
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-27",
+   "start": "2026-11-26",
    "end": "2026-11-30",
-   "days": 4,
+   "days": 5,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 2,
@@ -129,6 +127,7 @@
     "Les Cavaliers (Anglet)"
    ],
    "dates": [
+    "2026-11-26",
     "2026-11-27",
     "2026-11-28",
     "2026-11-29",
