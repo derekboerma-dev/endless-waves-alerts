@@ -1,17 +1,17 @@
 {
- "Wijk aan Zee": {
+ "Zandvoort": {
   "height_ratio": 0.75,
-  "n": 2,
-  "n_compared": 2,
+  "n": 1,
+  "n_compared": 1,
   "mean_diff": 0,
   "hints": [],
   "sessions": [
    {
     "date": "2026-11-22",
-    "time": "middag",
+    "time": "14:50-15:00",
     "score": 1,
     "board": "Lost 7'2",
-    "note": "Het was clean en mooie lijnen van golven. Wel waren de golven te klein en niet waard om te gaan",
+    "note": "Het was clean en mooie lijnen van golven. Wel waren de golven te klein en niet waard om te gaan (ingevuld onder Wijk aan Zee; verplaatst naar Zandvoort, tijd volgens de foto's)",
     "height": 0.3,
     "tags": null,
     "predicted": 1,
@@ -21,20 +21,29 @@
      "hs_off": 0.8,
      "tp": 6,
      "dir": "NNW",
-     "ws": 5,
-     "wd": "ONO",
+     "ws": 4,
+     "wd": "NO",
      "tide": "hoog water",
      "hs_ok": false
     },
     "obs": {
-     "hs": 0.72,
-     "tm": 5.41,
+     "hs": 0.76,
+     "tm": 5.37,
      "dir": "N",
-     "ws": 8,
-     "wd": "O"
+     "ws": 10,
+     "wd": "ONO"
     },
     "diff": 0
-   },
+   }
+  ]
+ },
+ "Wijk aan Zee": {
+  "height_ratio": 0.75,
+  "n": 1,
+  "n_compared": 1,
+  "mean_diff": 0,
+  "hints": [],
+  "sessions": [
    {
     "date": "2026-11-17",
     "time": "ochtend",
