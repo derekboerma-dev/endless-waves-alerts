@@ -1,0 +1,55 @@
+name: Instellingen uit de app
+
+# De tab Instellingen in de app opent een issue 'Instellingen: ...' met de wijzigingen als JSON.
+# Alleen issues van de eigenaar van de repository worden verwerkt (de repository is openbaar: anders
+# zou iedereen de instellingen kunnen wijzigen). scripts/settings.py staat alleen vaste sleutels en
+# grenzen toe. Daarna start meteen een nieuwe voorspelling (een push met GITHUB_TOKEN doet dat niet vanzelf).
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: settings
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: startsWith(github.event.issue.title, 'Instellingen') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Wijzigingen controleren en toepassen
+        id: apply
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          RESULT_FILE: /tmp/result.md
+        run: python scripts/settings.py apply && echo "ok=true" >> "$GITHUB_OUTPUT" || echo "ok=false" >> "$GITHUB_OUTPUT"
+      - name: Vastleggen
+        if: steps.apply.outputs.ok == 'true'
+        run: |
+          git config user.name "endless-waves-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add config/spots.json
+          git commit -m "Instellingen uit de app (#${{ github.event.issue.number }})"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 5; done
+      - name: Nieuwe voorspelling starten
+        if: steps.apply.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run forecast.yml --repo "$GITHUB_REPOSITORY"
+      - name: Issue beantwoorden en sluiten
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f /tmp/result.md ] || echo "Niet verwerkt: onbekende fout, zie de workflow-run." > /tmp/result.md
+          gh issue close "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" --comment "$(cat /tmp/result.md)"

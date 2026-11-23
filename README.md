@@ -10,6 +10,7 @@ GitHub Action (dagelijks 07:40 UTC = 08:40 NL-wintertijd)
                          apart (EWAM ±3 dagen), 16 dagen, inclusief zonsopkomst en -ondergang
      scripts/buoy.py     metingen Rijkswaterstaat bij Wijk aan Zee (boei + wind)
      scripts/verify.py   modelscore: oude voorspellingen tegenover de metingen -> gewichten
+     scripts/settings.py instellingen uit de app (tab Instellingen, via issue + settings.yml)
   2. scripts/analyze.py  toetst aan de spotcriteria, zoekt reeksen, past de drempels
                          per regio toe en onthoudt wat al gemeld is
   3. commit              data/ (voorspelling + archief), out/ (meldingen, verslag),

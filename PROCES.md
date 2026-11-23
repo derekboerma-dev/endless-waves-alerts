@@ -256,7 +256,7 @@ Keuzes van Derek, in volgorde:
 7. **Opstartscherm** (zon met bewegende golven), zie punt 8.
 8. **Opstartscherm 3 s** (was 4 s). Titelbalk toont "Data bijgewerkt <dag datum, tijd>" (moment van ophalen, niet van uploaden).
 9. **Spotdetail toont ook:** watertemperatuur, luchttemperatuur, wetsuitadvies, zonsopkomst/-ondergang.
-10. **Menubalk onderin:** Voorspelling en Quiver. De quiver toont per board de maten, tail, vinnen, herkomst en wanneer je hem pakt, met een getekend silhouet. Foto's van internet zijn bewust niet gebruikt (auteursrecht); eigen foto's kunnen in `docs/img/`.
+10. **Menubalk onderin:** Voorspelling, Alerts, Quiver en (sinds 23 nov) Instellingen. De quiver toont per board de maten, tail, vinnen, herkomst en wanneer je hem pakt, met een getekend silhouet. Foto's van internet zijn bewust niet gebruikt (auteursrecht); eigen foto's kunnen in `docs/img/`.
 
 11. **Favorieten:** ster rechtsboven op een spotpagina; favorieten staan bovenaan het startscherm. Bewaard op het toestel zelf.
 12. **Open in Surfline:** directe link bij Anchor Point en Bud Bud (Surfline-ID bekend); bij de andere spots de Surfline-kaart op de coördinaten van de spot. Directe links kunnen er komen zodra de Surfline-ID's bekend zijn (via Chrome).
@@ -445,6 +445,16 @@ Keuzes van Derek, in volgorde:
     - Getij Zandvoort blijft "alle"; het punt blijft het strand bij het centrum (keuze Derek).
     - **Sessie 17 nov, Wijk aan Zee (Derek):** clean, knie tot heup, te klein, graad matig, Lost 7'2. De app gaf matig, 0,3–0,6 m. Dat klopt; Point Break gaf heup tot meter (punt 31).
     - **Sessie 22 nov:** ingevuld onder Wijk aan Zee, maar was Zandvoort (stond nog niet in de app). Verplaatst naar Zandvoort, tijd 14:50–15:00 volgens de foto's.
+
+35. **Tab Instellingen (Derek, 23 nov).** Vierde tab in de app met de parameters van de alerts, aanpasbaar.
+    - **Per regio:** alerts aan/uit (nieuw: `alert.enabled`), dagen op rij, max. dagen vooruit (thuisspots), waarvan streng / krachtig / streng-of-krachtig, modellen eens.
+    - **Per spot:** golfhoogte op de spot van–tot, min. periode, getij.
+    - **Algemeen:** goede uren per dag, max. offshore wind, max. stoten (gewoon en offshore), windstil-grens, "strenger vanaf dag".
+    - **Hoe opslaan werkt:** de app opent een ingevuld GitHub-issue "Instellingen: …" met de wijzigingen als JSON; Derek tikt "Submit new issue".
+      - De workflow `settings.yml` verwerkt het binnen ±1 minuut met `scripts/settings.py`: alleen vaste sleutels en grenzen, anders wordt alles geweigerd.
+      - Daarna commit, reactie met de wijzigingen, issue sluiten, en meteen een nieuwe voorspelling starten (±10 min).
+    - **Beveiliging:** alleen issues van de eigenaar van de repository (`derekboerma-dev`) worden verwerkt. De repository is openbaar, dus zonder die controle zou iedereen de instellingen kunnen wijzigen. Geen token of wachtwoord in de app.
+    - Bewust niet aanpasbaar in de app: swell- en windrichtingen, exposure, schaal en andere modelinstellingen. Die vragen om een onderbouwing (Surfline, metingen, sessies) en blijven via Claude lopen.
 
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 

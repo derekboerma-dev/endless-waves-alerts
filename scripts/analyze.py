@@ -26,6 +26,7 @@ import pathlib
 import sys
 
 import tzfix
+from settings import export as settings_export
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CFG = json.loads((ROOT / "config" / "spots.json").read_text())
@@ -507,6 +508,8 @@ def find_runs(reg, days, today):
             reasons.append(f"{powerful} krachtige dagen (minimaal {a['min_powerful_days']})")
         if sp_or_pw < a.get("min_strict_or_powerful_days", 0):
             reasons.append(f"{sp_or_pw} strenge of krachtige dagen (minimaal {a['min_strict_or_powerful_days']})")
+        if a.get("enabled", True) is False:
+            reasons.append("alerts voor deze regio staan uit (tab Instellingen)")
         if "max_lead_days" in a and lead > a["max_lead_days"]:
             reasons.append(f"begint over {lead} dagen (thuisspot: max {a['max_lead_days']})")
         spots = sorted({s for m in md for v in m.values() for s in v["spots"]})
@@ -1008,6 +1011,7 @@ def app_data(alerts, per_region, today, latest=None):
     return {"generated": alerts["generated"], "fetched_at": alerts["fetched_at"],
             "new": alerts["new"], "upgraded": alerts["upgraded"], "cancelled": alerts["cancelled"],
             "problems": alerts["problems"], "regions": regions, "groups": CFG.get("groups"), "repo": CFG.get("repo"),
+            "settings": settings_export(CFG),
             "spots": spot_cards(alerts, per_region, today, latest) if latest else [],
             "tiers": D.get("tiers"), "long_range_from_day": D.get("long_range_from_day")}
 
