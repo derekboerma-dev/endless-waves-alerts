@@ -1,122 +1,108 @@
 {
  "generated": "2026-11-23",
- "fetched_at": "2026-11-23T13:21+00:00",
+ "fetched_at": "2026-11-23T20:34+00:00",
  "notify": true,
- "new": [],
- "upgraded": [],
- "cancelled": [
+ "new": [
   {
    "region": "vendee",
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-03",
+   "start": "2026-12-03",
+   "end": "2026-12-04",
    "days": 2,
    "lead_days": 10,
    "tier": "kans",
    "models_agree_days": 2,
-   "strict_days": 2,
-   "powerful_days": 2,
+   "strict_days": 1,
+   "powerful_days": 0,
    "spots": [
     "Bud Bud",
     "La Sauzaie"
    ],
    "dates": [
-    "2026-12-02",
-    "2026-12-03"
+    "2026-12-03",
+    "2026-12-04"
    ],
    "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-22",
-   "last_tier": "kans",
-   "cancelled": "2026-11-23"
+   "below_threshold": []
   },
   {
    "region": "crozon",
    "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-04",
-   "days": 3,
-   "lead_days": 10,
-   "tier": "kans",
-   "models_agree_days": 4,
-   "strict_days": 4,
-   "powerful_days": 3,
+   "start": "2026-11-25",
+   "end": "2026-11-26",
+   "days": 2,
+   "lead_days": 2,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 1,
+   "powerful_days": 0,
    "spots": [
     "La Palue",
     "Lostmarc'h"
    ],
    "dates": [
-    "2026-12-02",
+    "2026-11-25",
+    "2026-11-26"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-03",
+   "end": "2026-12-04",
+   "days": 2,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 2,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
     "2026-12-03",
     "2026-12-04"
    ],
    "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-22",
-   "last_tier": "kans",
-   "cancelled": "2026-11-23"
+   "below_threshold": []
   },
   {
    "region": "capferret",
    "region_name": "Cap Ferret",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-04",
+   "start": "2026-12-03",
+   "end": "2026-12-05",
    "days": 3,
    "lead_days": 10,
    "tier": "kans",
    "models_agree_days": 3,
    "strict_days": 2,
-   "powerful_days": 3,
+   "powerful_days": 2,
    "spots": [
     "Cap Ferret",
     "Le Truc Vert"
    ],
    "dates": [
-    "2026-12-02",
     "2026-12-03",
-    "2026-12-04"
+    "2026-12-04",
+    "2026-12-05"
    ],
    "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-22",
-   "last_tier": "kans",
-   "cancelled": "2026-11-23"
-  },
-  {
-   "region": "capferret",
-   "region_name": "Cap Ferret",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-27",
-   "end": "2026-11-29",
-   "days": 3,
-   "lead_days": 4,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 1,
-   "strict_days": 2,
-   "powerful_days": 3,
-   "spots": [
-    "Cap Ferret",
-    "Le Truc Vert"
-   ],
-   "dates": [
-    "2026-11-27",
-    "2026-11-28",
-    "2026-11-29"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-23",
-   "last_tier": "waarschijnlijk",
-   "cancelled": "2026-11-23"
+   "below_threshold": []
   }
  ],
+ "upgraded": [],
+ "cancelled": [],
  "all_runs": [
   {
    "region": "vendee",
@@ -129,7 +115,7 @@
    "lead_days": 3,
    "tier": "bevestigd",
    "models_agree_days": 0,
-   "strict_days": 2,
+   "strict_days": 1,
    "powerful_days": 0,
    "spots": [
     "Bud Bud",
@@ -139,6 +125,103 @@
     "2026-11-26",
     "2026-11-27",
     "2026-11-28"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-03",
+   "end": "2026-12-04",
+   "days": 2,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 2,
+   "strict_days": 1,
+   "powerful_days": 0,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-12-03",
+    "2026-12-04"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-11-25",
+   "end": "2026-11-26",
+   "days": 2,
+   "lead_days": 2,
+   "tier": "bevestigd",
+   "models_agree_days": 0,
+   "strict_days": 1,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-11-25",
+    "2026-11-26"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-03",
+   "end": "2026-12-04",
+   "days": 2,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 2,
+   "strict_days": 0,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-12-03",
+    "2026-12-04"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-03",
+   "end": "2026-12-05",
+   "days": 3,
+   "lead_days": 10,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 2,
+   "powerful_days": 2,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-03",
+    "2026-12-04",
+    "2026-12-05"
    ],
    "qualifies": true,
    "below_threshold": []
