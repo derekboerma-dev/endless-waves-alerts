@@ -48,6 +48,10 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-sy
 .top .upd.old{color:#f4c96b;opacity:1}
 .extra{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .extra .chip{background:transparent;border:1px solid var(--line)}
+#refresh{font-size:26px;font-weight:700;padding:0 6px 2px}
+#refresh.spin{animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 80px);z-index:40;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2)}
 .top button{appearance:none;border:0;background:none;color:#fff;font-size:36px;line-height:1;padding:0 4px 2px 0;cursor:pointer}
 main{padding:12px 0 calc(env(safe-area-inset-bottom) + 84px);max-width:760px;margin:0 auto}
 /* menubalk onderin */
@@ -292,6 +296,7 @@ summary{cursor:pointer;color:var(--ink);font-weight:600}
   <button id="back" hidden aria-label="Terug">‹</button>
   <div class="tt"><h1 id="title">Endless Waves</h1><span class="upd" id="upd"></span></div>
   <button id="fav" class="icon" hidden aria-label="Favoriet">☆</button>
+  <button id="refresh" class="icon" aria-label="Nieuwe data ophalen">↻</button>
   <button id="bell" class="icon" aria-label="Meldingen" style="font-size:22px">🔔</button>
 </div>
 <main id="view"></main>
@@ -320,7 +325,7 @@ const favs = () => { try { return JSON.parse(localStorage.getItem('ew-fav') || '
 const setFavs = a => { try { localStorage.setItem('ew-fav', JSON.stringify(a)); } catch(e){} };
 
 function home(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = $('#refresh').hidden = false; $('#title').textContent = 'Endless Waves';
   const F = favs();
   const groups = (DATA.groups || [...new Set(DATA.spots.map(s => s.group))]);
   const opts = ['Alle spots'].concat(F.length ? ['★ Favorieten'] : [], groups);
@@ -561,7 +566,7 @@ function waveCard(s, sel){
 function spot(k, focus){
   const s = DATA.spots[k]; if (!s) return home();
   $('#back').hidden = false; $('#title').textContent = s.name;
-  const fb = $('#fav'); fb.hidden = false; $('#bell').hidden = true;
+  const fb = $('#fav'); fb.hidden = false; $('#bell').hidden = $('#refresh').hidden = true;
   const paintFav = () => { const on = favs().includes(s.name); fb.textContent = on ? '★' : '☆'; fb.classList.toggle('on', on); };
   paintFav();
   fb.onclick = () => { const F = favs(); setFavs(F.includes(s.name) ? F.filter(x => x !== s.name) : F.concat(s.name)); paintFav(); };
@@ -706,7 +711,7 @@ let ED = {defaults: {}, regions: {}, spots: {}}; const OPEN = new Set();
 const TIDE_NL = {all: 'alle', low: 'laag', 'low-mid': 'laag–half', mid: 'half', 'mid-high': 'half–hoog', high: 'hoog', 'not-high': 'niet hoog'};
 function setPending(){ try { return JSON.parse(localStorage.getItem('ew-set-pending') || 'null'); } catch(e){ return null; } }
 function settingsView(){
-  const S = DATA.settings; $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
+  const S = DATA.settings; $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = $('#refresh').hidden = false; $('#title').textContent = 'Endless Waves';
   if (!S){ $('#view').innerHTML = '<div class="empty">Instellingen nog niet beschikbaar: wacht op de volgende run.</div>'; return; }
   const cur = (sec, id, k) => sec === 'defaults' ? S.defaults[k] : sec === 'regions' ? S.regions.find(r => r.id === id).values[k]
     : S.regions.flatMap(r => r.spots).find(x => x.name === id).values[k];
@@ -767,7 +772,7 @@ function settingsView(){
 
 /* ---------- alerts: alle reeksen op één tijdlijn, in één oogopslag te vergelijken ---------- */
 function alerts(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = $('#refresh').hidden = false; $('#title').textContent = 'Endless Waves';
   const days = DATA.spots[0].days.map(d => d.date), nd = days.length;
   const today = TODAY();
   const short = ds => { const t = new Date(ds + 'T12:00'); return `${WD[t.getDay()]} ${t.getDate()}`; };
@@ -843,7 +848,7 @@ function boardSVG(b){
     <line x1="${cx}" y1="${y(0.03)}" x2="${cx}" y2="${y(0.97)}" stroke="currentColor" stroke-width=".7" opacity=".35"/>${finEls}</svg>`;
 }
 async function quiver(){
-  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = false; $('#title').textContent = 'Endless Waves';
+  $('#back').hidden = true; $('#fav').hidden = true; $('#bell').hidden = $('#refresh').hidden = false; $('#title').textContent = 'Endless Waves';
   if (!QUIVER){ try { QUIVER = await (await fetch('quiver.json?t=' + Date.now(), {cache:'no-store'})).json(); } catch(e){ $('#view').innerHTML = '<div class="empty">Quiver niet gevonden.</div>'; return; } }
   const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
   $('#view').innerHTML = `<div class="boards">${QUIVER.boards.map(b => `<div class="board-card">${boardSVG(b)}
@@ -859,6 +864,41 @@ $('#back').addEventListener('click', () => { location.hash = ''; });
 $('#tab-f').addEventListener('click', e => { e.preventDefault(); location.hash = ''; route(); });
 window.addEventListener('hashchange', route);
 $('#bell').addEventListener('click', () => bellSheet());
+
+/* ---------- handmatig verversen: issue 'Update' -> workflow update.yml start forecast.yml ---------- */
+const UPD_MAX = 25 * 60 * 1000;
+function updState(){ try { const u = JSON.parse(localStorage.getItem('ew-upd') || 'null'); return u && Date.now() - u.t < UPD_MAX ? u : null; } catch(e){ return null; } }
+function toast(msg){ const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+let updTimer = null;
+function updWatch(){
+  const u = updState(); $('#refresh').classList.toggle('spin', !!u);
+  clearInterval(updTimer); if (!u) return;
+  updTimer = setInterval(async () => {
+    const v = updState(); if (!v) { clearInterval(updTimer); $('#refresh').classList.remove('spin'); return; }
+    await load(false);
+    if (DATA && DATA.fetched_at !== v.from) { try { localStorage.removeItem('ew-upd'); } catch(e){}
+      clearInterval(updTimer); $('#refresh').classList.remove('spin'); toast('Nieuwe data binnen'); }
+  }, 60000);
+}
+function refreshSheet(){
+  const bg = document.createElement('div'); bg.className = 'sheet-bg';
+  bg.addEventListener('click', e => { if (e.target === bg) bg.remove(); });
+  const u = updState(), t = DATA && DATA.fetched_at ? new Date(DATA.fetched_at) : null;
+  const hm = d => d.toLocaleTimeString('nl-NL', {hour: '2-digit', minute: '2-digit'});
+  bg.innerHTML = `<div class="sheet"><h3>Nieuwe data ophalen</h3>
+    <p>${t ? `Huidige data: ${t.toLocaleDateString('nl-NL', {weekday: 'short', day: 'numeric', month: 'short'})}, ${hm(t)}.` : ''}
+    ${u ? `<br><b>Update aangevraagd om ${hm(new Date(u.t))}.</b> De app kijkt elke minuut of de nieuwe data er is (±10 min).` : 'Start een nieuwe run met de laatste modellen en metingen. Dit opent GitHub: tik daar op "Submit new issue". Na ±10 minuten staat de nieuwe data hier; de app ververst vanzelf.'}</p>
+    <div class="seg" style="margin-top:14px"><button id="ugo" class="on">${u ? 'Opnieuw aanvragen' : 'Update aanvragen'}</button><button id="ureload">Alleen app verversen</button><button id="ux">Sluiten</button></div></div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('#ux').onclick = () => bg.remove();
+  bg.querySelector('#ureload').onclick = async () => { bg.remove(); await load(false); toast('App ververst'); };
+  bg.querySelector('#ugo').onclick = () => {
+    try { localStorage.setItem('ew-upd', JSON.stringify({t: Date.now(), from: DATA ? DATA.fetched_at : null})); } catch(e){}
+    const now = new Date();
+    window.open(`https://github.com/${DATA.repo}/issues/new?title=${encodeURIComponent('Update ' + now.toLocaleDateString('nl-NL') + ' ' + hm(now))}&body=${encodeURIComponent('Nieuwe voorspelling aangevraagd vanuit de Endless Waves-app.')}`, '_blank');
+    bg.remove(); updWatch(); };
+}
+$('#refresh').addEventListener('click', () => refreshSheet());
 
 async function load(first){
   const t0 = Date.now();
@@ -879,7 +919,7 @@ async function load(first){
   }
   if (first) setTimeout(() => $('#splash').classList.add('hide'), Math.max(0, 3000 - (Date.now() - t0)));
 }
-load(true);
+load(true).then(updWatch);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(false); });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>

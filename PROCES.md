@@ -456,6 +456,12 @@ Keuzes van Derek, in volgorde:
     - **Beveiliging:** alleen issues van de eigenaar van de repository (`derekboerma-dev`) worden verwerkt. De repository is openbaar, dus zonder die controle zou iedereen de instellingen kunnen wijzigen. Geen token of wachtwoord in de app.
     - Bewust niet aanpasbaar in de app: swell- en windrichtingen, exposure, schaal en andere modelinstellingen. Die vragen om een onderbouwing (Surfline, metingen, sessies) en blijven via Claude lopen.
 
+36. **Knop "Nieuwe data ophalen" (Derek, 24 nov).** ↻ in de kop, naast de bel.
+    - Tik → venster met de tijd van de huidige data en "Update aanvragen". Dat opent een ingevuld GitHub-issue "Update …"; Derek tikt "Submit new issue".
+    - Workflow `update.yml`: issue van de eigenaar → `forecast.yml` starten en het issue sluiten. Andere accounts worden genegeerd (repository is openbaar).
+    - De app kijkt daarna elke minuut of `fetched_at` veranderd is (max. 25 min). Het pictogram draait zolang; bij nieuwe data verschijnt "Nieuwe data binnen".
+    - "Alleen app verversen" haalt alleen de bestaande data opnieuw op, zonder nieuwe run.
+
 Eerder afgewezen of vervangen: Surfline-achtige rijen met balkjes (vervangen door tegels); varianten C (beste kansen eerst), D (per dag) en E (bollen); een kalender zonder hoogtes; een rode kleur voor slecht; één kaart per regio (te algemeen); een native iOS-app (vereist een Mac/Xcode en €99 per jaar).
 
 ## 5b. Leren van sessies

@@ -1,0 +1,26 @@
+name: Update uit de app
+
+# De knop ↻ in de kop van de app opent een issue 'Update'. Van de eigenaar van de repository start dat
+# meteen een nieuwe voorspelling (forecast.yml, ±10 min). Andere accounts worden genegeerd: de
+# repository is openbaar.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  actions: write
+
+jobs:
+  update:
+    if: startsWith(github.event.issue.title, 'Update') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nieuwe voorspelling starten
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run forecast.yml --repo "$GITHUB_REPOSITORY"
+          gh issue close "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" \
+            --comment "Nieuwe run gestart. Over ±10 minuten staat de nieuwe data in de app."
