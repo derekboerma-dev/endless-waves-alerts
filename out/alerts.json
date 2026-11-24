@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-24",
- "fetched_at": "2026-11-24T06:14+00:00",
+ "fetched_at": "2026-11-24T06:50+00:00",
  "notify": false,
  "new": [],
  "upgraded": [],
@@ -11,12 +11,12 @@
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-25",
+   "start": "2026-11-24",
    "end": "2026-11-30",
-   "days": 6,
-   "lead_days": 1,
+   "days": 7,
+   "lead_days": 0,
    "tier": "bevestigd",
-   "models_agree_days": 2,
+   "models_agree_days": 3,
    "strict_days": 4,
    "powerful_days": 1,
    "spots": [
@@ -24,6 +24,7 @@
     "La Sauzaie"
    ],
    "dates": [
+    "2026-11-24",
     "2026-11-25",
     "2026-11-26",
     "2026-11-27",
