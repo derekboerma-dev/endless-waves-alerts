@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-24T07:30+00:00",
+ "updated": "2026-11-24T13:29+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 424,
+ "obs_hours": 430,
  "obs_from": "2026-11-06T17:00",
  "runs": 16,
  "buckets": [
@@ -23,40 +23,40 @@
     "wind_ok": 0.864
    },
    "1-2": {
-    "n": 219,
-    "n_wind": 219,
-    "hs_err": 0.289,
-    "hs_ratio": 0.9,
-    "ws_err": 4.2,
+    "n": 225,
+    "n_wind": 225,
+    "hs_err": 0.292,
+    "hs_ratio": 0.892,
+    "ws_err": 4.1,
     "wd_err": 17,
-    "wind_ok": 0.813
+    "wind_ok": 0.818
    },
    "2-4": {
-    "n": 406,
-    "n_wind": 390,
-    "hs_err": 0.347,
-    "hs_ratio": 0.856,
-    "ws_err": 6.0,
+    "n": 418,
+    "n_wind": 402,
+    "hs_err": 0.348,
+    "hs_ratio": 0.853,
+    "ws_err": 5.9,
     "wd_err": 28,
-    "wind_ok": 0.551
+    "wind_ok": 0.565
    },
    "4-7": {
-    "n": 489,
-    "n_wind": 484,
-    "hs_err": 0.406,
+    "n": 507,
+    "n_wind": 502,
+    "hs_err": 0.399,
     "hs_ratio": 0.883,
-    "ws_err": 7.4,
-    "wd_err": 49,
-    "wind_ok": 0.455
+    "ws_err": 7.3,
+    "wd_err": 48,
+    "wind_ok": 0.468
    },
    "7+": {
-    "n": 600,
-    "n_wind": 600,
-    "hs_err": 0.782,
-    "hs_ratio": 0.707,
-    "ws_err": 5.2,
-    "wd_err": 75,
-    "wind_ok": 0.435
+    "n": 648,
+    "n_wind": 648,
+    "hs_err": 0.831,
+    "hs_ratio": 0.695,
+    "ws_err": 5.0,
+    "wd_err": 73,
+    "wind_ok": 0.455
    }
   },
   "GFS": {
@@ -70,60 +70,60 @@
     "wind_ok": 0.864
    },
    "1-2": {
-    "n": 219,
-    "n_wind": 219,
-    "hs_err": 0.231,
-    "hs_ratio": 0.971,
-    "ws_err": 4.1,
+    "n": 225,
+    "n_wind": 225,
+    "hs_err": 0.232,
+    "hs_ratio": 0.964,
+    "ws_err": 4.0,
     "wd_err": 17,
-    "wind_ok": 0.813
+    "wind_ok": 0.818
    },
    "2-4": {
-    "n": 406,
-    "n_wind": 390,
-    "hs_err": 0.317,
-    "hs_ratio": 0.877,
+    "n": 418,
+    "n_wind": 402,
+    "hs_err": 0.322,
+    "hs_ratio": 0.865,
     "ws_err": 4.3,
-    "wd_err": 31,
-    "wind_ok": 0.705
+    "wd_err": 30,
+    "wind_ok": 0.714
    },
    "4-7": {
-    "n": 489,
-    "n_wind": 484,
-    "hs_err": 0.524,
-    "hs_ratio": 0.811,
-    "ws_err": 5.6,
-    "wd_err": 48,
-    "wind_ok": 0.62
+    "n": 507,
+    "n_wind": 502,
+    "hs_err": 0.532,
+    "hs_ratio": 0.8,
+    "ws_err": 5.5,
+    "wd_err": 47,
+    "wind_ok": 0.633
    },
    "7+": {
-    "n": 603,
-    "n_wind": 603,
-    "hs_err": 1.034,
-    "hs_ratio": 0.616,
-    "ws_err": 6.6,
-    "wd_err": 92,
-    "wind_ok": 0.423
+    "n": 657,
+    "n_wind": 657,
+    "hs_err": 1.003,
+    "hs_ratio": 0.619,
+    "ws_err": 6.3,
+    "wd_err": 87,
+    "wind_ok": 0.449
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 115,
-    "n_wind": 203,
+    "n": 121,
+    "n_wind": 209,
     "hs_err": 0.195,
-    "hs_ratio": 1.115,
-    "ws_err": 4.2,
-    "wd_err": 18,
-    "wind_ok": 0.798
+    "hs_ratio": 1.091,
+    "ws_err": 4.1,
+    "wd_err": 17,
+    "wind_ok": 0.804
    },
    "2-4": {
-    "n": 135,
-    "n_wind": 251,
-    "hs_err": 0.183,
-    "hs_ratio": 1.115,
-    "ws_err": 5.3,
-    "wd_err": 31,
-    "wind_ok": 0.554
+    "n": 141,
+    "n_wind": 263,
+    "hs_err": 0.186,
+    "hs_ratio": 1.102,
+    "ws_err": 5.2,
+    "wd_err": 30,
+    "wind_ok": 0.574
    },
    "0-1": {
     "n": 26,
@@ -136,21 +136,21 @@
    },
    "4-7": {
     "n": 0,
-    "n_wind": 153,
+    "n_wind": 171,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 4.3,
-    "wd_err": 54,
-    "wind_ok": 0.51
+    "ws_err": 4.0,
+    "wd_err": 49,
+    "wind_ok": 0.561
    },
    "7+": {
     "n": 0,
-    "n_wind": 11,
+    "n_wind": 16,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 3.5,
-    "wd_err": 48,
-    "wind_ok": 0.364
+    "ws_err": 2.8,
+    "wd_err": 32,
+    "wind_ok": 0.562
    }
   }
  },
@@ -160,22 +160,22 @@
    "GFS": 1.0
   },
   "1-2": {
-   "ECMWF": 0.91,
+   "ECMWF": 0.9,
    "GFS": 1.03,
-   "EWAM": 1.04
+   "EWAM": 1.05
   },
   "2-4": {
    "ECMWF": 0.85,
-   "GFS": 1.11,
-   "EWAM": 1.05
+   "GFS": 1.1,
+   "EWAM": 1.06
   },
   "4-7": {
    "ECMWF": 0.98,
-   "GFS": 1.03
+   "GFS": 1.02
   },
   "7+": {
-   "ECMWF": 1.1,
-   "GFS": 0.92
+   "ECMWF": 1.06,
+   "GFS": 0.94
   }
  },
  "min_hours": 36,
