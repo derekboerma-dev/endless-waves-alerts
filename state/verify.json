@@ -1,9 +1,9 @@
 {
- "updated": "2026-11-23T20:40+00:00",
+ "updated": "2026-11-24T06:08+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 413,
+ "obs_hours": 423,
  "obs_from": "2026-11-06T17:00",
- "runs": 15,
+ "runs": 16,
  "buckets": [
   "0-1",
   "1-2",
@@ -14,143 +14,143 @@
  "models": {
   "ECMWF": {
    "0-1": {
-    "n": 45,
-    "n_wind": 44,
-    "hs_err": 0.121,
+    "n": 46,
+    "n_wind": 45,
+    "hs_err": 0.129,
     "hs_ratio": 0.935,
-    "ws_err": 3.4,
+    "ws_err": 3.3,
     "wd_err": 18,
-    "wind_ok": 0.864
+    "wind_ok": 0.867
    },
    "1-2": {
-    "n": 216,
-    "n_wind": 216,
-    "hs_err": 0.288,
+    "n": 218,
+    "n_wind": 218,
+    "hs_err": 0.29,
     "hs_ratio": 0.902,
     "ws_err": 4.3,
     "wd_err": 17,
-    "wind_ok": 0.815
+    "wind_ok": 0.812
    },
    "2-4": {
-    "n": 400,
-    "n_wind": 384,
-    "hs_err": 0.347,
-    "hs_ratio": 0.858,
+    "n": 404,
+    "n_wind": 388,
+    "hs_err": 0.348,
+    "hs_ratio": 0.856,
     "ws_err": 6.1,
     "wd_err": 28,
     "wind_ok": 0.552
    },
    "4-7": {
-    "n": 480,
-    "n_wind": 475,
-    "hs_err": 0.411,
-    "hs_ratio": 0.886,
+    "n": 486,
+    "n_wind": 481,
+    "hs_err": 0.408,
+    "hs_ratio": 0.88,
     "ws_err": 7.4,
     "wd_err": 49,
     "wind_ok": 0.453
    },
    "7+": {
-    "n": 576,
-    "n_wind": 576,
-    "hs_err": 0.758,
-    "hs_ratio": 0.725,
-    "ws_err": 5.3,
+    "n": 592,
+    "n_wind": 592,
+    "hs_err": 0.779,
+    "hs_ratio": 0.707,
+    "ws_err": 5.2,
     "wd_err": 76,
     "wind_ok": 0.432
    }
   },
   "GFS": {
    "0-1": {
-    "n": 45,
-    "n_wind": 44,
-    "hs_err": 0.124,
+    "n": 46,
+    "n_wind": 45,
+    "hs_err": 0.127,
     "hs_ratio": 1.0,
     "ws_err": 3.3,
     "wd_err": 18,
-    "wind_ok": 0.864
+    "wind_ok": 0.867
    },
    "1-2": {
-    "n": 216,
-    "n_wind": 216,
-    "hs_err": 0.233,
-    "hs_ratio": 0.973,
+    "n": 218,
+    "n_wind": 218,
+    "hs_err": 0.232,
+    "hs_ratio": 0.971,
     "ws_err": 4.1,
     "wd_err": 17,
-    "wind_ok": 0.815
+    "wind_ok": 0.812
    },
    "2-4": {
-    "n": 400,
-    "n_wind": 384,
-    "hs_err": 0.317,
-    "hs_ratio": 0.879,
+    "n": 404,
+    "n_wind": 388,
+    "hs_err": 0.318,
+    "hs_ratio": 0.877,
     "ws_err": 4.3,
     "wd_err": 31,
-    "wind_ok": 0.701
+    "wind_ok": 0.704
    },
    "4-7": {
-    "n": 480,
-    "n_wind": 475,
-    "hs_err": 0.52,
-    "hs_ratio": 0.812,
+    "n": 486,
+    "n_wind": 481,
+    "hs_err": 0.525,
+    "hs_ratio": 0.811,
     "ws_err": 5.6,
     "wd_err": 48,
-    "wind_ok": 0.621
+    "wind_ok": 0.62
    },
    "7+": {
-    "n": 576,
-    "n_wind": 576,
-    "hs_err": 1.051,
-    "hs_ratio": 0.613,
-    "ws_err": 6.7,
-    "wd_err": 93,
-    "wind_ok": 0.417
+    "n": 594,
+    "n_wind": 594,
+    "hs_err": 1.043,
+    "hs_ratio": 0.612,
+    "ws_err": 6.6,
+    "wd_err": 92,
+    "wind_ok": 0.419
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 112,
-    "n_wind": 200,
-    "hs_err": 0.194,
-    "hs_ratio": 1.119,
-    "ws_err": 4.3,
-    "wd_err": 17,
-    "wind_ok": 0.8
+    "n": 114,
+    "n_wind": 202,
+    "hs_err": 0.197,
+    "hs_ratio": 1.118,
+    "ws_err": 4.2,
+    "wd_err": 18,
+    "wind_ok": 0.797
    },
    "2-4": {
-    "n": 130,
-    "n_wind": 245,
-    "hs_err": 0.184,
-    "hs_ratio": 1.118,
+    "n": 134,
+    "n_wind": 249,
+    "hs_err": 0.185,
+    "hs_ratio": 1.117,
     "ws_err": 5.4,
     "wd_err": 31,
-    "wind_ok": 0.543
+    "wind_ok": 0.55
    },
    "0-1": {
-    "n": 26,
-    "n_wind": 43,
-    "hs_err": 0.104,
-    "hs_ratio": 1.054,
+    "n": 27,
+    "n_wind": 44,
+    "hs_err": 0.113,
+    "hs_ratio": 1.037,
     "ws_err": 3.3,
     "wd_err": 18,
-    "wind_ok": 0.86
+    "wind_ok": 0.864
    },
    "4-7": {
     "n": 0,
-    "n_wind": 144,
+    "n_wind": 150,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 4.5,
-    "wd_err": 56,
-    "wind_ok": 0.479
+    "ws_err": 4.4,
+    "wd_err": 55,
+    "wind_ok": 0.5
    },
    "7+": {
     "n": 0,
-    "n_wind": 8,
+    "n_wind": 10,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 4.7,
-    "wd_err": 70,
-    "wind_ok": 0.125
+    "ws_err": 3.9,
+    "wd_err": 60,
+    "wind_ok": 0.3
    }
   }
  },
@@ -161,7 +161,7 @@
   },
   "1-2": {
    "ECMWF": 0.91,
-   "GFS": 1.02,
+   "GFS": 1.03,
    "EWAM": 1.04
   },
   "2-4": {
@@ -174,7 +174,7 @@
    "GFS": 1.03
   },
   "7+": {
-   "ECMWF": 1.12,
+   "ECMWF": 1.1,
    "GFS": 0.91
   }
  },
