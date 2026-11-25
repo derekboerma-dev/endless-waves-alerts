@@ -1,40 +1,13 @@
 {
  "events": [
   {
-   "region": "peniche",
-   "region_name": "Peniche",
-   "country": "PT",
-   "mode": "trip",
-   "start": "2026-11-22",
-   "end": "2026-11-24",
-   "days": 3,
-   "lead_days": 0,
-   "tier": "bevestigd",
-   "models_agree_days": 2,
-   "strict_days": 0,
-   "powerful_days": 0,
-   "spots": [
-    "Lagide",
-    "Supertubos"
-   ],
-   "dates": [
-    "2026-11-22",
-    "2026-11-23",
-    "2026-11-24"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-21",
-   "last_tier": "bevestigd"
-  },
-  {
    "region": "vendee",
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-24",
-   "end": "2026-11-28",
-   "days": 5,
+   "start": "2026-11-25",
+   "end": "2026-11-26",
+   "days": 2,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
@@ -45,11 +18,8 @@
     "La Sauzaie"
    ],
    "dates": [
-    "2026-11-24",
     "2026-11-25",
-    "2026-11-26",
-    "2026-11-27",
-    "2026-11-28"
+    "2026-11-26"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -62,8 +32,8 @@
    "country": "FR",
    "mode": "trip",
    "start": "2026-11-28",
-   "end": "2026-12-01",
-   "days": 4,
+   "end": "2026-12-02",
+   "days": 5,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 2,
@@ -78,12 +48,13 @@
     "2026-11-28",
     "2026-11-29",
     "2026-11-30",
-    "2026-12-01"
+    "2026-12-01",
+    "2026-12-02"
    ],
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-22",
-   "last_tier": "waarschijnlijk"
+   "last_tier": "bevestigd"
   },
   {
    "region": "crozon",
@@ -137,86 +108,32 @@
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-24",
-   "last_tier": "waarschijnlijk"
-  },
-  {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-11-30",
-   "end": "2026-12-01",
-   "days": 2,
-   "lead_days": 6,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 0,
-   "strict_days": 2,
-   "powerful_days": 0,
-   "spots": [
-    "Bud Bud",
-    "La Sauzaie"
-   ],
-   "dates": [
-    "2026-11-30",
-    "2026-12-01"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-24",
-   "last_tier": "waarschijnlijk"
-  },
-  {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-12-05",
-   "end": "2026-12-08",
-   "days": 4,
-   "lead_days": 11,
-   "tier": "kans",
-   "models_agree_days": 4,
-   "strict_days": 3,
-   "powerful_days": 1,
-   "spots": [
-    "Bud Bud",
-    "La Sauzaie"
-   ],
-   "dates": [
-    "2026-12-05",
-    "2026-12-06",
-    "2026-12-07",
-    "2026-12-08"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-24",
-   "last_tier": "kans"
+   "last_tier": "bevestigd"
   },
   {
    "region": "crozon",
    "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-06",
-   "end": "2026-12-07",
+   "start": "2026-12-05",
+   "end": "2026-12-06",
    "days": 2,
-   "lead_days": 12,
+   "lead_days": 10,
    "tier": "kans",
    "models_agree_days": 2,
    "strict_days": 2,
-   "powerful_days": 2,
+   "powerful_days": 0,
    "spots": [
     "La Palue",
     "Lostmarc'h"
    ],
    "dates": [
-    "2026-12-06",
-    "2026-12-07"
+    "2026-12-05",
+    "2026-12-06"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-24",
+   "first_alert": "2026-11-25",
    "last_tier": "kans"
   },
   {
@@ -224,27 +141,26 @@
    "region_name": "Cap Ferret",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-06",
-   "end": "2026-12-09",
-   "days": 4,
-   "lead_days": 12,
+   "start": "2026-12-04",
+   "end": "2026-12-06",
+   "days": 3,
+   "lead_days": 9,
    "tier": "kans",
    "models_agree_days": 3,
-   "strict_days": 4,
+   "strict_days": 2,
    "powerful_days": 2,
    "spots": [
     "Cap Ferret",
     "Le Truc Vert"
    ],
    "dates": [
-    "2026-12-06",
-    "2026-12-07",
-    "2026-12-08",
-    "2026-12-09"
+    "2026-12-04",
+    "2026-12-05",
+    "2026-12-06"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-24",
+   "first_alert": "2026-11-25",
    "last_tier": "kans"
   },
   {
@@ -252,10 +168,10 @@
    "region_name": "Peniche",
    "country": "PT",
    "mode": "trip",
-   "start": "2026-11-26",
-   "end": "2026-11-28",
-   "days": 3,
-   "lead_days": 2,
+   "start": "2026-11-28",
+   "end": "2026-12-01",
+   "days": 4,
+   "lead_days": 3,
    "tier": "bevestigd",
    "models_agree_days": 2,
    "strict_days": 2,
@@ -264,13 +180,14 @@
     "Lagide"
    ],
    "dates": [
-    "2026-11-26",
-    "2026-11-27",
-    "2026-11-28"
+    "2026-11-28",
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01"
    ],
    "qualifies": true,
    "below_threshold": [],
-   "first_alert": "2026-11-24",
+   "first_alert": "2026-11-25",
    "last_tier": "bevestigd"
   }
  ]
