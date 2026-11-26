@@ -118,9 +118,9 @@
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-29",
-   "end": "2026-12-03",
-   "days": 5,
+   "start": "2026-11-30",
+   "end": "2026-12-02",
+   "days": 3,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
@@ -131,11 +131,9 @@
     "La Sauzaie"
    ],
    "dates": [
-    "2026-11-29",
     "2026-11-30",
     "2026-12-01",
-    "2026-12-02",
-    "2026-12-03"
+    "2026-12-02"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -143,38 +141,12 @@
    "last_tier": "bevestigd"
   },
   {
-   "region": "crozon",
-   "region_name": "Crozon (Lostmarc'h)",
-   "country": "FR",
-   "mode": "trip",
-   "start": "2026-12-02",
-   "end": "2026-12-03",
-   "days": 2,
-   "lead_days": 6,
-   "tier": "waarschijnlijk",
-   "models_agree_days": 0,
-   "strict_days": 1,
-   "powerful_days": 0,
-   "spots": [
-    "La Palue",
-    "Lostmarc'h"
-   ],
-   "dates": [
-    "2026-12-02",
-    "2026-12-03"
-   ],
-   "qualifies": true,
-   "below_threshold": [],
-   "first_alert": "2026-11-26",
-   "last_tier": "waarschijnlijk"
-  },
-  {
    "region": "capferret",
    "region_name": "Cap Ferret",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-12-05",
-   "end": "2026-12-07",
+   "start": "2026-12-06",
+   "end": "2026-12-08",
    "days": 3,
    "lead_days": 9,
    "tier": "kans",
@@ -186,9 +158,61 @@
     "Le Truc Vert"
    ],
    "dates": [
-    "2026-12-05",
     "2026-12-06",
-    "2026-12-07"
+    "2026-12-07",
+    "2026-12-08"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-26",
+   "last_tier": "kans"
+  },
+  {
+   "region": "vendee",
+   "region_name": "Vendée (Bud Bud)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-05",
+   "end": "2026-12-06",
+   "days": 2,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 2,
+   "strict_days": 1,
+   "powerful_days": 0,
+   "spots": [
+    "Bud Bud",
+    "La Sauzaie"
+   ],
+   "dates": [
+    "2026-12-05",
+    "2026-12-06"
+   ],
+   "qualifies": true,
+   "below_threshold": [],
+   "first_alert": "2026-11-26",
+   "last_tier": "kans"
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-05",
+   "end": "2026-12-06",
+   "days": 2,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 2,
+   "strict_days": 2,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
+    "2026-12-05",
+    "2026-12-06"
    ],
    "qualifies": true,
    "below_threshold": [],
