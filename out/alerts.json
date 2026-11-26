@@ -1,38 +1,59 @@
 {
  "generated": "2026-11-26",
- "fetched_at": "2026-11-26T05:00+00:00",
+ "fetched_at": "2026-11-26T06:14+00:00",
  "notify": true,
- "new": [],
- "upgraded": [
+ "new": [
   {
-   "region": "vendee",
-   "region_name": "Vendée (Bud Bud)",
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-29",
+   "start": "2026-12-02",
    "end": "2026-12-03",
-   "days": 5,
-   "lead_days": 3,
-   "tier": "bevestigd",
+   "days": 2,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
    "models_agree_days": 0,
-   "strict_days": 2,
-   "powerful_days": 1,
+   "strict_days": 1,
+   "powerful_days": 0,
    "spots": [
-    "Bud Bud",
-    "La Sauzaie"
+    "La Palue",
+    "Lostmarc'h"
    ],
    "dates": [
-    "2026-11-29",
-    "2026-11-30",
-    "2026-12-01",
     "2026-12-02",
     "2026-12-03"
    ],
    "qualifies": true,
-   "below_threshold": [],
-   "previous_tier": "waarschijnlijk"
+   "below_threshold": []
+  },
+  {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-05",
+   "end": "2026-12-07",
+   "days": 3,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 1,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-05",
+    "2026-12-06",
+    "2026-12-07"
+   ],
+   "qualifies": true,
+   "below_threshold": []
   }
  ],
+ "upgraded": [],
  "cancelled": [],
  "all_runs": [
   {
@@ -46,8 +67,8 @@
    "lead_days": 3,
    "tier": "bevestigd",
    "models_agree_days": 0,
-   "strict_days": 2,
-   "powerful_days": 1,
+   "strict_days": 3,
+   "powerful_days": 2,
    "spots": [
     "Bud Bud",
     "La Sauzaie"
@@ -56,6 +77,30 @@
     "2026-11-29",
     "2026-11-30",
     "2026-12-01",
+    "2026-12-02",
+    "2026-12-03"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
+   "region": "crozon",
+   "region_name": "Crozon (Lostmarc'h)",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-02",
+   "end": "2026-12-03",
+   "days": 2,
+   "lead_days": 6,
+   "tier": "waarschijnlijk",
+   "models_agree_days": 0,
+   "strict_days": 1,
+   "powerful_days": 0,
+   "spots": [
+    "La Palue",
+    "Lostmarc'h"
+   ],
+   "dates": [
     "2026-12-02",
     "2026-12-03"
    ],
@@ -73,7 +118,7 @@
    "lead_days": 2,
    "tier": "bevestigd",
    "models_agree_days": 1,
-   "strict_days": 2,
+   "strict_days": 4,
    "powerful_days": 5,
    "spots": [
     "Cap Ferret",
@@ -91,6 +136,31 @@
    "below_threshold": []
   },
   {
+   "region": "capferret",
+   "region_name": "Cap Ferret",
+   "country": "FR",
+   "mode": "trip",
+   "start": "2026-12-05",
+   "end": "2026-12-07",
+   "days": 3,
+   "lead_days": 9,
+   "tier": "kans",
+   "models_agree_days": 3,
+   "strict_days": 3,
+   "powerful_days": 1,
+   "spots": [
+    "Cap Ferret",
+    "Le Truc Vert"
+   ],
+   "dates": [
+    "2026-12-05",
+    "2026-12-06",
+    "2026-12-07"
+   ],
+   "qualifies": true,
+   "below_threshold": []
+  },
+  {
    "region": "biarritz",
    "region_name": "Zuidwest-Frankrijk (Hossegor – Guéthary)",
    "country": "FR",
@@ -101,7 +171,7 @@
    "lead_days": 2,
    "tier": "bevestigd",
    "models_agree_days": 2,
-   "strict_days": 3,
+   "strict_days": 4,
    "powerful_days": 4,
    "spots": [
     "La Gravière (Hossegor)",
