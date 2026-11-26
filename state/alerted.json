@@ -32,8 +32,8 @@
    "country": "FR",
    "mode": "trip",
    "start": "2026-11-28",
-   "end": "2026-12-02",
-   "days": 5,
+   "end": "2026-12-03",
+   "days": 6,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 2,
@@ -49,7 +49,8 @@
     "2026-11-29",
     "2026-11-30",
     "2026-12-01",
-    "2026-12-02"
+    "2026-12-02",
+    "2026-12-03"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -88,8 +89,8 @@
    "country": "FR",
    "mode": "trip",
    "start": "2026-11-28",
-   "end": "2026-12-02",
-   "days": 5,
+   "end": "2026-12-03",
+   "days": 6,
    "lead_days": 4,
    "tier": "waarschijnlijk",
    "models_agree_days": 1,
@@ -104,7 +105,8 @@
     "2026-11-29",
     "2026-11-30",
     "2026-12-01",
-    "2026-12-02"
+    "2026-12-02",
+    "2026-12-03"
    ],
    "qualifies": true,
    "below_threshold": [],
@@ -116,9 +118,9 @@
    "region_name": "Vendée (Bud Bud)",
    "country": "FR",
    "mode": "trip",
-   "start": "2026-11-30",
-   "end": "2026-12-02",
-   "days": 3,
+   "start": "2026-11-29",
+   "end": "2026-12-03",
+   "days": 5,
    "lead_days": 5,
    "tier": "waarschijnlijk",
    "models_agree_days": 0,
@@ -129,14 +131,16 @@
     "La Sauzaie"
    ],
    "dates": [
+    "2026-11-29",
     "2026-11-30",
     "2026-12-01",
-    "2026-12-02"
+    "2026-12-02",
+    "2026-12-03"
    ],
    "qualifies": true,
    "below_threshold": [],
    "first_alert": "2026-11-25",
-   "last_tier": "waarschijnlijk"
+   "last_tier": "bevestigd"
   }
  ]
 }
