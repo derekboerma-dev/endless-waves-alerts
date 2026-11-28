@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-28T06:20+00:00",
+ "updated": "2026-11-28T13:22+00:00",
  "spot": "Wijk aan Zee",
- "obs_hours": 519,
+ "obs_hours": 526,
  "obs_from": "2026-11-06T17:00",
  "runs": 20,
  "buckets": [
@@ -23,40 +23,40 @@
     "wind_ok": 0.847
    },
    "1-2": {
-    "n": 277,
-    "n_wind": 282,
-    "hs_err": 0.574,
-    "hs_ratio": 0.842,
-    "ws_err": 4.1,
+    "n": 284,
+    "n_wind": 289,
+    "hs_err": 0.594,
+    "hs_ratio": 0.833,
+    "ws_err": 4.0,
     "wd_err": 14,
-    "wind_ok": 0.819
+    "wind_ok": 0.824
    },
    "2-4": {
-    "n": 522,
-    "n_wind": 516,
-    "hs_err": 0.634,
-    "hs_ratio": 0.782,
-    "ws_err": 5.7,
-    "wd_err": 24,
-    "wind_ok": 0.622
+    "n": 536,
+    "n_wind": 530,
+    "hs_err": 0.653,
+    "hs_ratio": 0.772,
+    "ws_err": 5.6,
+    "wd_err": 23,
+    "wind_ok": 0.632
    },
    "4-7": {
-    "n": 663,
-    "n_wind": 673,
-    "hs_err": 0.666,
-    "hs_ratio": 0.8,
+    "n": 684,
+    "n_wind": 694,
+    "hs_err": 0.678,
+    "hs_ratio": 0.789,
     "ws_err": 7.0,
-    "wd_err": 39,
-    "wind_ok": 0.559
+    "wd_err": 38,
+    "wind_ok": 0.572
    },
    "7+": {
-    "n": 1071,
-    "n_wind": 1114,
-    "hs_err": 1.343,
-    "hs_ratio": 0.576,
-    "ws_err": 6.0,
+    "n": 1127,
+    "n_wind": 1170,
+    "hs_err": 1.356,
+    "hs_ratio": 0.564,
+    "ws_err": 5.9,
     "wd_err": 65,
-    "wind_ok": 0.512
+    "wind_ok": 0.523
    }
   },
   "GFS": {
@@ -70,60 +70,60 @@
     "wind_ok": 0.847
    },
    "1-2": {
-    "n": 277,
-    "n_wind": 282,
-    "hs_err": 0.415,
-    "hs_ratio": 0.908,
+    "n": 284,
+    "n_wind": 289,
+    "hs_err": 0.429,
+    "hs_ratio": 0.904,
     "ws_err": 3.9,
-    "wd_err": 15,
-    "wind_ok": 0.819
+    "wd_err": 14,
+    "wind_ok": 0.824
    },
    "2-4": {
-    "n": 522,
-    "n_wind": 516,
-    "hs_err": 0.508,
-    "hs_ratio": 0.8,
-    "ws_err": 4.1,
+    "n": 536,
+    "n_wind": 530,
+    "hs_err": 0.512,
+    "hs_ratio": 0.793,
+    "ws_err": 4.0,
     "wd_err": 25,
-    "wind_ok": 0.738
+    "wind_ok": 0.745
    },
    "4-7": {
-    "n": 663,
-    "n_wind": 673,
-    "hs_err": 0.609,
+    "n": 684,
+    "n_wind": 694,
+    "hs_err": 0.604,
     "hs_ratio": 0.745,
-    "ws_err": 5.6,
-    "wd_err": 39,
-    "wind_ok": 0.682
+    "ws_err": 5.4,
+    "wd_err": 38,
+    "wind_ok": 0.692
    },
    "7+": {
-    "n": 1125,
-    "n_wind": 1170,
-    "hs_err": 1.341,
-    "hs_ratio": 0.537,
-    "ws_err": 6.1,
-    "wd_err": 67,
-    "wind_ok": 0.551
+    "n": 1188,
+    "n_wind": 1233,
+    "hs_err": 1.362,
+    "hs_ratio": 0.526,
+    "ws_err": 5.9,
+    "wd_err": 68,
+    "wind_ok": 0.556
    }
   },
   "EWAM": {
    "1-2": {
-    "n": 173,
-    "n_wind": 266,
-    "hs_err": 0.466,
-    "hs_ratio": 0.98,
+    "n": 180,
+    "n_wind": 273,
+    "hs_err": 0.482,
+    "hs_ratio": 0.968,
     "ws_err": 4.0,
-    "wd_err": 15,
-    "wind_ok": 0.808
+    "wd_err": 14,
+    "wind_ok": 0.813
    },
    "2-4": {
-    "n": 225,
-    "n_wind": 377,
-    "hs_err": 0.553,
-    "hs_ratio": 0.879,
-    "ws_err": 5.1,
-    "wd_err": 23,
-    "wind_ok": 0.65
+    "n": 232,
+    "n_wind": 391,
+    "hs_err": 0.563,
+    "hs_ratio": 0.864,
+    "ws_err": 5.0,
+    "wd_err": 22,
+    "wind_ok": 0.662
    },
    "0-1": {
     "n": 52,
@@ -136,21 +136,21 @@
    },
    "4-7": {
     "n": 0,
-    "n_wind": 342,
+    "n_wind": 363,
     "hs_err": null,
     "hs_ratio": null,
-    "ws_err": 5.4,
-    "wd_err": 31,
-    "wind_ok": 0.693
+    "ws_err": 5.3,
+    "wd_err": 29,
+    "wind_ok": 0.711
    },
    "7+": {
     "n": 0,
-    "n_wind": 58,
+    "n_wind": 64,
     "hs_err": null,
     "hs_ratio": null,
     "ws_err": 6.5,
-    "wd_err": 21,
-    "wind_ok": 0.69
+    "wd_err": 22,
+    "wind_ok": 0.719
    }
   }
  },
@@ -161,18 +161,18 @@
    "EWAM": 1.01
   },
   "1-2": {
-   "ECMWF": 0.89,
-   "GFS": 1.12,
+   "ECMWF": 0.88,
+   "GFS": 1.13,
    "EWAM": 1.01
   },
   "2-4": {
    "ECMWF": 0.88,
-   "GFS": 1.16,
+   "GFS": 1.17,
    "EWAM": 0.99
   },
   "4-7": {
-   "ECMWF": 0.92,
-   "GFS": 1.1
+   "ECMWF": 0.91,
+   "GFS": 1.11
   },
   "7+": {
    "ECMWF": 0.99,

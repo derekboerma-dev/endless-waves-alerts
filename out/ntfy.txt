@@ -1,5 +1,4 @@
-Surf: 3 meldingen – Cap Ferret, Crozon, Vendée
-+ Vendée (Bud Bud): za 5 dec – zo 6 dec (2 d, waarschijnlijk, over 7 d)
-+ Crozon (Lostmarc'h): do 3 dec – zo 6 dec (4 d, waarschijnlijk, over 5 d)
-+ Cap Ferret: zo 6 dec – wo 9 dec (4 d, kans, over 8 d)
-× vervallen: Vendée (Bud Bud) zo 6 dec
+Surf: Vendée (Bud Bud) (kans)
++ Vendée (Bud Bud): vr 11 dec – zo 13 dec (3 d, kans, over 13 d)
+× vervallen: Vendée (Bud Bud) za 5 dec
+× vervallen: Cap Ferret zo 6 dec
